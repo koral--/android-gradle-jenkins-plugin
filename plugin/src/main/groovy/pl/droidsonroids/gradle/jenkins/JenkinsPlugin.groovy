@@ -1,4 +1,4 @@
-package pl.droidsonroids.gradle.ci
+package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
@@ -6,7 +6,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
 
-public class CiPlugin implements Plugin<Project> {
+public class JenkinsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         project.allprojects {
