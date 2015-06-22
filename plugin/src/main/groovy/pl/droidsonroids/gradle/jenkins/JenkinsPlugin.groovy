@@ -2,6 +2,7 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.ddmlib.DdmPreferences
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
@@ -9,6 +10,8 @@ import org.gradle.api.tasks.compile.JavaCompile
 public class JenkinsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
+        DdmPreferences.setTimeOut(30000)
+
         project.allprojects {
             gradle.projectsEvaluated {
                 tasks.withType(JavaCompile) {
