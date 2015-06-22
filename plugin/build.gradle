@@ -2,15 +2,15 @@ plugins {
     id 'com.gradle.plugin-publish' version '0.9.0'
 }
 apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply from: 'mvn-push.gradle'
 
 dependencies {
     compile gradleApi()
     compile localGroovy()
     compile 'com.android.tools.build:gradle:1.2.3'
 }
+
+group = GROUP
+version = VERSION_NAME
 
 pluginBundle {
     website = POM_URL
@@ -19,7 +19,7 @@ pluginBundle {
     tags = ['jenkins', 'android', 'ci']
 
     plugins {
-        localizationPlugin {
+        jenkinsPlugin {
             id = 'pl.droidsonroids.jenkins'
             displayName = POM_NAME
             description = POM_DESCRIPTION
