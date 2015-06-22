@@ -7,4 +7,4 @@ Gradle plugin for CI Android projects on Jenkins
 - setting ADB timeout to 30s
 
 ## Usage
-See
+See [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.jenkins)
