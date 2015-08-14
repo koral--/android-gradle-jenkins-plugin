@@ -2,7 +2,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '0.9.1'
 }
 apply plugin: 'groovy'
-//apply plugin: 'maven-publish'
+apply plugin: 'maven-publish'
 
 dependencies {
     compile gradleApi()
@@ -27,18 +27,18 @@ pluginBundle {
         }
     }
 }
-//publishing {
-//    repositories {
-//        maven {
-//            // change to point to your repo, e.g. http://my.org/repo
-//            url "file:///tmp/repo"
-//        }
-//    }
-//}
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//        }
-//    }
-//}
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url "file:///tmp/repo"
+        }
+    }
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

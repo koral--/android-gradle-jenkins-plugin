@@ -2,7 +2,9 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
+import com.android.builder.testing.ConnectedDevice
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.ddmlib.DdmPreferences
 import com.android.ddmlib.MultiLineReceiver
@@ -16,11 +18,14 @@ import org.gradle.api.tasks.compile.JavaCompile
 import java.util.concurrent.TimeUnit
 
 public class JenkinsPlugin implements Plugin<Project> {
+
+    @TupleConstructor
     static class MonkeyOutputReceiver extends MultiLineReceiver {
+        Logger logger
 
         @Override
         public void processNewLines(String[] lines) {
-            lines.each { println it }
+            lines.each { logger.lifecycle it }
         }
 
         @Override
@@ -35,7 +40,7 @@ public class JenkinsPlugin implements Plugin<Project> {
         DdmPreferences.setTimeOut(30000)
         addJavacXlint(project)
 
-        project.allprojects { subproject ->
+        project.allprojects { Project subproject ->
             subproject.plugins.withType(AppPlugin) {
                 addJenkinsReleaseBuildType(subproject)
                 subproject.task(group: 'verification',
@@ -45,13 +50,16 @@ public class JenkinsPlugin implements Plugin<Project> {
                             def connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExe,
                                     new LoggerWrapper(subproject.logger))
                             //TODO
-                            def command = 'monkey -p ' + android.applicationVariants.getAt(0).applicationId + ' 1000'
-                            println command
-                            def receiver = new MonkeyOutputReceiver()
+                            def variant = android.applicationVariants.getAt(0)
+                            def command = 'monkey -p ' + variant.applicationId + ' 1000'
+                            def receiver = new MonkeyOutputReceiver(subproject.logger)
                             connectedDeviceProvider.init()
-                            connectedDeviceProvider.getDevices().each { device ->
+                            connectedDeviceProvider.getDevices().findAll {
+                                it.apiLevel >= variant.getMergedFlavor().minSdkVersion
+                            }.each { device ->
                                 device.executeShellCommand(command, receiver, 5, TimeUnit.SECONDS)
                             }
+                            connectedDeviceProvider.terminate()
                         },
                         'connectedMonkeyTest')
             }
