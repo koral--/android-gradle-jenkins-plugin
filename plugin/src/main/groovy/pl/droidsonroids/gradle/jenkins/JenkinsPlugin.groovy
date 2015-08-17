@@ -2,6 +2,10 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.builder.core.DefaultBuildType
+import com.android.builder.core.DefaultProductFlavor
+import com.android.builder.model.BuildType
+import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,16 +17,22 @@ public class JenkinsPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         DdmPreferences.setTimeOut(30000)
+
+        DefaultProductFlavor.metaClass.isJenkinsTestable = null
+        DefaultBuildType.metaClass.isJenkinsTestable = null
+        ProductFlavor.metaClass.jenkinsTestable { boolean val ->
+            delegate.isJenkinsTestable = val }
+        BuildType.metaClass.jenkinsTestable { boolean val ->
+            delegate.isJenkinsTestable = val
+        }
+
         addJavacXlint(project)
 
         project.allprojects { Project subproject ->
             subproject.plugins.withType(AppPlugin) {
                 subproject.extensions.create('jenkins', JenkinsExtension)
                 addJenkinsReleaseBuildType(subproject)
-                subproject.extensions.getByType(AppExtension).buildTypes.each {
-                    it.ext.isMonkeyTestable = false
-                    it.ext.monkeyTestable = { boolean isMonkeyTestable -> it.isMonkeyTestable = isMonkeyTestable }
-                }
+
                 subproject.tasks.create('connectedMonkeyTest', MonkeyTask, { it.subproject = subproject })
             }
         }

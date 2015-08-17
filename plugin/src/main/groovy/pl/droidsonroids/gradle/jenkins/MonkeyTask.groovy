@@ -1,8 +1,8 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
+import com.android.builder.model.ProductFlavor
 import com.android.builder.testing.ConnectedDeviceProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -26,7 +26,17 @@ class MonkeyTask extends DefaultTask {
                 new LoggerWrapper(subproject.logger))
         def receiver = new MonkeyOutputReceiver(subproject.logger)
         connectedDeviceProvider.init()
-        android.applicationVariants.findAll { it.buildType.isMonkeyTestable }.each {
+        android.applicationVariants.findAll {
+            if (it.buildType.isJenkinsTestable != null) {
+                return it.buildType.isJenkinsTestable
+            }
+            for (ProductFlavor flavor : it.productFlavors) {
+                if (flavor.isJenkinsTestable != null) {
+                    return flavor.isJenkinsTestable
+                }
+            }
+            false
+        }.each {
             variant ->
                 def command = 'monkey -v -p ' + variant.applicationId + ' 1'
                 connectedDeviceProvider.getDevices().findAll {
