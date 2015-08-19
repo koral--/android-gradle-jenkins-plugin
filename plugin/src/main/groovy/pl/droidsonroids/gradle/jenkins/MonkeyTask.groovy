@@ -1,6 +1,7 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.model.ProductFlavor
 import com.android.builder.testing.ConnectedDeviceProvider
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit
 class MonkeyTask extends DefaultTask {
 
     Project subproject
+    Set<ApplicationVariant> applicationVariants
 
     {
         group = 'verification'
@@ -25,18 +27,9 @@ class MonkeyTask extends DefaultTask {
         def connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExe,
                 new LoggerWrapper(subproject.logger))
         def receiver = new MonkeyOutputReceiver(subproject.logger)
+
         connectedDeviceProvider.init()
-        android.applicationVariants.findAll {
-            if (it.buildType.isJenkinsTestable != null) {
-                return it.buildType.isJenkinsTestable
-            }
-            for (ProductFlavor flavor : it.productFlavors) {
-                if (flavor.isJenkinsTestable != null) {
-                    return flavor.isJenkinsTestable
-                }
-            }
-            false
-        }.each {
+        applicationVariants.each {
             variant ->
                 def command = 'monkey -v -p ' + variant.applicationId + ' 1'
                 connectedDeviceProvider.getDevices().findAll {

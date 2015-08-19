@@ -27,15 +27,11 @@ pluginBundle {
         }
     }
 }
+
 publishing {
     repositories {
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url "file:///tmp/repo"
-        }
+        mavenLocal()
     }
-}
-publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java

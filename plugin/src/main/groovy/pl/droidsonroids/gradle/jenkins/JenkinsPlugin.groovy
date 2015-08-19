@@ -7,6 +7,7 @@ import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.BuildType
 import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
@@ -21,7 +22,8 @@ public class JenkinsPlugin implements Plugin<Project> {
         DefaultProductFlavor.metaClass.isJenkinsTestable = null
         DefaultBuildType.metaClass.isJenkinsTestable = null
         ProductFlavor.metaClass.jenkinsTestable { boolean val ->
-            delegate.isJenkinsTestable = val }
+            delegate.isJenkinsTestable = val
+        }
         BuildType.metaClass.jenkinsTestable { boolean val ->
             delegate.isJenkinsTestable = val
         }
@@ -32,8 +34,27 @@ public class JenkinsPlugin implements Plugin<Project> {
             subproject.plugins.withType(AppPlugin) {
                 subproject.extensions.create('jenkins', JenkinsExtension)
                 addJenkinsReleaseBuildType(subproject)
-
-                subproject.tasks.create('connectedMonkeyTest', MonkeyTask, { it.subproject = subproject })
+                subproject.afterEvaluate{
+                def android = subproject.extensions.getByType(AppExtension)
+                def applicationVariants = android.applicationVariants.findAll {
+                    if (it.buildType.isJenkinsTestable != null) {
+                        return it.buildType.isJenkinsTestable
+                    }
+                    for (ProductFlavor flavor : it.productFlavors) {
+                        if (flavor.isJenkinsTestable != null) {
+                            return flavor.isJenkinsTestable
+                        }
+                    }
+                    false
+                }
+                if (applicationVariants.isEmpty())
+                    throw new GradleException() //TODO message
+                def monkeyTask = subproject.tasks.create('connectedMonkeyTest', MonkeyTask, {
+                    it.subproject = subproject
+                    it.applicationVariants = applicationVariants
+                })
+                applicationVariants.each { monkeyTask.dependsOn it.install }
+                }
             }
         }
     }
