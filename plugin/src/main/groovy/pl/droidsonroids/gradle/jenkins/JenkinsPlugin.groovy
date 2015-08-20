@@ -14,46 +14,52 @@ import org.gradle.api.tasks.compile.JavaCompile
 
 public class JenkinsPlugin implements Plugin<Project> {
 
+    static def addDSL() {
+        DefaultProductFlavor.metaClass.isJenkinsTestable = null
+        DefaultBuildType.metaClass.isJenkinsTestable = null
+        ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
+            delegate.isJenkinsTestable = isJenkinsTestable
+        }
+        BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
+            delegate.isJenkinsTestable = isJenkinsTestable
+        }
+    }
+
+    static def addMonkeyTask(Project subproject) {
+        def android = subproject.extensions.getByType(AppExtension)
+        def applicationVariants = android.applicationVariants.findAll {
+            if (it.buildType.isJenkinsTestable != null) {
+                return it.buildType.isJenkinsTestable
+            }
+            for (ProductFlavor flavor : it.productFlavors) {
+                if (flavor.isJenkinsTestable != null) {
+                    return flavor.isJenkinsTestable
+                }
+            }
+            false
+        }
+        if (applicationVariants.isEmpty()) {
+            throw new GradleException("No jenkins testable application variants found")
+        }
+        def monkeyTask = subproject.tasks.create('connectedMonkeyJenkinsTest', MonkeyTask, {
+            it.subproject = subproject
+            it.applicationVariants = applicationVariants
+        })
+        applicationVariants.each { monkeyTask.dependsOn it.install }
+    }
+
     @Override
     void apply(Project project) {
 
         DdmPreferences.setTimeOut(30000)
-
-        DefaultProductFlavor.metaClass.isJenkinsTestable = null
-        DefaultBuildType.metaClass.isJenkinsTestable = null
-        ProductFlavor.metaClass.jenkinsTestable { boolean val ->
-            delegate.isJenkinsTestable = val
-        }
-        BuildType.metaClass.jenkinsTestable { boolean val ->
-            delegate.isJenkinsTestable = val
-        }
-
+        addDSL()
         addJavacXlint(project)
 
         project.allprojects { Project subproject ->
             subproject.plugins.withType(AppPlugin) {
-                subproject.extensions.create('jenkins', JenkinsExtension)
                 addJenkinsReleaseBuildType(subproject)
-                subproject.afterEvaluate{
-                def android = subproject.extensions.getByType(AppExtension)
-                def applicationVariants = android.applicationVariants.findAll {
-                    if (it.buildType.isJenkinsTestable != null) {
-                        return it.buildType.isJenkinsTestable
-                    }
-                    for (ProductFlavor flavor : it.productFlavors) {
-                        if (flavor.isJenkinsTestable != null) {
-                            return flavor.isJenkinsTestable
-                        }
-                    }
-                    false
-                }
-                if (applicationVariants.isEmpty())
-                    throw new GradleException() //TODO message
-                def monkeyTask = subproject.tasks.create('connectedMonkeyTest', MonkeyTask, {
-                    it.subproject = subproject
-                    it.applicationVariants = applicationVariants
-                })
-                applicationVariants.each { monkeyTask.dependsOn it.install }
+                subproject.afterEvaluate {
+                    addMonkeyTask(subproject)
                 }
             }
         }

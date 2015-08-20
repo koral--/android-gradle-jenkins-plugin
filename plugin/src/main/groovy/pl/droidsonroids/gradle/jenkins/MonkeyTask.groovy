@@ -3,7 +3,6 @@ package pl.droidsonroids.gradle.jenkins
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
-import com.android.builder.model.ProductFlavor
 import com.android.builder.testing.ConnectedDeviceProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -23,15 +22,14 @@ class MonkeyTask extends DefaultTask {
 
     @TaskAction
     def connectedMonkeyTest() {
-        def android = subproject.extensions.getByType(AppExtension)
-        def connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExe,
-                new LoggerWrapper(subproject.logger))
+        def adbExe = subproject.extensions.getByType(AppExtension).adbExe
+        def connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(subproject.logger))
         def receiver = new MonkeyOutputReceiver(subproject.logger)
 
         connectedDeviceProvider.init()
         applicationVariants.each {
             variant ->
-                def command = 'monkey -v -p ' + variant.applicationId + ' 1'
+                def command = 'monkey -v -p ' + variant.applicationId + ' 1000'
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
