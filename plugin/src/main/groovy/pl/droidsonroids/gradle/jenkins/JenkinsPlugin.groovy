@@ -80,6 +80,7 @@ public class JenkinsPlugin implements Plugin<Project> {
                 minifyEnabled true
                 proguardFiles android.getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 signingConfig android.signingConfigs.jenkinsRelease
+                jenkinsTestable true
             }
         }
     }
