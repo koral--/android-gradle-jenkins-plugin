@@ -24,8 +24,6 @@ class MonkeyTask extends DefaultTask {
     def connectedMonkeyTest() {
         def adbExe = subproject.extensions.getByType(AppExtension).adbExe
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(subproject.logger))
-        def receiver = new MonkeyOutputReceiver(subproject.logger)
-
         connectedDeviceProvider.init()
         applicationVariants.each {
             variant ->
@@ -33,7 +31,7 @@ class MonkeyTask extends DefaultTask {
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
-                    device.executeShellCommand(command, receiver, 5, TimeUnit.SECONDS)
+                    device.executeShellCommand(command, new MonkeyOutputReceiver(), 5, TimeUnit.SECONDS)
                 }
         }
         connectedDeviceProvider.terminate()

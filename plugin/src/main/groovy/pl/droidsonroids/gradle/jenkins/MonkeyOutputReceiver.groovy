@@ -4,13 +4,12 @@ import com.android.ddmlib.MultiLineReceiver
 import groovy.transform.TupleConstructor
 import org.gradle.api.logging.Logger
 
-@TupleConstructor
 class MonkeyOutputReceiver extends MultiLineReceiver {
-    Logger logger
+    File file = new File("monkey.txt")
 
     @Override
     public void processNewLines(String[] lines) {
-        lines.each { logger.lifecycle it }
+        lines.each { file<< it }
     }
 
     @Override
