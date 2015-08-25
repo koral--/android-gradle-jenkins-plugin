@@ -9,7 +9,7 @@ class MonkeyOutputReceiver extends MultiLineReceiver {
 
     @Override
     public void processNewLines(String[] lines) {
-        lines.each { file<< it }
+        lines.each { file << it }
     }
 
     @Override
