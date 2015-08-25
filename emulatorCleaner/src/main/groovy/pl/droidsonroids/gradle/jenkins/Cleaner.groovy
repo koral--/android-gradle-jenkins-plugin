@@ -1,11 +1,13 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.builder.testing.ConnectedDeviceProvider
+import com.android.builder.testing.api.DeviceException
+import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.utils.StdLogger
 
 import java.util.concurrent.TimeUnit
 
-class Cleaner {
+public class Cleaner {
 
     static class StdOutputReceiver extends BaseOutputReceiver {
         StdLogger logger = new StdLogger(StdLogger.Level.VERBOSE)
@@ -16,7 +18,17 @@ class Cleaner {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        try {
+            cleanAllEmulators()
+        } catch (DeviceException e) {
+            e.printStackTrace()
+            System.exit(1)
+        }
+        System.exit(0)
+    }
+
+    def static cleanAllEmulators() {
         def stdOutputReceiver = new StdOutputReceiver()
         def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, new StdLogger(StdLogger.Level.INFO))
@@ -37,6 +49,5 @@ class Cleaner {
             device.executeShellCommand('rm -rf /sdcard/', outputReceiver, 5, TimeUnit.SECONDS)
         }
         connectedDeviceProvider.terminate()
-        System.exit(0)
     }
 }
