@@ -7,5 +7,7 @@
 - Added jenkinsTestable by default in jenkinsRelease build type
 ### 1.0.4
 - Monkey output redirected to monkey.txt
-### 1.0.4
+### 1.0.5
 - Monkey output formatting fixed
+### 1.0.6
+- Monkey output appending fixed

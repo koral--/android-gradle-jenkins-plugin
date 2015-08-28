@@ -5,8 +5,9 @@ import com.android.ddmlib.MultiLineReceiver
 class MonkeyOutputReceiver extends MultiLineReceiver {
 
     PrintWriter printWriter
+
     MonkeyOutputReceiver() throws IOException {
-        printWriter = new PrintWriter(new File('monkey.txt'))
+        printWriter = new PrintWriter(new BufferedWriter(new FileWriter('monkey.txt', true), 16 * 1024))
     }
 
     @Override
