@@ -4,8 +4,11 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.testing.ConnectedDeviceProvider
+import com.android.ddmlib.ShellCommandUnresponsiveException
+import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
 
 import java.util.concurrent.TimeUnit
@@ -25,13 +28,21 @@ class MonkeyTask extends DefaultTask {
         def adbExe = subproject.extensions.getByType(AppExtension).adbExe
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(subproject.logger))
         connectedDeviceProvider.init()
+        File monkeyOutputFile = project.file('monkey.txt')
+        monkeyOutputFile.delete()
         applicationVariants.each {
             variant ->
                 def command = 'monkey -v -p ' + variant.applicationId + ' 1000'
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
-                    device.executeShellCommand(command, new MonkeyOutputReceiver(), 5, TimeUnit.SECONDS)
+                    try {
+                        subproject.logger.lifecycle('Monkeying on %s', device.getName())
+                        device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 5, TimeUnit.SECONDS)
+                    } catch (ShellCommandUnresponsiveException ex) {
+                        subproject.logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.getName(), ex)
+                        throw ex
+                    }
                 }
         }
         connectedDeviceProvider.terminate()

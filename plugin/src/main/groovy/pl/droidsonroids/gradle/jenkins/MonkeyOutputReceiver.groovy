@@ -6,8 +6,8 @@ class MonkeyOutputReceiver extends MultiLineReceiver {
 
     PrintWriter printWriter
 
-    MonkeyOutputReceiver() throws IOException {
-        printWriter = new PrintWriter(new BufferedWriter(new FileWriter('monkey.txt', true), 16 * 1024))
+    MonkeyOutputReceiver(File outputFile) throws IOException {
+        printWriter = new PrintWriter(new BufferedWriter(new FileWriter(outputFile, true), 16 * 1024))
     }
 
     @Override
