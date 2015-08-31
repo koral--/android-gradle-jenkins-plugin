@@ -39,7 +39,7 @@ class MonkeyTask extends DefaultTask {
                     def deviceName = device.getName()
                     try {
                         subproject.logger.lifecycle('Monkeying on {}', deviceName)
-                        device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 5, TimeUnit.SECONDS)
+                        device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 20, TimeUnit.SECONDS)
                     } catch (ShellCommandUnresponsiveException ex) {
                         subproject.logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + deviceName, ex)
                         throw ex
