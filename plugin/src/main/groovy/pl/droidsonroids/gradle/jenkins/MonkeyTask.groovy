@@ -28,7 +28,7 @@ class MonkeyTask extends DefaultTask {
         def adbExe = subproject.extensions.getByType(AppExtension).adbExe
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(subproject.logger))
         connectedDeviceProvider.init()
-        File monkeyOutputFile = project.file('monkey.txt')
+        File monkeyOutputFile = subproject.getRootProject().file('monkey.txt')
         monkeyOutputFile.delete()
         applicationVariants.each {
             variant ->
@@ -36,11 +36,12 @@ class MonkeyTask extends DefaultTask {
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
+                    def deviceName = device.getName()
                     try {
-                        subproject.logger.lifecycle('Monkeying on %s', device.getName())
+                        subproject.logger.lifecycle('Monkeying on {}', deviceName)
                         device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 5, TimeUnit.SECONDS)
                     } catch (ShellCommandUnresponsiveException ex) {
-                        subproject.logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.getName(), ex)
+                        subproject.logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + deviceName, ex)
                         throw ex
                     }
                 }
