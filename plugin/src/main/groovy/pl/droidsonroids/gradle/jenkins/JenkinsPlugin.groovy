@@ -47,7 +47,7 @@ public class JenkinsPlugin implements Plugin<Project> {
             it.applicationVariants = applicationVariants
             it.monkeyOutputFile = monkeyOutputFile
         })
-        def cleanMonkeyOutputTask = subproject.tasks.create('cleanMonkeyOutput', CleanMonkeyOutput, {
+        def cleanMonkeyOutputTask = subproject.tasks.create('cleanMonkeyOutput', CleanMonkeyOutputTask, {
             it.monkeyOutputFile = monkeyOutputFile
         })
         applicationVariants.each { cleanMonkeyOutputTask.dependsOn it.clean }
