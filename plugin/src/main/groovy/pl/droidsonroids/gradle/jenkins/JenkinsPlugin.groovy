@@ -41,10 +41,16 @@ public class JenkinsPlugin implements Plugin<Project> {
         if (applicationVariants.isEmpty()) {
             throw new GradleException("No jenkins testable application variants found")
         }
+        File monkeyOutputFile = subproject.getRootProject().file('monkey.txt')
         def monkeyTask = subproject.tasks.create('connectedMonkeyJenkinsTest', MonkeyTask, {
             it.subproject = subproject
             it.applicationVariants = applicationVariants
+            it.monkeyOutputFile = monkeyOutputFile
         })
+        def cleanMonkeyOutputTask = subproject.tasks.create('cleanMonkeyOutput', CleanMonkeyOutput, {
+            it.monkeyOutputFile = monkeyOutputFile
+        })
+        applicationVariants.each { cleanMonkeyOutputTask.dependsOn it.clean }
         applicationVariants.each { monkeyTask.dependsOn it.install }
     }
 

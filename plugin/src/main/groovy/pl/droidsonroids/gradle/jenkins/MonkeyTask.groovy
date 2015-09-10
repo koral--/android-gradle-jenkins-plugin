@@ -5,7 +5,6 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.ddmlib.ShellCommandUnresponsiveException
-import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
@@ -17,6 +16,7 @@ class MonkeyTask extends DefaultTask {
 
     Project subproject
     Set<ApplicationVariant> applicationVariants
+    File monkeyOutputFile
 
     {
         group = 'verification'
@@ -28,11 +28,10 @@ class MonkeyTask extends DefaultTask {
         def adbExe = subproject.extensions.getByType(AppExtension).adbExe
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(subproject.logger))
         connectedDeviceProvider.init()
-        File monkeyOutputFile = subproject.getRootProject().file('monkey.txt')
-        monkeyOutputFile.delete()
         applicationVariants.each {
             variant ->
-                def command = 'monkey -v -p ' + variant.applicationId + ' 1000'
+                def command = 'monkey -v -p --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes'
+                +variant.applicationId + ' 1000'
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
