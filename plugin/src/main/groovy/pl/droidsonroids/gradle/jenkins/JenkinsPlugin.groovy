@@ -7,14 +7,47 @@ import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.BuildType
 import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
+import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.tasks.compile.JavaCompile
 
 public class JenkinsPlugin implements Plugin<Project> {
 
-    static def addDSL() {
+    File monkeyOutputFile
+
+    @Override
+    void apply(Project project) {
+
+        DdmPreferences.setTimeOut(30000)
+        addJenkinsTestableDSL()
+        addJavacXlint(project)
+        monkeyOutputFile = project.file('monkey.txt')
+
+        project.allprojects { Project subproject ->
+            subproject.plugins.withType(AppPlugin) {
+                addJenkinsReleaseBuildType(subproject)
+                subproject.afterEvaluate {
+                    addMonkeyTask(subproject)
+                }
+            }
+        }
+        addCleanMonkeyOutputTask(project, monkeyOutputFile)
+    }
+
+    def addCleanMonkeyOutputTask(Project project, monkeyOutputFile) {
+        def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', new Action<Task>() {
+            @Override
+            void execute(Task task) {
+                monkeyOutputFile.delete()
+            }
+        })
+        project.clean.dependsOn cleanMonkeyOutput
+    }
+
+    static def addJenkinsTestableDSL() {
         DefaultProductFlavor.metaClass.isJenkinsTestable = null
         DefaultBuildType.metaClass.isJenkinsTestable = null
         ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
@@ -25,8 +58,8 @@ public class JenkinsPlugin implements Plugin<Project> {
         }
     }
 
-    static def addMonkeyTask(Project subproject) {
-        def android = subproject.extensions.getByType(AppExtension)
+    def addMonkeyTask(Project project) {
+        def android = project.extensions.getByType(AppExtension)
         def applicationVariants = android.applicationVariants.findAll {
             if (it.buildType.isJenkinsTestable != null) {
                 return it.buildType.isJenkinsTestable
@@ -41,34 +74,12 @@ public class JenkinsPlugin implements Plugin<Project> {
         if (applicationVariants.isEmpty()) {
             throw new GradleException("No jenkins testable application variants found")
         }
-        File monkeyOutputFile = subproject.getRootProject().file('monkey.txt')
-        def monkeyTask = subproject.tasks.create('connectedMonkeyJenkinsTest', MonkeyTask, {
-            it.subproject = subproject
+        def monkeyTask = project.tasks.create('connectedMonkeyJenkinsTest', MonkeyTask, {
+            it.subproject = project
             it.applicationVariants = applicationVariants
             it.monkeyOutputFile = monkeyOutputFile
         })
-        def cleanMonkeyOutputTask = subproject.tasks.create('cleanMonkeyOutput', CleanMonkeyOutputTask, {
-            it.monkeyOutputFile = monkeyOutputFile
-        })
-        applicationVariants.each { cleanMonkeyOutputTask.dependsOn subproject.tasks.getByPath('clean') }
         applicationVariants.each { monkeyTask.dependsOn it.install }
-    }
-
-    @Override
-    void apply(Project project) {
-
-        DdmPreferences.setTimeOut(30000)
-        addDSL()
-        addJavacXlint(project)
-
-        project.allprojects { Project subproject ->
-            subproject.plugins.withType(AppPlugin) {
-                addJenkinsReleaseBuildType(subproject)
-                subproject.afterEvaluate {
-                    addMonkeyTask(subproject)
-                }
-            }
-        }
     }
 
     def addJenkinsReleaseBuildType(def subproject) {

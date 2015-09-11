@@ -30,8 +30,7 @@ class MonkeyTask extends DefaultTask {
         connectedDeviceProvider.init()
         applicationVariants.each {
             variant ->
-                def command = 'monkey -v -p --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes'
-                +variant.applicationId + ' 1000'
+                def command = 'monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ' + variant.applicationId + ' 1000'
                 connectedDeviceProvider.getDevices().findAll {
                     it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
                 }.each { device ->
