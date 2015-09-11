@@ -14,8 +14,8 @@ class JenkinsPluginTest {
 
     @Before void setUp() {
         project = ProjectBuilder.builder().build()
-        project.pluginManager.apply 'com.android.application'
         project.pluginManager.apply JenkinsPlugin.class
+        project.pluginManager.apply 'com.android.application'
     }
 
     @Test

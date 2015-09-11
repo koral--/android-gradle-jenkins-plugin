@@ -34,17 +34,16 @@ public class JenkinsPlugin implements Plugin<Project> {
                 }
             }
         }
-        addCleanMonkeyOutputTask(project, monkeyOutputFile)
+        addCleanMonkeyOutputTask(project)
     }
 
-    def addCleanMonkeyOutputTask(Project project, monkeyOutputFile) {
+    def addCleanMonkeyOutputTask(Project project) {
         def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', new Action<Task>() {
             @Override
             void execute(Task task) {
                 monkeyOutputFile.delete()
             }
         })
-        project.clean.dependsOn cleanMonkeyOutput
     }
 
     static def addJenkinsTestableDSL() {
