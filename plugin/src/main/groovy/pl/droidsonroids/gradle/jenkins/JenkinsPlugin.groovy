@@ -76,7 +76,7 @@ public class JenkinsPlugin implements Plugin<Project> {
             throw new GradleException('No jenkins testable application variants found')
         }
         def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
-            it.init(project, applicationVariants, monkeyOutputFile)
+            it.init(project, applicationVariants, owner.monkeyOutputFile)
         })
         applicationVariants.each { monkeyTask.dependsOn it.install }
     }
