@@ -12,6 +12,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.compile.JavaCompile
 
 public class JenkinsPlugin implements Plugin<Project> {
@@ -20,7 +21,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-
+        project.pluginManager.apply(BasePlugin)
         DdmPreferences.setTimeOut(30000)
         addJenkinsTestableDSL()
         addJavacXlint(project)
@@ -44,6 +45,7 @@ public class JenkinsPlugin implements Plugin<Project> {
                 monkeyOutputFile.delete()
             }
         })
+        project.clean.dependsOn cleanMonkeyOutput
     }
 
     static def addJenkinsTestableDSL() {
@@ -71,12 +73,10 @@ public class JenkinsPlugin implements Plugin<Project> {
             false
         }
         if (applicationVariants.isEmpty()) {
-            throw new GradleException("No jenkins testable application variants found")
+            throw new GradleException('No jenkins testable application variants found')
         }
-        def monkeyTask = project.tasks.create('connectedMonkeyJenkinsTest', MonkeyTask, {
-            it.subproject = project
-            it.applicationVariants = applicationVariants
-            it.monkeyOutputFile = monkeyOutputFile
+        def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
+            it.init(project, applicationVariants, monkeyOutputFile)
         })
         applicationVariants.each { monkeyTask.dependsOn it.install }
     }

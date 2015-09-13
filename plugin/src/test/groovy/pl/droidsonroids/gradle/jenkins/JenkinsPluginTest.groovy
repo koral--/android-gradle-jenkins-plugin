@@ -1,34 +1,51 @@
 package pl.droidsonroids.gradle.jenkins
 
+import com.android.build.gradle.AppExtension
 import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.ProductFlavor
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Before
 import org.junit.Test
-import static org.junit.Assert.*
+import static org.assertj.core.api.Assertions.*;
 
-class JenkinsPluginTest {
-    Project project
-
-    @Before void setUp() {
-        project = ProjectBuilder.builder().build()
-        project.pluginManager.apply JenkinsPlugin.class
-        project.pluginManager.apply 'com.android.application'
-    }
+public class JenkinsPluginTest extends BasePluginTest {
 
     @Test
     void testAddJenkinsTestableBuildType() {
         DefaultBuildType buildType = new DefaultBuildType("test")
         buildType.jenkinsTestable true
-        assertTrue(buildType.isJenkinsTestable)
+        assertThat(buildType.isJenkinsTestable).isTrue()
     }
 
     @Test
     void testAddJenkinsTestableFlavor() {
         ProductFlavor flavor = new DefaultProductFlavor("test")
         flavor.jenkinsTestable true
-        assertTrue(flavor.isJenkinsTestable)
+        assertThat(flavor.isJenkinsTestable).isTrue()
+    }
+
+    @Test
+    void testBuildTypeOverriding() {
+        android.buildTypes.create('dev', {
+            jenkinsTestable true
+        })
+        android.buildTypes.create('store', {
+            jenkinsTestable false
+        })
+        android.productFlavors.create('staging', {
+            jenkinsTestable true
+        })
+        android.productFlavors.create('production', {
+            jenkinsTestable false
+        })
+        project.evaluate()
+        def expectedTestableVariantNames = ['productionDev',
+                                            'productionJenkinsRelease',
+                                            'stagingDebug',
+                                            'stagingDev',
+                                            'stagingRelease',
+                                            'stagingJenkinsRelease']
+        def testableVariantNames = []
+        project.tasks.getByName(MonkeyTask.MONKEY_TASK_NAME).applicationVariants.each { testableVariantNames.add it.name }
+        assertThat(testableVariantNames).hasSameElementsAs(expectedTestableVariantNames)
     }
 }
