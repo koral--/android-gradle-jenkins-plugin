@@ -3,6 +3,7 @@ package pl.droidsonroids.gradle.jenkins
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceException
 import com.android.ddmlib.AdbCommandRejectedException
+import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.utils.ILogger
 import com.android.utils.StdLogger
@@ -32,7 +33,7 @@ public class Cleaner {
 
     def static cleanAllEmulators(ILogger logger) {
         def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
-        if (!adbLocation.exists() || !adbLocation.canExecute()) {
+        if (!adbLocation.canExecute()) {
             throw new FileNotFoundException('ADB binary not found')
         }
 

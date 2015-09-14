@@ -1,2 +1,2 @@
 include ':plugin'
-include ':emulatorCleaner'
+include ':emulatorCleaner', ':emulatorUnlocker'
