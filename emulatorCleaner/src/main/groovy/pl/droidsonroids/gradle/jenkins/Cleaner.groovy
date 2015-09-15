@@ -1,25 +1,33 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.builder.testing.ConnectedDeviceProvider
+import com.android.builder.testing.api.DeviceConnector
 import com.android.builder.testing.api.DeviceException
 import com.android.ddmlib.AdbCommandRejectedException
-import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.utils.ILogger
 import com.android.utils.StdLogger
+import groovy.transform.TupleConstructor
 
 import java.util.concurrent.TimeoutException
 
 import static java.util.concurrent.TimeUnit.SECONDS
 
+@TupleConstructor
 public class Cleaner {
 
     static final int ADB_COMMAND_TIMEOUT_SECONDS = 5
+    ILogger logger
 
     public static void main(String[] args) throws Exception {
         def logger = new StdLogger(StdLogger.Level.VERBOSE)
+        def cleaner = new Cleaner(logger)
+        cleaner.clean()
+    }
+
+    def clean() {
         try {
-            cleanAllEmulators(logger)
+            cleanConnectedDevices()
         } catch (DeviceException | AdbCommandRejectedException | ShellCommandUnresponsiveException | IOException | TimeoutException e) {
             logger.error(e, null)
             System.exit(1)
@@ -31,19 +39,19 @@ public class Cleaner {
         System.exit(0)
     }
 
-    def static cleanAllEmulators(ILogger logger) {
+    def cleanConnectedDevices() {
         def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
-        if (!adbLocation.canExecute()) {
-            throw new FileNotFoundException('ADB binary not found')
-        }
 
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, logger)
         connectedDeviceProvider.init()
-        connectedDeviceProvider.getDevices()
-                .each { device ->
-            device.executeShellCommand('pm list packages -3', new AppUninstaller(device, logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-            device.executeShellCommand('rm -r /sdcard/*', new StdOutputReceiver(logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        connectedDeviceProvider.getDevices().each { device ->
+            cleanDevice(device)
         }
         connectedDeviceProvider.terminate()
+    }
+
+    def cleanDevice(DeviceConnector device) {
+        device.executeShellCommand('pm list packages -3', new AppUninstaller(device, logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('rm -r /sdcard/*', new StdOutputReceiver(logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
     }
 }

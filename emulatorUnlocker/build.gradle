@@ -4,7 +4,8 @@ apply plugin: 'application'
 dependencies {
     compile 'org.codehaus.groovy:groovy:2.4.4'
     compile 'com.android.tools.build:gradle:1.3.1'
+    testCompile 'junit:junit:4.12'
     compile project(':emulatorCleaner') //TODO extract common part
 }
 
-mainClassName = 'pl.droidsonroids.gradle.jenkins.Cleaner'
+mainClassName = 'pl.droidsonroids.gradle.jenkins.Unlocker'

@@ -6,61 +6,72 @@ import com.android.utils.StdLogger
 
 import static java.util.concurrent.TimeUnit.SECONDS
 
-public class Unlocker {
+public class Unlocker implements AndroidDebugBridge.IDeviceChangeListener {
 
-    static final int ADB_COMMAND_TIMEOUT_SECONDS = 5
-    static def outputReceiver = new StdOutputReceiver(new StdLogger(StdLogger.Level.VERBOSE))
-
+    public static final String ANIMATIONS_SQL_FILE_REMOTE_PATH = '/data/local/tmp/animations.sql'
+    def outputReceiver = new StdOutputReceiver(new StdLogger(StdLogger.Level.VERBOSE))
+    def bridge
+    String animationsSqlFilePath
 
     public static void main(String[] args) throws Exception {
+        new Unlocker().unlock()
+    }
 
-        def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
-        if (!adbLocation.canExecute()) {
-            throw new FileNotFoundException('ADB binary not found')
-        }
+    Unlocker() {
+        def animationsSqlFile = File.createTempFile('animations', 'sql')
+        animationsSqlFile.deleteOnExit()
+        animationsSqlFile << getClass().getResourceAsStream('animations.sql')
+        animationsSqlFilePath = animationsSqlFile.absolutePath
 
         AndroidDebugBridge.initIfNeeded(false)
-        def bridge = AndroidDebugBridge.createBridge(adbLocation.absolutePath, false)
-        bridge.hasInitialDeviceList()
-        bridge.addDeviceChangeListener(new AndroidDebugBridge.IDeviceChangeListener() {
-            @Override
-            void deviceConnected(IDevice device) {
-                println 'conn ' + device.name
-                unlock(device)
-            }
+        def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
+        bridge = AndroidDebugBridge.createBridge(adbLocation.absolutePath, false)
+    }
 
-            @Override
-            void deviceDisconnected(IDevice device) {
-                println 'dc ' + device.name
-            }
+    def unlock() {
+        bridge.addDeviceChangeListener(this)
+        unlockAlreadyConnectedDevices()
+        waitForever()
+    }
 
-            @Override
-            void deviceChanged(IDevice device, int changeMask) {
-                println changeMask + " " + device.state
-                if (changeMask == IDevice.CHANGE_STATE) {
-                    unlock(device)
-                }
-            }
-
-        })
-        bridge.getDevices().each {
-            unlock(it)
+    def unlockAlreadyConnectedDevices() {
+        bridge.getDevices().each { IDevice device ->
+            unlock(device)
         }
+    }
 
-        synchronized (Unlocker.class) {
+    @SuppressWarnings("GroovyInfiniteLoopStatement")
+    def waitForever() {
+        synchronized (this) {
             while (true) {
                 wait()
             }
         }
     }
 
-    static def unlock(IDevice device) {
+    def unlock(IDevice device) {
         if (!device.isOnline()) {
             return
         }
+        device.pushFile(animationsSqlFilePath, ANIMATIONS_SQL_FILE_REMOTE_PATH)
+        device.executeShellCommand("sqlite3 /data/data/com.android.providers.settings/databases/settings.db < ${ANIMATIONS_SQL_FILE_REMOTE_PATH}", outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('input keyevent 82', outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('input keyevent 4', outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        //TODO disable animations
     }
 
+    @Override
+    void deviceConnected(IDevice device) {
+        unlock(device)
+    }
+
+    @Override
+    void deviceDisconnected(IDevice device) {
+    }
+
+    @Override
+    void deviceChanged(IDevice device, int changeMask) {
+        if (changeMask == IDevice.CHANGE_STATE) {
+            unlock(device)
+        }
+    }
 }
