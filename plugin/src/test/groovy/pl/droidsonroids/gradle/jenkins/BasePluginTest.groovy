@@ -15,7 +15,7 @@ abstract class BasePluginTest {
         project.pluginManager.apply JenkinsPlugin.class
         project.pluginManager.apply 'com.android.application'
         android = project.extensions.getByType(AppExtension)
-        android.defaultConfig.setApplicationId 'pl.droidsonroid.testapplication'
+        android.defaultConfig.setApplicationId 'pl.droidsonroids.testapplication'
         android.defaultConfig.setSigningConfig android.signingConfigs.jenkinsRelease
         android.defaultConfig.setMinSdkVersion(1)
         android.buildToolsVersion '23.0.1'

@@ -55,8 +55,8 @@ public class Unlocker implements AndroidDebugBridge.IDeviceChangeListener {
         }
         device.pushFile(animationsSqlFilePath, ANIMATIONS_SQL_FILE_REMOTE_PATH)
         device.executeShellCommand("sqlite3 /data/data/com.android.providers.settings/databases/settings.db < ${ANIMATIONS_SQL_FILE_REMOTE_PATH}", outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('input keyevent 82', outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('input keyevent 4', outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('input keyevent 82', outputReceiver, 10, SECONDS)
+        device.executeShellCommand('input keyevent 4', outputReceiver, 10, SECONDS)
     }
 
     @Override
