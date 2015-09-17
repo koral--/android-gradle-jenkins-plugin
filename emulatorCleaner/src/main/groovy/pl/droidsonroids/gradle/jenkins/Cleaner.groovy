@@ -7,17 +7,20 @@ import com.android.ddmlib.AdbCommandRejectedException
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.utils.ILogger
 import com.android.utils.StdLogger
-import groovy.transform.TupleConstructor
 
 import java.util.concurrent.TimeoutException
 
 import static java.util.concurrent.TimeUnit.SECONDS
 
-@TupleConstructor
 public class Cleaner {
 
+    private final LoggerBasedOutputReceiver outputReceiver
+
+    Cleaner(ILogger logger) {
+        outputReceiver = new LoggerBasedOutputReceiver(logger)
+    }
+
     static final int ADB_COMMAND_TIMEOUT_SECONDS = 5
-    ILogger logger
 
     public static void main(String[] args) throws Exception {
         def logger = new StdLogger(StdLogger.Level.VERBOSE)
@@ -29,11 +32,11 @@ public class Cleaner {
         try {
             cleanConnectedDevices()
         } catch (DeviceException | AdbCommandRejectedException | ShellCommandUnresponsiveException | IOException | TimeoutException e) {
-            logger.error(e, null)
+            outputReceiver.logger.error(e, null)
             System.exit(1)
         }
         catch (Throwable t) {
-            logger.error(t, null)
+            outputReceiver.logger.error(t, null)
             System.exit(2)
         }
         System.exit(0)
@@ -42,7 +45,7 @@ public class Cleaner {
     def cleanConnectedDevices() {
         def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
 
-        def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, logger)
+        def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, outputReceiver.logger)
         connectedDeviceProvider.init()
         connectedDeviceProvider.getDevices().each { device ->
             cleanDevice(device)
@@ -51,7 +54,9 @@ public class Cleaner {
     }
 
     def cleanDevice(DeviceConnector device) {
-        device.executeShellCommand('pm list packages -3', new AppUninstaller(device, logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('rm -r /sdcard/*', new StdOutputReceiver(logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
     }
 }

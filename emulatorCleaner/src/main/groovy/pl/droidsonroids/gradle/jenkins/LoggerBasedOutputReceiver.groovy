@@ -4,7 +4,7 @@ import com.android.utils.ILogger
 import groovy.transform.TupleConstructor
 
 @TupleConstructor
-class StdOutputReceiver extends BaseOutputReceiver {
+class LoggerBasedOutputReceiver extends BaseOutputReceiver {
     ILogger logger
 
     @Override

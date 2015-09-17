@@ -8,4 +8,4 @@ dependencies {
     compile project(':emulatorCleaner') //TODO extract common part
 }
 
-mainClassName = 'pl.droidsonroids.gradle.jenkins.Unlocker'
+mainClassName = 'pl.droidsonroids.gradle.jenkins.Setuper'
