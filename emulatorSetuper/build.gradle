@@ -1,5 +1,4 @@
 apply plugin: 'groovy'
-apply plugin: 'application'
 
 dependencies {
     compile 'org.codehaus.groovy:groovy:2.4.4'
@@ -8,4 +7,10 @@ dependencies {
     compile project(':emulatorCleaner') //TODO extract common part
 }
 
-mainClassName = 'pl.droidsonroids.gradle.jenkins.Setuper'
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'pl.droidsonroids.gradle.jenkins.Setuper'
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
