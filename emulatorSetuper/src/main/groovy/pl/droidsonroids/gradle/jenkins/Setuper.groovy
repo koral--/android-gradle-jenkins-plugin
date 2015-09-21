@@ -24,7 +24,9 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
         animationsSqlFilePath = animationsSqlFile.absolutePath
 
         AndroidDebugBridge.initIfNeeded(false)
-        def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
+
+        final androidHomeDir = System.getenv('ANDROID_HOME') ?: '/opt/android-sdk-update-manager'
+        def adbLocation = new File(androidHomeDir, 'platform-tools/adb')
         bridge = AndroidDebugBridge.createBridge(adbLocation.absolutePath, false)
     }
 
