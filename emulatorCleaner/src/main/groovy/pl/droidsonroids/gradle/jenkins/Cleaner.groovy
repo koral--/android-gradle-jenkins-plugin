@@ -54,8 +54,10 @@ public class Cleaner {
     }
 
     def cleanDevice(DeviceConnector device) {
+        outputReceiver.logger.info('Cleaning %s', device.name)
         device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        outputReceiver.logger.info('Unlocking %s', device.name)
         device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
     }
