@@ -43,7 +43,8 @@ public class Cleaner {
     }
 
     def cleanConnectedDevices() {
-        def adbLocation = new File(System.getenv('ANDROID_HOME'), 'platform-tools/adb')
+        final androidHomeDir = System.getenv('ANDROID_HOME') ?: '/opt/android-sdk-update-manager'
+        def adbLocation = new File(androidHomeDir, 'platform-tools/adb')
 
         def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, outputReceiver.logger)
         connectedDeviceProvider.init()
