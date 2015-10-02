@@ -1,11 +1,11 @@
 package pl.droidsonroids.gradle.jenkins
 
-import com.android.build.gradle.AppExtension
 import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.ProductFlavor
 import org.junit.Test
-import static org.assertj.core.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat
 
 public class JenkinsPluginTest extends BasePluginTest {
 
@@ -39,11 +39,9 @@ public class JenkinsPluginTest extends BasePluginTest {
         })
         project.evaluate()
         def expectedTestableVariantNames = ['productionDev',
-                                            'productionJenkinsRelease',
                                             'stagingDebug',
                                             'stagingDev',
-                                            'stagingRelease',
-                                            'stagingJenkinsRelease']
+                                            'stagingRelease']
         def testableVariantNames = []
         project.tasks.getByName(MonkeyTask.MONKEY_TASK_NAME).applicationVariants.each { testableVariantNames.add it.name }
         assertThat(testableVariantNames).hasSameElementsAs(expectedTestableVariantNames)
