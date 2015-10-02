@@ -8,7 +8,7 @@ dependencies {
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
-        attributes 'Main-Class': 'pl.droidsonroids.gradle.jenkins.Unlocker'
+        attributes 'Main-Class': 'pl.droidsonroids.gradle.jenkins.Cleaner'
     }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 }

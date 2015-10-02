@@ -7,14 +7,17 @@ import org.junit.Test
 
 import java.util.concurrent.TimeUnit
 
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 public class MonkeyTaskTest extends BasePluginTest {
 
     @Test
     public void testConnectedMonkeyTest() throws Exception {
-        android.variantFilter { variant -> if (!variant.buildType.name.equals('jenkinsRelease'))
-            variant.setIgnore(true)
+        android.buildTypes {
+            release {
+                jenkinsTestable true
+            }
         }
 
         project.evaluate()
