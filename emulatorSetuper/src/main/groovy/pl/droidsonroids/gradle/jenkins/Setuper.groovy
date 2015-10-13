@@ -8,7 +8,7 @@ import static java.util.concurrent.TimeUnit.SECONDS
 
 public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
 
-    public static final String ANIMATIONS_SQL_FILE_REMOTE_PATH = '/data/local/tmp/animations.sql'
+    public static final String ANIMATIONS_SQL_FILE_REMOTE_PATH = '/data/local/tmp/settings.sql'
     def outputReceiver = new LoggerBasedOutputReceiver(new StdLogger(StdLogger.Level.VERBOSE))
     def bridge
     String animationsSqlFilePath
@@ -18,9 +18,9 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
     }
 
     Setuper() {
-        def animationsSqlFile = File.createTempFile('animations', 'sql')
+        def animationsSqlFile = File.createTempFile('settings', 'sql')
         animationsSqlFile.deleteOnExit()
-        animationsSqlFile << getClass().getResourceAsStream('animations.sql')
+        animationsSqlFile << getClass().getResourceAsStream('settings.sql')
         animationsSqlFilePath = animationsSqlFile.absolutePath
 
         AndroidDebugBridge.initIfNeeded(false)
