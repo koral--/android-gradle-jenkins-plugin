@@ -19,7 +19,7 @@ public class JenkinsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         if (GradleVersion.current() < GradleVersion.version('2.6')) {
-            throw new GradleException('Running with unsupported Gradle Version. Use Gradle Wrapper or with Gradle version >= 2.3')
+            throw new GradleException('Running with unsupported Gradle Version. Use Gradle Wrapper or with Gradle version >= 2.6')
         }
 
         project.pluginManager.apply(BasePlugin)
