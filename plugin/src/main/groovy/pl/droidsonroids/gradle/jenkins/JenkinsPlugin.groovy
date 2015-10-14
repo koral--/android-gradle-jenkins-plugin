@@ -10,6 +10,7 @@ import com.android.ddmlib.DdmPreferences
 import org.gradle.api.*
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
 
@@ -17,6 +18,10 @@ public class JenkinsPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        if (GradleVersion.current() < GradleVersion.version('2.6')) {
+            throw new GradleException('Running with unsupported Gradle Version. Use Gradle Wrapper or with Gradle version >= 2.3')
+        }
+
         project.pluginManager.apply(BasePlugin)
         DdmPreferences.setTimeOut(30000)
         addJenkinsTestableDSL()
@@ -74,7 +79,12 @@ public class JenkinsPlugin implements Plugin<Project> {
         def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
             it.init(project, applicationVariants, owner.monkeyOutputFile)
         })
-        applicationVariants.each { monkeyTask.dependsOn it.install }
+        applicationVariants.each {
+            if (it.install == null) {
+                throw new GradleException("Variant ${it.name} is marked testable but it is not installable. Missing singningConfig?")
+            }
+            monkeyTask.dependsOn it.install
+        }
     }
 
     def addJenkinsReleaseBuildType(def subproject) {
