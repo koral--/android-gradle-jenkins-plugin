@@ -7,7 +7,6 @@ import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceProvider
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
@@ -19,7 +18,6 @@ class MonkeyTask extends DefaultTask {
     protected static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
 
     Set<ApplicationVariant> applicationVariants
-    File monkeyOutputFile
     Logger logger
     DeviceProvider connectedDeviceProvider
 
@@ -28,10 +26,9 @@ class MonkeyTask extends DefaultTask {
         description = 'Runs monkey application exerciser on all connected devices and/or emulators'
     }
 
-    def init(Project project, Set<ApplicationVariant> applicationVariants, File monkeyOutputFile) {
+    def init(Set<ApplicationVariant> applicationVariants) {
         this.logger = project.logger
         this.applicationVariants = applicationVariants
-        this.monkeyOutputFile = monkeyOutputFile
         def adbExe = project.extensions.getByType(AppExtension).adbExe
         connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(logger))
     }
@@ -39,20 +36,20 @@ class MonkeyTask extends DefaultTask {
     @TaskAction
     def connectedMonkeyTest() {
         connectedDeviceProvider.init()
+        def monkeyFile = project.rootProject.file('monkey.txt')
         applicationVariants.each { variant ->
             def command = 'monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ' + variant.applicationId + ' 1000'
             connectedDeviceProvider.getDevices().findAll {
                 it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
             }.each { device ->
                 try {
-                    def logcatReceiver = new MonkeyOutputReceiver(new File(monkeyOutputFile.parentFile, "logcat-${device.name}.txt"))
-
-                    Thread.start {
-                        device.executeShellCommand('logcat -v time', logcatReceiver, 0, TimeUnit.SECONDS)
-                    }
+                    def logcatFile = project.rootProject.file("monkey-logcat-${device.name}.txt")
+                    def logcatReceiver = new MonkeyOutputReceiver(logcatFile)
+                    Thread.start { device.executeShellCommand('logcat -v time', logcatReceiver, 0, TimeUnit.SECONDS) }
 
                     logger.lifecycle('Monkeying on {}', device.name)
-                    device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 20, TimeUnit.SECONDS)
+
+                    device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyFile), 20, TimeUnit.SECONDS)
                     logcatReceiver.cancel()
                 } catch (ShellCommandUnresponsiveException ex) {
                     logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.name, ex)

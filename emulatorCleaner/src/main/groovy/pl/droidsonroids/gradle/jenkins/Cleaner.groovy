@@ -55,21 +55,12 @@ public class Cleaner {
     }
 
     def cleanDevice(DeviceConnector device) {
+        outputReceiver.logger.info('Unlocking %s', device.name)
+        device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+
         outputReceiver.logger.info('Cleaning %s', device.name)
         device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        outputReceiver.logger.info('Unlocking %s', device.name)
-        int retryCount = 0
-        while (retryCount < 3) {
-            try {
-                device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-                device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-                break
-            } catch (TimeoutException | AdbCommandRejectedException | ShellCommandUnresponsiveException | IOException e) {
-                outputReceiver.logger.error(e, 'Unlocking failed')
-                Thread.sleep(1000)
-                retryCount++
-            }
-        }
     }
 }

@@ -14,8 +14,6 @@ import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
 
-    File monkeyOutputFile
-
     @Override
     void apply(Project project) {
         if (GradleVersion.current() < GradleVersion.version('2.6')) {
@@ -26,7 +24,6 @@ public class JenkinsPlugin implements Plugin<Project> {
         DdmPreferences.setTimeOut(30000)
         addJenkinsTestableDSL()
         addJavacXlint(project)
-        monkeyOutputFile = project.rootProject.file('monkey.txt')
 
         project.allprojects { Project subproject ->
             subproject.plugins.withType(AppPlugin) {
@@ -43,7 +40,10 @@ public class JenkinsPlugin implements Plugin<Project> {
         def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', new Action<Task>() {
             @Override
             void execute(Task task) {
-                monkeyOutputFile.delete()
+                project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*']).each {
+                    println it.path
+                    it.delete()
+                }
             }
         })
         project.clean.dependsOn cleanMonkeyOutput
@@ -77,7 +77,7 @@ public class JenkinsPlugin implements Plugin<Project> {
             throw new GradleException('No jenkins testable application variants found')
         }
         def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
-            it.init(project, applicationVariants, owner.monkeyOutputFile)
+            it.init(applicationVariants)
         })
         applicationVariants.each {
             if (it.install == null) {
