@@ -39,21 +39,26 @@ class MonkeyTask extends DefaultTask {
     @TaskAction
     def connectedMonkeyTest() {
         connectedDeviceProvider.init()
-        applicationVariants.each {
-            variant ->
-                def command = 'monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ' + variant.applicationId + ' 1000'
-                connectedDeviceProvider.getDevices().findAll {
-                    it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
-                }.each { device ->
-                    def deviceName = device.getName()
-                    try {
-                        logger.lifecycle('Monkeying on {}', deviceName)
-                        device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 20, TimeUnit.SECONDS)
-                    } catch (ShellCommandUnresponsiveException ex) {
-                        logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + deviceName, ex)
-                        throw ex
+        applicationVariants.each { variant ->
+            def command = 'monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ' + variant.applicationId + ' 1000'
+            connectedDeviceProvider.getDevices().findAll {
+                it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
+            }.each { device ->
+                try {
+                    def logcatReceiver = new MonkeyOutputReceiver(new File(monkeyOutputFile.parentFile, "logcat-${device.name}.txt"))
+
+                    Thread.start {
+                        device.executeShellCommand('logcat -v time', logcatReceiver, 0, TimeUnit.SECONDS)
                     }
+
+                    logger.lifecycle('Monkeying on {}', device.name)
+                    device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyOutputFile), 20, TimeUnit.SECONDS)
+                    logcatReceiver.cancel()
+                } catch (ShellCommandUnresponsiveException ex) {
+                    logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.name, ex)
+                    throw ex
                 }
+            }
         }
         connectedDeviceProvider.terminate()
     }

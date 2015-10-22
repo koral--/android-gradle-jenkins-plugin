@@ -5,6 +5,7 @@ import com.android.ddmlib.MultiLineReceiver
 class MonkeyOutputReceiver extends MultiLineReceiver {
 
     PrintWriter printWriter
+    boolean isCancelled
 
     MonkeyOutputReceiver(File outputFile) throws IOException {
         printWriter = new PrintWriter(new BufferedWriter(new FileWriter(outputFile, true), 16 * 1024))
@@ -22,6 +23,10 @@ class MonkeyOutputReceiver extends MultiLineReceiver {
 
     @Override
     public boolean isCancelled() {
-        false
+        isCancelled
+    }
+
+    public void cancel() {
+        isCancelled = true;
     }
 }
