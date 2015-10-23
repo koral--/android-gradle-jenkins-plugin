@@ -17,7 +17,7 @@ public class JenkinsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         if (GradleVersion.current() < GradleVersion.version('2.6')) {
-            throw new GradleException('Running with unsupported Gradle Version. Use Gradle Wrapper or with Gradle version >= 2.6')
+            throw new GradleException("Gradle Version ${GradleVersion.current()} not supported. Use Gradle Wrapper or with Gradle version >= 2.6")
         }
 
         project.pluginManager.apply(BasePlugin)
@@ -41,7 +41,6 @@ public class JenkinsPlugin implements Plugin<Project> {
             @Override
             void execute(Task task) {
                 project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*']).each {
-                    println it.path
                     it.delete()
                 }
             }
