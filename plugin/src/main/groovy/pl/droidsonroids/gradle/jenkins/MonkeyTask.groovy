@@ -5,6 +5,7 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceProvider
+import com.android.ddmlib.NullOutputReceiver
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
@@ -45,7 +46,9 @@ class MonkeyTask extends DefaultTask {
                 try {
                     def logcatFile = project.rootProject.file("monkey-logcat-${device.name}.txt")
                     def logcatReceiver = new MonkeyOutputReceiver(logcatFile)
-                    Thread.start { device.executeShellCommand('logcat -v time', logcatReceiver, 0, TimeUnit.SECONDS) }
+                    Thread.start {
+                        device.executeShellCommand('logcat -v time', logcatReceiver, 0, TimeUnit.SECONDS)
+                    }
 
                     logger.lifecycle('Monkeying on {}', device.name)
 
