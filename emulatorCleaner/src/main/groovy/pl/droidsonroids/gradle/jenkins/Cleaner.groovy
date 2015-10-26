@@ -4,6 +4,7 @@ import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceConnector
 import com.android.builder.testing.api.DeviceException
 import com.android.ddmlib.AdbCommandRejectedException
+import com.android.ddmlib.DdmPreferences
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.utils.ILogger
 import com.android.utils.StdLogger
@@ -29,6 +30,7 @@ public class Cleaner {
     }
 
     def clean() {
+        DdmPreferences.setLogLevel("verbose")
         try {
             cleanConnectedDevices()
         } catch (DeviceException | AdbCommandRejectedException | ShellCommandUnresponsiveException | IOException | TimeoutException e) {
