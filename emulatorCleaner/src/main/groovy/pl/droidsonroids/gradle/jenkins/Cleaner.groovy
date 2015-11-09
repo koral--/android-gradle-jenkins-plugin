@@ -21,7 +21,7 @@ public class Cleaner {
         outputReceiver = new LoggerBasedOutputReceiver(logger)
     }
 
-    static final int ADB_COMMAND_TIMEOUT_SECONDS = 5
+    static final int ADB_COMMAND_TIMEOUT_SECONDS = 30
 
     public static void main(String[] args) throws Exception {
         def logger = new StdLogger(StdLogger.Level.VERBOSE)
@@ -57,12 +57,22 @@ public class Cleaner {
     }
 
     def cleanDevice(DeviceConnector device) {
-        outputReceiver.logger.info('Unlocking %s', device.name)
-        device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-
         outputReceiver.logger.info('Cleaning %s', device.name)
         device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
         device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('rm -r /data/local/tmp/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        int tryCount = 0
+        while (tryCount < 3) {
+            try {
+                outputReceiver.logger.info('Unlocking %s', device.name)
+                device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+                device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+            }
+            catch (Exception ex) {
+                outputReceiver.logger.error(ex, 'Unlocking %s failed', device.name)
+                Thread.sleep(2000)
+            }
+            tryCount++
+        }
     }
 }

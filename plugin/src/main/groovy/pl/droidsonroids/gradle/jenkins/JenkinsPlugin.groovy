@@ -14,6 +14,8 @@ import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
 
+    static final int ADB_COMMAND_TIMEOUT_MILLIS = 300 * 1000
+
     @Override
     void apply(Project project) {
         if (GradleVersion.current() < GradleVersion.version('2.6')) {
@@ -21,7 +23,7 @@ public class JenkinsPlugin implements Plugin<Project> {
         }
 
         project.pluginManager.apply(BasePlugin)
-        DdmPreferences.setTimeOut(30000)
+        DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
         addJenkinsTestableDSL()
         addJavacXlint(project)
 

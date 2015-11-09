@@ -5,7 +5,6 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceProvider
-import com.android.ddmlib.NullOutputReceiver
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
@@ -13,6 +12,8 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
 
 import java.util.concurrent.TimeUnit
+
+import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.ADB_COMMAND_TIMEOUT_MILLIS
 
 class MonkeyTask extends DefaultTask {
 
@@ -52,7 +53,7 @@ class MonkeyTask extends DefaultTask {
 
                     logger.lifecycle('Monkeying on {}', device.name)
 
-                    device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyFile), 20, TimeUnit.SECONDS)
+                    device.executeShellCommand(command, new MonkeyOutputReceiver(monkeyFile), ADB_COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
                     logcatReceiver.cancel()
                 } catch (ShellCommandUnresponsiveException ex) {
                     logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.name, ex)
