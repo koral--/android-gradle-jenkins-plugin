@@ -67,6 +67,7 @@ public class Cleaner {
                 outputReceiver.logger.info('Unlocking %s', device.name)
                 device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
                 device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
+                break
             }
             catch (Exception ex) {
                 outputReceiver.logger.error(ex, 'Unlocking %s failed', device.name)
