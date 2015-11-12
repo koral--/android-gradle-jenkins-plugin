@@ -17,7 +17,7 @@ class AppUninstaller extends BaseOutputReceiver {
             it.split(':', -1)[1]
         }.each {
             logger.info('Uninstalling %s', it)
-            device.uninstallPackage(it, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, logger)
+            device.uninstallPackage(it, Cleaner.ADB_COMMAND_TIMEOUT_MILLIS, logger)
         }
     }
 }

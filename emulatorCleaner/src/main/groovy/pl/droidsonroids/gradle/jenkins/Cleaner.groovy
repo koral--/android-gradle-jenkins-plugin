@@ -11,7 +11,7 @@ import com.android.utils.StdLogger
 
 import java.util.concurrent.TimeoutException
 
-import static java.util.concurrent.TimeUnit.SECONDS
+import static java.util.concurrent.TimeUnit.MILLISECONDS
 
 public class Cleaner {
 
@@ -21,7 +21,7 @@ public class Cleaner {
         outputReceiver = new LoggerBasedOutputReceiver(logger)
     }
 
-    static final int ADB_COMMAND_TIMEOUT_SECONDS = 30
+    static final int ADB_COMMAND_TIMEOUT_MILLIS = 30*1000
 
     public static void main(String[] args) throws Exception {
         def logger = new StdLogger(StdLogger.Level.VERBOSE)
@@ -48,7 +48,7 @@ public class Cleaner {
         final androidHomeDir = System.getenv('ANDROID_HOME') ?: '/opt/android-sdk-update-manager'
         def adbLocation = new File(androidHomeDir, 'platform-tools/adb')
 
-        def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, outputReceiver.logger)
+        def connectedDeviceProvider = new ConnectedDeviceProvider(adbLocation, ADB_COMMAND_TIMEOUT_MILLIS, outputReceiver.logger)
         connectedDeviceProvider.init()
         connectedDeviceProvider.getDevices().each { device ->
             cleanDevice(device)
@@ -58,15 +58,15 @@ public class Cleaner {
 
     def cleanDevice(DeviceConnector device) {
         outputReceiver.logger.info('Cleaning %s', device.name)
-        device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-        device.executeShellCommand('rm -r /data/local/tmp/*', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand('pm list packages -3', new AppUninstaller(device, outputReceiver.logger), ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
+        device.executeShellCommand('rm -r /sdcard/*', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
+        device.executeShellCommand('rm -r /data/local/tmp/*', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
         int tryCount = 0
         while (tryCount < 3) {
             try {
                 outputReceiver.logger.info('Unlocking %s', device.name)
-                device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
-                device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+                device.executeShellCommand('input keyevent 82', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
+                device.executeShellCommand('input keyevent 4', outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
             }
             catch (Exception ex) {
                 outputReceiver.logger.error(ex, 'Unlocking %s failed', device.name)

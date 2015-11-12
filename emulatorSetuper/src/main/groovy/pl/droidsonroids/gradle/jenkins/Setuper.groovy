@@ -58,7 +58,7 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
         device.pushFile(animationsSqlFilePath, ANIMATIONS_SQL_FILE_REMOTE_PATH)
 
         final remoteCommand = "sqlite3 /data/data/com.android.providers.settings/databases/settings.db < ${ANIMATIONS_SQL_FILE_REMOTE_PATH}"
-        device.executeShellCommand(remoteCommand, outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_SECONDS, SECONDS)
+        device.executeShellCommand(remoteCommand, outputReceiver, Cleaner.ADB_COMMAND_TIMEOUT_MILLIS, SECONDS)
     }
 
     @Override

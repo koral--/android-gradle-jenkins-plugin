@@ -11,3 +11,5 @@
 - Monkey output formatting fixed
 ### 1.0.6
 - Monkey output appending fixed
+### 1.0.10
+- Android gradle plugin version bumped to 1.5.0

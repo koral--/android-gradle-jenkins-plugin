@@ -5,9 +5,6 @@ import org.gradle.api.GradleException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Test
 
-/**
- * Created by koral on 14.10.15.
- */
 public class PluginApplyExceptionTest {
 
     @Test(expected = GradleException.class)

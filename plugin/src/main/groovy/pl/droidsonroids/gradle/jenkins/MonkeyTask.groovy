@@ -32,7 +32,7 @@ class MonkeyTask extends DefaultTask {
         this.logger = project.logger
         this.applicationVariants = applicationVariants
         def adbExe = project.extensions.getByType(AppExtension).adbExe
-        connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, new LoggerWrapper(logger))
+        connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(logger))
     }
 
     @TaskAction
