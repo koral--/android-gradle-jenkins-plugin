@@ -9,6 +9,7 @@ import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
 import org.gradle.api.*
 import org.gradle.api.plugins.BasePlugin
+import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.util.GradleVersion
 
@@ -39,14 +40,8 @@ public class JenkinsPlugin implements Plugin<Project> {
     }
 
     def addCleanMonkeyOutputTask(Project project) {
-        def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', new Action<Task>() {
-            @Override
-            void execute(Task task) {
-                project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*']).each {
-                    it.delete()
-                }
-            }
-        })
+        def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', Delete)
+        cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*'])
         project.clean.dependsOn cleanMonkeyOutput
     }
 
