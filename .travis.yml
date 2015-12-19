@@ -3,9 +3,9 @@ language:
   - android
 jdk:
   - oraclejdk8
-android:
-  components:
-    - build-tools-23.0.2
-    - android-23
+before_install:
+  - echo y|android update sdk --all --no-ui --force --filter tools
+  - echo y|android update sdk --all --no-ui --force --filter build-tools-23.0.2
+  - echo y|android update sdk --all --no-ui --force --filter android-23
 script:
   - ./gradlew build --info --stacktrace
