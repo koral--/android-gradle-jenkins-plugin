@@ -16,7 +16,7 @@ public class PluginApplyExceptionTest {
         android.defaultConfig.setApplicationId 'pl.droidsonroids.testapplication'
         android.defaultConfig.setSigningConfig android.signingConfigs.jenkinsRelease
         android.defaultConfig.setMinSdkVersion(1)
-        android.buildToolsVersion '23.0.1'
+        android.buildToolsVersion '23.0.2'
         android.compileSdkVersion 23
         project.evaluate()
     }
@@ -29,7 +29,7 @@ public class PluginApplyExceptionTest {
         def android = project.extensions.getByType(AppExtension)
         android.defaultConfig.setApplicationId 'pl.droidsonroids.testapplication'
         android.defaultConfig.setMinSdkVersion(1)
-        android.buildToolsVersion '23.0.1'
+        android.buildToolsVersion '23.0.2'
         android.compileSdkVersion 23
         android.buildTypes {
             release {
