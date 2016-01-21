@@ -1,3 +1,7 @@
+### 1.0.14
+- monkey hang workaround added
+- monkey timeout reduced to 120s
+- code cleaning
 ### 1.0.11
 - monkey output cleaning task based on gradle's `Delete`
 ### 1.0.10

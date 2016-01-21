@@ -15,7 +15,7 @@ import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
 
-    static final int ADB_COMMAND_TIMEOUT_MILLIS = 300 * 1000
+    static final int ADB_COMMAND_TIMEOUT_MILLIS = 180 * 1000
 
     @Override
     void apply(Project project) {
