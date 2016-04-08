@@ -1,3 +1,5 @@
+### 1.0.15
+- android gradle plugin dependency updated to 2.0.0
 ### 1.0.14
 - monkey hang workaround added
 - monkey timeout reduced to 120s

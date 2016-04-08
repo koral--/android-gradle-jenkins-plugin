@@ -63,14 +63,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 
     def addMonkeyTask(Project project) {
 
-        AndroidBuilder androidBuilder = new AndroidBuilder(
-                project.getName(),
-                "s",
-                new GradleProcessExecutor(project),
-                new GradleJavaProcessExecutor(project),
-                new ExtraModelInfo(project, false),
-                new StdLogger(StdLogger.Level.INFO),
-                true);
         def android = project.extensions.getByType(AppExtension)
         def applicationVariants = android.applicationVariants.findAll {
             if (it.buildType.isJenkinsTestable != null) {
