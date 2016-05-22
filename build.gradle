@@ -1,13 +1,19 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
 }
 
 allprojects {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+	apply plugin: 'groovy'
+	dependencies {
+		compile 'org.codehaus.groovy:groovy:2.4.6'
+		compile 'com.android.tools.build:gradle:2.1.0'
+		testCompile 'junit:junit:4.12'
+	}
 }

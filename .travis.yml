@@ -5,7 +5,9 @@ jdk:
   - oraclejdk8
 before_install:
   - echo y|android update sdk --all --no-ui --force --filter tools
-  - echo y|android update sdk --all --no-ui --force --filter build-tools-23.0.2
+  - echo y|android update sdk --all --no-ui --force --filter build-tools-23.0.3
   - echo y|android update sdk --all --no-ui --force --filter android-23
 script:
   - ./gradlew build --info --stacktrace
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

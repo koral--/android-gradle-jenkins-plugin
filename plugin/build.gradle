@@ -1,16 +1,13 @@
 plugins {
     id 'com.gradle.plugin-publish' version '0.9.4'
 }
-apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
 
 dependencies {
     compile gradleApi()
-    compile 'org.codehaus.groovy:groovy:2.4.6'
-    compile 'com.android.tools.build:gradle:2.1.0'
-    testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.4.1'
-    testCompile 'org.mockito:mockito-core:2.0.52-beta'
+    testCompile 'org.mockito:mockito-core:2.0.53-beta'
 }
 
 group = GROUP
@@ -39,5 +36,12 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
         }
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
     }
 }
