@@ -6,18 +6,18 @@ import groovy.transform.TupleConstructor
 @TupleConstructor
 class AppUninstaller extends BaseOutputReceiver {
 
-    def device
-    ILogger logger
+	def device
+	ILogger logger
 
-    @Override
-    void processNewLines(String[] lines) {
-        lines.findAll {
-            it.startsWith('package:')
-        }.collect {
-            it.split(':', -1)[1]
-        }.each {
-            logger.info('Uninstalling %s', it)
-            device.uninstallPackage(it, Cleaner.ADB_COMMAND_TIMEOUT_MILLIS, logger)
-        }
-    }
+	@Override
+	void processNewLines(String[] lines) {
+		lines.findAll {
+			it.startsWith('package:')
+		}.collect {
+			it.split(':', -1)[1]
+		}.each {
+			logger.info('Uninstalling %s', it)
+			device.uninstallPackage(it, Cleaner.ADB_COMMAND_TIMEOUT_MILLIS, logger)
+		}
+	}
 }

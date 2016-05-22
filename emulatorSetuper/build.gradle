@@ -1,11 +1,11 @@
 dependencies {
-    compile project(':emulatorCleaner')
+	compile project(':emulatorCleaner')
 }
 
 jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest {
-        attributes 'Main-Class': 'pl.droidsonroids.gradle.jenkins.Setuper'
-    }
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	manifest {
+		attributes 'Main-Class': 'pl.droidsonroids.gradle.jenkins.Setuper'
+	}
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }

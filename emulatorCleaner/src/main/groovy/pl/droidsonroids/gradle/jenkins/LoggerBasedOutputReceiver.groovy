@@ -5,10 +5,10 @@ import groovy.transform.TupleConstructor
 
 @TupleConstructor
 class LoggerBasedOutputReceiver extends BaseOutputReceiver {
-    ILogger logger
+	ILogger logger
 
-    @Override
-    void processNewLines(String[] lines) {
-        lines.each { logger.println(it) }
-    }
+	@Override
+	void processNewLines(String[] lines) {
+		lines.each { logger.println(it) }
+	}
 }
