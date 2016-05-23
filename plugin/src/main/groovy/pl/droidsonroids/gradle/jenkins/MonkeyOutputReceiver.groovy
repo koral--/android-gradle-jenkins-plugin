@@ -4,8 +4,8 @@ import com.android.ddmlib.MultiLineReceiver
 
 class MonkeyOutputReceiver extends MultiLineReceiver {
 
-	PrintWriter printWriter
-	boolean isCancelled
+	private final PrintWriter printWriter
+	private boolean isCancelled
 
 	MonkeyOutputReceiver(File outputFile) throws IOException {
 		printWriter = new PrintWriter(new BufferedWriter(new FileWriter(outputFile, true), 16 * 1024))

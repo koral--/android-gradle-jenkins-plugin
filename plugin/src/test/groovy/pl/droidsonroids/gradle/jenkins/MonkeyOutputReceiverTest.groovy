@@ -46,6 +46,6 @@ public class MonkeyOutputReceiverTest {
 	@Test
 	public void testCancel() throws Exception {
 		receiver.cancel()
-		assertThat(receiver.isCancelled).isTrue()
+		assertThat(receiver.isCancelled()).isTrue()
 	}
 }
