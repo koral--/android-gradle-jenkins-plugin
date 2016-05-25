@@ -1,35 +1,18 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.internal.ExtraModelInfo
-import com.android.build.gradle.internal.process.GradleJavaProcessExecutor
-import com.android.build.gradle.internal.process.GradleProcessExecutor
-import com.android.builder.core.AndroidBuilder
-import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultProductFlavor
-import com.android.builder.core.DefaultProductFlavor
-import com.android.builder.model.BuildType
 import com.android.builder.model.BuildType
 import com.android.builder.model.ProductFlavor
-import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
-import com.android.ddmlib.DdmPreferences
-import com.android.utils.StdLogger
-import org.gradle.api.*
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.Delete
 import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.util.GradleVersion
 import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
@@ -76,7 +59,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 	}
 
 	def addMonkeyTask(Project project) {
-
 		def android = project.extensions.getByType(AppExtension)
 		def applicationVariants = android.applicationVariants.findAll {
 			if (it.buildType.isJenkinsTestable != null) {
