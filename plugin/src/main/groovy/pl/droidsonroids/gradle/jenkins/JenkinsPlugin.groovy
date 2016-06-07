@@ -2,6 +2,8 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.LibraryPlugin
 import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.BuildType
@@ -18,11 +20,12 @@ import org.gradle.util.GradleVersion
 public class JenkinsPlugin implements Plugin<Project> {
 
 	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180 * 1000
+	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
 
 	@Override
 	void apply(Project project) {
 		if (GradleVersion.current() < GradleVersion.version('2.6')) {
-			throw new GradleException("Gradle Version ${GradleVersion.current()} not supported. Use Gradle Wrapper or with Gradle version >= 2.6")
+			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.6")
 		}
 
 		project.pluginManager.apply(BasePlugin)
@@ -31,10 +34,21 @@ public class JenkinsPlugin implements Plugin<Project> {
 		addJavacXlint(project)
 
 		project.allprojects { Project subproject ->
+			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
-				addJenkinsReleaseBuildType(subproject)
+				def android = subproject.extensions.getByType(AppExtension)
+				if (disablePredex) {
+					android.dexOptions.setPreDexLibraries(false)
+				}
+				addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {
-					addMonkeyTask(subproject)
+					addMonkeyTask(subproject, android)
+				}
+			}
+			subproject.plugins.withType(LibraryPlugin) {
+				def android = project.extensions.getByType(LibraryExtension)
+				if (disablePredex) {
+					android.dexOptions.setPreDexLibraries(false)
 				}
 			}
 		}
@@ -58,8 +72,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 		}
 	}
 
-	def addMonkeyTask(Project project) {
-		def android = project.extensions.getByType(AppExtension)
+	def addMonkeyTask(Project project, AppExtension android) {
 		def applicationVariants = android.applicationVariants.findAll {
 			if (it.buildType.isJenkinsTestable != null) {
 				return it.buildType.isJenkinsTestable
@@ -85,8 +98,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 		}
 	}
 
-	def addJenkinsReleaseBuildType(def subproject) {
-		def android = subproject.extensions.getByType(AppExtension)
+	def addJenkinsReleaseBuildType(AppExtension android) {
 		android.signingConfigs {
 			jenkinsRelease {
 				storeFile new File("$System.env.HOME/.android/debug.keystore")

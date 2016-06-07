@@ -7,7 +7,7 @@ apply plugin: 'jacoco'
 dependencies {
 	compile gradleApi()
 	testCompile 'org.assertj:assertj-core:3.4.1'
-	testCompile 'org.mockito:mockito-core:2.0.53-beta'
+	testCompile 'org.mockito:mockito-core:2.0.54-beta'
 }
 
 group = GROUP
