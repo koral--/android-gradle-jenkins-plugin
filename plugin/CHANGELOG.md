@@ -1,3 +1,8 @@
+### 1.0.17
+- dependencies versions bump
+- predexing library control added
+### 1.0.16
+- dependencies versions bump
 ### 1.0.15
 - android gradle plugin dependency updated to 2.0.0
 ### 1.0.14
