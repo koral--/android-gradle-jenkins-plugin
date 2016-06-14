@@ -1,3 +1,7 @@
+### 1.0.18
+- Gradle version updated to 2.14
+- dependencies versions bump 
+
 ### 1.0.17
 - dependencies versions bump
 - predexing library control added

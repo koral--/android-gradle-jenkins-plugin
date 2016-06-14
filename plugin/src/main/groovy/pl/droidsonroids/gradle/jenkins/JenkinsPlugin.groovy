@@ -110,9 +110,9 @@ public class JenkinsPlugin implements Plugin<Project> {
 	}
 
 	def addJavacXlint(Project project) {
-		project.allprojects {
+		project.allprojects { Project subproject ->
 			gradle.projectsEvaluated {
-				tasks.withType(JavaCompile) {
+				subproject.tasks.withType(JavaCompile) {
 					options.compilerArgs << '-Xlint'
 				}
 			}
