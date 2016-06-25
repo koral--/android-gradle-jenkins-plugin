@@ -31,6 +31,6 @@ public class MonkeyTaskTest extends BasePluginTest {
 		doNothing().when(mockDevice).executeShellCommand(anyString(), any(IShellOutputReceiver.class), anyLong(), any(TimeUnit.class))
 		when(monkeyTask.connectedDeviceProvider.getDevices()).thenReturn(Collections.singletonList(mockDevice))
 		monkeyTask.connectedMonkeyTest()
-		verify(mockDevice).executeShellCommand(endsWith(android.defaultConfig.applicationId + ' 1000'), any(IShellOutputReceiver.class), anyLong(), any(TimeUnit.class))
+		verify(mockDevice).executeShellCommand(endsWith("${android.defaultConfig.applicationId} 1000"), any(IShellOutputReceiver.class), anyLong(), any(TimeUnit.class))
 	}
 }

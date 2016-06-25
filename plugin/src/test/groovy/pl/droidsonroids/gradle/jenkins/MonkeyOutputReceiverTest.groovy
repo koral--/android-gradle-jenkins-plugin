@@ -48,4 +48,9 @@ public class MonkeyOutputReceiverTest {
 		receiver.cancel()
 		assertThat(receiver.isCancelled()).isTrue()
 	}
+
+	@Test(expected = IOException.class)
+	public void testNonWritableFile() {
+		new MonkeyOutputReceiver(new File(file, "test.txt"))
+	}
 }

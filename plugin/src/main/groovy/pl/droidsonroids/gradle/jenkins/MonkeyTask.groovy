@@ -25,7 +25,7 @@ class MonkeyTask extends DefaultTask {
 	Logger logger
 	DeviceProvider connectedDeviceProvider
 
-	{
+	public MonkeyTask() {
 		group = 'verification'
 		description = 'Runs monkey application exerciser on all connected devices and/or emulators'
 	}
@@ -43,7 +43,7 @@ class MonkeyTask extends DefaultTask {
 		def monkeyFile = project.rootProject.file('monkey.txt')
 		def executor = Executors.newScheduledThreadPool(1)
 		applicationVariants.each { variant ->
-			def command = 'monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ' + variant.applicationId + ' 1000'
+			def command = "monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ${variant.applicationId} 1000"
 			connectedDeviceProvider.getDevices().findAll {
 				it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
 			}.each { device ->
@@ -58,13 +58,13 @@ class MonkeyTask extends DefaultTask {
 					def future = executor.schedule({ monkeyOutputReceiver.cancel() }, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
 					device.executeShellCommand(command, monkeyOutputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
 
-					if (monkeyOutputReceiver.isCancelled) {
+					if (monkeyOutputReceiver.isCancelled()) {
 						throw new TimeoutException("Monkey hanged, see monkey.txt and $logcatFileName for details")
 					}
 					future.cancel(false)
 					logcatReceiver.cancel()
 				} catch (ShellCommandUnresponsiveException ex) {
-					logger.log(LogLevel.ERROR, 'Monkey timeout on device ' + device.name, ex)
+					logger.log(LogLevel.ERROR, "Monkey timeout on device ${device.name}", ex)
 					throw ex
 				}
 			}

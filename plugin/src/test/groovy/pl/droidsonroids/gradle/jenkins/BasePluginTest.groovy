@@ -18,7 +18,7 @@ abstract class BasePluginTest {
 		android.defaultConfig.setApplicationId 'pl.droidsonroids.testapplication'
 		android.defaultConfig.setSigningConfig android.signingConfigs.jenkinsRelease
 		android.defaultConfig.setMinSdkVersion(1)
-		android.buildToolsVersion '23.0.3'
-		android.compileSdkVersion 23
+		android.buildToolsVersion Constants.BUILD_TOOLS_VERSION
+		android.compileSdkVersion Constants.ANDROID_SDK_VERSION
 	}
 }
