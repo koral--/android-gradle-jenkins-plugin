@@ -7,7 +7,7 @@ import org.junit.Test
 
 import java.util.concurrent.TimeUnit
 
-import static org.mockito.Matchers.*
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 
 public class MonkeyTaskTest extends BasePluginTest {

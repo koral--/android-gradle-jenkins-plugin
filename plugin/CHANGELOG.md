@@ -1,24 +1,25 @@
 ### 1.0.18
-- Gradle version updated to 2.14
-- dependencies versions bump 
+- Gradle version updated to 2.14.1
+- Android gradle plugin dependency updated to 2.1.3
+- Dependencies versions bump 
 
 ### 1.0.17
-- dependencies versions bump
-- predexing library control added
+- Dependencies versions bump
+- Predexing library control added
 
 ### 1.0.16
-- dependencies versions bump
+- Dependencies versions bump
 
 ### 1.0.15
-- android gradle plugin dependency updated to 2.0.0
+- Android gradle plugin dependency updated to 2.0.0
 
 ### 1.0.14
-- monkey hang workaround added
-- monkey timeout reduced to 120s
-- code cleaning
+- Monkey hang workaround added
+- Monkey timeout reduced to 120s
+- Code cleaning
 
 ### 1.0.11
-- monkey output cleaning task based on gradle's `Delete`
+- Monkey output cleaning task based on gradle's `Delete`
 
 ### 1.0.10
 - Android gradle plugin version bumped to 1.5.0
