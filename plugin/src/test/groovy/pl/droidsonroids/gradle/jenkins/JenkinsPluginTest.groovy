@@ -3,10 +3,12 @@ package pl.droidsonroids.gradle.jenkins
 import com.android.builder.core.DefaultBuildType
 import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.model.ProductFlavor
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.assertj.core.api.Assertions.assertThat
 
+@Ignore("Migrate to functional tests")
 public class JenkinsPluginTest extends BasePluginTest {
 
 	@Test

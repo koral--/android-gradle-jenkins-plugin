@@ -1,11 +1,6 @@
 package pl.droidsonroids.gradle.jenkins
 
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.LibraryPlugin
-import com.android.builder.core.DefaultBuildType
-import com.android.builder.core.DefaultProductFlavor
+import com.android.build.gradle.*
 import com.android.builder.model.BuildType
 import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
@@ -14,7 +9,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.Delete
-import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
@@ -28,63 +22,65 @@ public class JenkinsPlugin implements Plugin<Project> {
 			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.6")
 		}
 
-		project.pluginManager.apply(BasePlugin)
 		DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
-		addJenkinsTestableDSL()
-		addJavacXlint(project)
-
+		Utils.addJavacXlint(project)
 		project.allprojects { Project subproject ->
+			project.pluginManager.apply(BasePlugin)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
-				def android = subproject.extensions.getByType(AppExtension)
-				if (disablePredex) {
-					android.dexOptions.setPreDexLibraries(false)
+				def buildTypesDir = new File(project.buildDir, 'jenkinsTestableBuildTypes')
+				def productFlavorsDir = new File(project.buildDir, 'jenkinsTestableProductFlavors')
+				subproject.gradle.buildFinished {
+					buildTypesDir.deleteDir()
+					productFlavorsDir.deleteDir()
 				}
-				addJenkinsReleaseBuildType(android)
+				def testableUnits = new MonkeyTestableUnits(buildTypesDir, productFlavorsDir)
+				addJenkinsTestableDSL(testableUnits)
+				def android = subproject.extensions.getByType(AppExtension)
+				Utils.setDexOptions(android, disablePredex)
+				Utils.addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {
-					addMonkeyTask(subproject, android)
+					addMonkeyTask(subproject, testableUnits)
 				}
 			}
 			subproject.plugins.withType(LibraryPlugin) {
-				def android = project.extensions.getByType(LibraryExtension)
-				if (disablePredex) {
-					android.dexOptions.setPreDexLibraries(false)
-				}
+				Utils.setDexOptions(project.extensions.getByType(LibraryExtension), disablePredex)
+			}
+			subproject.plugins.withType(TestPlugin) {
+				Utils.setDexOptions(project.extensions.getByType(TestExtension), disablePredex)
 			}
 		}
 		addCleanMonkeyOutputTask(project)
 	}
 
-	def addCleanMonkeyOutputTask(Project project) {
+	static def addCleanMonkeyOutputTask(Project project) {
 		def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', Delete)
 		cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*'])
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 
-	static def addJenkinsTestableDSL() {
-		DefaultProductFlavor.metaClass.isJenkinsTestable = null
-		DefaultBuildType.metaClass.isJenkinsTestable = null
+	static def addJenkinsTestableDSL(MonkeyTestableUnits testableUnits) {
 		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			delegate.isJenkinsTestable = isJenkinsTestable
+			testableUnits.productFlavors[delegate.name] = isJenkinsTestable
 		}
 		BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			delegate.isJenkinsTestable = isJenkinsTestable
+			testableUnits.buildTypes[delegate.name] = isJenkinsTestable
 		}
 	}
 
-	def addMonkeyTask(Project project, AppExtension android) {
-		def applicationVariants = android.applicationVariants.findAll {
-			if (it.buildType.isJenkinsTestable != null) {
-				return it.buildType.isJenkinsTestable
+	static def addMonkeyTask(Project project, MonkeyTestableUnits testableUnits) {
+		def applicationVariants = project.extensions.getByType(AppExtension).applicationVariants.findAll {
+			if (testableUnits.buildTypes[it.buildType.name] != null) {
+				return testableUnits.buildTypes[it.buildType.name]
 			}
 			for (ProductFlavor flavor : it.productFlavors) {
-				if (flavor.isJenkinsTestable != null) {
-					return flavor.isJenkinsTestable
+				if (testableUnits.productFlavors[flavor.name] != null) {
+					return testableUnits.productFlavors[flavor.name]
 				}
 			}
 			false
 		}
-		if (applicationVariants.isEmpty()) {
+		if (applicationVariants.empty) {
 			throw new GradleException('No jenkins testable application variants found')
 		}
 		def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
@@ -95,27 +91,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 				throw new GradleException("Variant ${it.name} is marked testable but it is not installable. Missing singningConfig?")
 			}
 			monkeyTask.dependsOn it.install
-		}
-	}
-
-	def addJenkinsReleaseBuildType(AppExtension android) {
-		android.signingConfigs {
-			jenkinsRelease {
-				storeFile new File("$System.env.HOME/.android/debug.keystore")
-				storePassword 'android'
-				keyAlias 'androiddebugkey'
-				keyPassword 'android'
-			}
-		}
-	}
-
-	def addJavacXlint(Project project) {
-		project.allprojects { Project subproject ->
-			gradle.projectsEvaluated {
-				subproject.tasks.withType(JavaCompile) {
-					options.compilerArgs << '-Xlint'
-				}
-			}
 		}
 	}
 }

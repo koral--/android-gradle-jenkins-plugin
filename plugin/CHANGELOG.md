@@ -1,3 +1,7 @@
+### 1.0.19
+- Gradle daemon support fixed for gradle 2.14.1+ - [#1](https://github.com/koral--/android-gradle-jenkins-plugin/issues/1)
+- Test only Android projects support added
+
 ### 1.0.18
 - Gradle version updated to 2.14.1
 - Android gradle plugin dependency updated to 2.1.3
