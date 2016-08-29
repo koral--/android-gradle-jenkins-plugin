@@ -3,10 +3,11 @@ plugins {
 }
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
+apply plugin: 'java-gradle-plugin'
 
 dependencies {
-	compile 'com.jamierf:persistenthashmap:1.0'
 	compile gradleApi()
+	testCompile gradleTestKit()
 	testCompile 'org.assertj:assertj-core:3.5.2'
 	testCompile 'org.mockito:mockito-core:2.0.106-beta'
 }

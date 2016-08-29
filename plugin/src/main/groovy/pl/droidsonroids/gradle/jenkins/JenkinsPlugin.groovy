@@ -11,6 +11,8 @@ import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.Delete
 import org.gradle.util.GradleVersion
 
+import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
+
 public class JenkinsPlugin implements Plugin<Project> {
 
 	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180 * 1000
@@ -28,17 +30,17 @@ public class JenkinsPlugin implements Plugin<Project> {
 			project.pluginManager.apply(BasePlugin)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
-				def buildTypesDir = new File(project.buildDir, 'jenkinsTestableBuildTypes')
-				def productFlavorsDir = new File(project.buildDir, 'jenkinsTestableProductFlavors')
+				def buildTypesFile = new File(project.buildDir, 'jenkinsTestableBuildTypes.properties')
+				def productFlavorsFile = new File(project.buildDir, 'jenkinsTestableProductFlavors.properties')
 				subproject.gradle.buildFinished {
-					buildTypesDir.deleteDir()
-					productFlavorsDir.deleteDir()
+					buildTypesFile.deleteDir()
+					productFlavorsFile.deleteDir()
 				}
-				def testableUnits = new MonkeyTestableUnits(buildTypesDir, productFlavorsDir)
-				addJenkinsTestableDSL(testableUnits)
 				def android = subproject.extensions.getByType(AppExtension)
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
+				def testableUnits = new MonkeyTestableUnits(buildTypesFile, productFlavorsFile)
+				addJenkinsTestableDSL(testableUnits)
 				subproject.afterEvaluate {
 					addMonkeyTask(subproject, testableUnits)
 				}
@@ -83,13 +85,14 @@ public class JenkinsPlugin implements Plugin<Project> {
 		if (applicationVariants.empty) {
 			throw new GradleException('No jenkins testable application variants found')
 		}
-		def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
+		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
 			it.init(applicationVariants)
 		})
 		applicationVariants.each {
 			if (it.install == null) {
 				throw new GradleException("Variant ${it.name} is marked testable but it is not installable. Missing singningConfig?")
 			}
+			project.logger.quiet("`$it.name` build variant is testable by monkey")
 			monkeyTask.dependsOn it.install
 		}
 	}

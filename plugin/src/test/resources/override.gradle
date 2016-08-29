@@ -1,0 +1,23 @@
+plugins {
+	id 'pl.droidsonroids.jenkins'
+	id 'com.android.application'
+}
+apply from: 'base.gradle'
+android {
+	buildTypes {
+		dev {
+			jenkinsTestable true
+		}
+		store {
+			jenkinsTestable false
+		}
+	}
+	productFlavors {
+		staging {
+			jenkinsTestable true
+		}
+		production {
+			jenkinsTestable false
+		}
+	}
+}
