@@ -2,10 +2,10 @@ package pl.droidsonroids.gradle.jenkins
 
 class MonkeyTestableUnits {
 	final Map<String, Boolean> buildTypes
-	final PersistentMap productFlavors
+	final PersistentBooleanMap productFlavors
 
-	MonkeyTestableUnits(File buildTypesDir, File productFlavorsDir) {
-		buildTypes = new PersistentMap(buildTypesDir)
-		productFlavors = new PersistentMap(productFlavorsDir)
+	MonkeyTestableUnits(File buildTypesFile, File productFlavorsFile) {
+		buildTypes = new PersistentBooleanMap(buildTypesFile)
+		productFlavors = new PersistentBooleanMap(productFlavorsFile)
 	}
 }

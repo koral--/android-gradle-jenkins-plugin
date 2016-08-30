@@ -15,7 +15,7 @@ import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
 
 public class JenkinsPlugin implements Plugin<Project> {
 
-	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180 * 1000
+	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180_000
 	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
 
 	@Override
@@ -33,8 +33,8 @@ public class JenkinsPlugin implements Plugin<Project> {
 				def buildTypesFile = new File(project.buildDir, 'jenkinsTestableBuildTypes.properties')
 				def productFlavorsFile = new File(project.buildDir, 'jenkinsTestableProductFlavors.properties')
 				subproject.gradle.buildFinished {
-					buildTypesFile.deleteDir()
-					productFlavorsFile.deleteDir()
+					buildTypesFile.delete()
+					productFlavorsFile.delete()
 				}
 				def android = subproject.extensions.getByType(AppExtension)
 				Utils.setDexOptions(android, disablePredex)

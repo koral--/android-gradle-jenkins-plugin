@@ -21,7 +21,7 @@ public class Cleaner {
 		outputReceiver = new LoggerBasedOutputReceiver(logger)
 	}
 
-	static final int ADB_COMMAND_TIMEOUT_MILLIS = 30 * 1000
+	static final int ADB_COMMAND_TIMEOUT_MILLIS = 30_000
 
 	public static void main(String[] args) throws Exception {
 		def logger = new StdLogger(StdLogger.Level.VERBOSE)
