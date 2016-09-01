@@ -12,6 +12,8 @@ import org.gradle.api.tasks.Delete
 import org.gradle.util.GradleVersion
 
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
+import static pl.droidsonroids.gradle.jenkins.MonkeyTestableUnits.Kind.*
+import static pl.droidsonroids.gradle.jenkins.MonkeyTestableUnits.Kind.BUILD_TYPE
 
 public class JenkinsPlugin implements Plugin<Project> {
 
@@ -30,19 +32,12 @@ public class JenkinsPlugin implements Plugin<Project> {
 			project.pluginManager.apply(BasePlugin)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
-				def buildTypesFile = new File(project.buildDir, 'jenkinsTestableBuildTypes.properties')
-				def productFlavorsFile = new File(project.buildDir, 'jenkinsTestableProductFlavors.properties')
-				subproject.gradle.buildFinished {
-					buildTypesFile.delete()
-					productFlavorsFile.delete()
-				}
 				def android = subproject.extensions.getByType(AppExtension)
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
-				def testableUnits = new MonkeyTestableUnits(buildTypesFile, productFlavorsFile)
-				addJenkinsTestableDSL(testableUnits)
+				addJenkinsTestableDSL(subproject)
 				subproject.afterEvaluate {
-					addMonkeyTask(subproject, testableUnits)
+					addMonkeyTask(subproject)
 				}
 			}
 			subproject.plugins.withType(LibraryPlugin) {
@@ -61,23 +56,25 @@ public class JenkinsPlugin implements Plugin<Project> {
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 
-	static def addJenkinsTestableDSL(MonkeyTestableUnits testableUnits) {
+	static def addJenkinsTestableDSL(Project project) {
+		def testableUnits = new MonkeyTestableUnits(project)
 		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			testableUnits.productFlavors[delegate.name] = isJenkinsTestable
+			testableUnits.setTestable(delegate.name, PRODUCT_FLAVOR, isJenkinsTestable)
 		}
 		BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			testableUnits.buildTypes[delegate.name] = isJenkinsTestable
+			testableUnits.setTestable(delegate.name, BUILD_TYPE, isJenkinsTestable)
 		}
 	}
 
-	static def addMonkeyTask(Project project, MonkeyTestableUnits testableUnits) {
+	static def addMonkeyTask(Project project) {
+		def testableUnits = new MonkeyTestableUnits(project)
 		def applicationVariants = project.extensions.getByType(AppExtension).applicationVariants.findAll {
-			if (testableUnits.buildTypes[it.buildType.name] != null) {
-				return testableUnits.buildTypes[it.buildType.name]
+			if (testableUnits.contains(it.buildType.name, BUILD_TYPE)) {
+				return testableUnits.isTestable(it.buildType.name, BUILD_TYPE)
 			}
 			for (ProductFlavor flavor : it.productFlavors) {
-				if (testableUnits.productFlavors[flavor.name] != null) {
-					return testableUnits.productFlavors[flavor.name]
+				if (testableUnits.contains(flavor.name, PRODUCT_FLAVOR)) {
+					return testableUnits.isTestable(flavor.name, PRODUCT_FLAVOR)
 				}
 			}
 			false
