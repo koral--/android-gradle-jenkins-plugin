@@ -4,9 +4,8 @@ plugins {
 }
 apply from: 'base.gradle'
 android {
-	productFlavors {
-		pro {
-			signingConfig android.signingConfigs.jenkinsRelease
+	buildTypes {
+		release {
 			jenkinsTestable true
 		}
 	}

@@ -1,7 +1,6 @@
 android {
 	defaultConfig {
 		applicationId 'pl.droidsonroids.testapplication'
-		signingConfig android.signingConfigs.jenkinsRelease
 		minSdkVersion 1
 	}
 	buildToolsVersion '24.0.2'

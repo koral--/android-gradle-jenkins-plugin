@@ -1,0 +1,5 @@
+plugins {
+	id 'pl.droidsonroids.jenkins'
+	id 'com.android.application'
+}
+apply from: 'base.gradle'

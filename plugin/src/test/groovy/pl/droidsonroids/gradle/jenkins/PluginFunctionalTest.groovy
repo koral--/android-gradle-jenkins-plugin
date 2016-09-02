@@ -55,6 +55,30 @@ class PluginFunctionalTest {
 		assertTestableVariants(result, 'proDebug', 'proRelease')
 	}
 
+	@Test
+	public void testNoTestableVariant() {
+		copyResource('base.gradle', 'base.gradle')
+		copyResource('noTestableVariant.gradle', 'build.gradle')
+		GradleRunner.create()
+				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withArguments('projects')
+				.withPluginClasspath()
+				.buildAndFail()
+	}
+
+	@Test
+	public void testNoSigningConfig() {
+		copyResource('base.gradle', 'base.gradle')
+		copyResource('noSigningConfig.gradle', 'build.gradle')
+		GradleRunner.create()
+				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withArguments('projects')
+				.withPluginClasspath()
+				.buildAndFail()
+	}
+
 	private static void assertTestableVariants(BuildResult result, String... expectedVariants) {
 		assertThat(result.output.readLines().findAll { it.endsWith(VARIANT_LINE_SUFFIX) }).hasSize(expectedVariants.size())
 		def softAssertions = new SoftAssertions()

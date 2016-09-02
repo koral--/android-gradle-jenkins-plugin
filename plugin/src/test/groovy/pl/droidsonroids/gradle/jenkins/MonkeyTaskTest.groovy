@@ -11,11 +11,10 @@ import java.util.concurrent.TimeUnit
 
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
-import static pl.droidsonroids.gradle.jenkins.Constants.*
-import static pl.droidsonroids.gradle.jenkins.Constants.BUILD_TOOLS_VERSION
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
 
 public class MonkeyTaskTest {
+	private static final String BUILD_TOOLS_VERSION = '24.0.2'
 
 	@Test
 	public void testConnectedMonkeyTest() throws Exception {
@@ -26,12 +25,12 @@ public class MonkeyTaskTest {
 
 		project.android {
 			defaultConfig {
-				applicationId TEST_APPLICATION_ID
+				applicationId 'pl.droidsonroids.testapplication'
 				signingConfig signingConfigs.jenkinsRelease
 				minSdkVersion 1
 			}
 			buildToolsVersion BUILD_TOOLS_VERSION
-			compileSdkVersion ANDROID_SDK_VERSION
+			compileSdkVersion 24
 			buildTypes {
 				release {
 					jenkinsTestable true
@@ -39,7 +38,7 @@ public class MonkeyTaskTest {
 			}
 		}
 		def variant = mock(ApplicationVariant.class, RETURNS_DEEP_STUBS)
-		when(variant.getApplicationId()).thenReturn(TEST_APPLICATION_ID)
+		when(variant.getApplicationId()).thenReturn('pl.droidsonroids.testapplication')
 		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
 			it.init(Collections.singleton(variant))
 		})

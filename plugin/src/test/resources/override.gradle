@@ -6,6 +6,7 @@ apply from: 'base.gradle'
 android {
 	buildTypes {
 		dev {
+			signingConfig android.signingConfigs.jenkinsRelease
 			jenkinsTestable true
 		}
 		store {
@@ -14,6 +15,7 @@ android {
 	}
 	productFlavors {
 		staging {
+			signingConfig android.signingConfigs.jenkinsRelease
 			jenkinsTestable true
 		}
 		production {

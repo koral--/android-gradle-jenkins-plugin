@@ -9,7 +9,7 @@ dependencies {
 	compile gradleApi()
 	testCompile gradleTestKit()
 	testCompile 'org.assertj:assertj-core:3.5.2'
-	testCompile 'org.mockito:mockito-core:2.0.106-beta'
+	testCompile 'org.mockito:mockito-core:2.1.0-beta.120'
 }
 
 group = GROUP

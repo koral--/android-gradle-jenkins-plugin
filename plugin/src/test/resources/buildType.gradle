@@ -6,6 +6,7 @@ apply from: 'base.gradle'
 android {
 	buildTypes {
 		debug {
+			signingConfig android.signingConfigs.jenkinsRelease
 			jenkinsTestable true
 		}
 	}

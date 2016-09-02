@@ -12,8 +12,6 @@ import org.gradle.api.tasks.Delete
 import org.gradle.util.GradleVersion
 
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
-import static pl.droidsonroids.gradle.jenkins.MonkeyTestableUnits.Kind.*
-import static pl.droidsonroids.gradle.jenkins.MonkeyTestableUnits.Kind.BUILD_TYPE
 
 public class JenkinsPlugin implements Plugin<Project> {
 
@@ -28,6 +26,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 		DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
 		Utils.addJavacXlint(project)
+		addJenkinsTestableDSL()
 		project.allprojects { Project subproject ->
 			project.pluginManager.apply(BasePlugin)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
@@ -35,7 +34,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 				def android = subproject.extensions.getByType(AppExtension)
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
-				addJenkinsTestableDSL(subproject)
 				subproject.afterEvaluate {
 					addMonkeyTask(subproject)
 				}
@@ -56,29 +54,43 @@ public class JenkinsPlugin implements Plugin<Project> {
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 
-	static def addJenkinsTestableDSL(Project project) {
-		def testableUnits = new MonkeyTestableUnits(project)
-		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			testableUnits.setTestable(delegate.name, PRODUCT_FLAVOR, isJenkinsTestable)
-		}
+	static def addJenkinsTestableDSL() {
+		Map<BuildType, Boolean> bts = new HashMap<>()
+		Map<ProductFlavor, Boolean> fs = new HashMap<>()
+
+		BuildType.metaClass.isJenkinsTestable { -> bts[delegate] }
+		ProductFlavor.metaClass.isJenkinsTestable { -> fs[delegate] }
 		BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			testableUnits.setTestable(delegate.name, BUILD_TYPE, isJenkinsTestable)
+			bts[delegate] = isJenkinsTestable
+		}
+		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
+			fs[delegate] = isJenkinsTestable
 		}
 	}
 
 	static def addMonkeyTask(Project project) {
-		def testableUnits = new MonkeyTestableUnits(project)
-		def applicationVariants = project.extensions.getByType(AppExtension).applicationVariants.findAll {
-			if (testableUnits.contains(it.buildType.name, BUILD_TYPE)) {
-				return testableUnits.isTestable(it.buildType.name, BUILD_TYPE)
+		def android = project.extensions.getByType(AppExtension)
+		Map<String, Boolean> testableFlavors = new HashMap<>()
+		Map<String, Boolean> testableBuildTypes = new HashMap<>()
+		android.productFlavors.each {
+			testableFlavors[it.name] = it.isJenkinsTestable()
+		}
+		android.buildTypes.each {
+			testableBuildTypes[it.name] = it.isJenkinsTestable()
+		}
+
+		def applicationVariants = android.applicationVariants.findAll {
+			if (testableBuildTypes[it.buildType.name] != null) {
+				return testableBuildTypes[it.buildType.name]
 			}
 			for (ProductFlavor flavor : it.productFlavors) {
-				if (testableUnits.contains(flavor.name, PRODUCT_FLAVOR)) {
-					return testableUnits.isTestable(flavor.name, PRODUCT_FLAVOR)
+				if (testableFlavors[flavor.name] != null) {
+					return testableFlavors[flavor.name]
 				}
 			}
 			false
 		}
+
 		if (applicationVariants.empty) {
 			throw new GradleException('No jenkins testable application variants found')
 		}
