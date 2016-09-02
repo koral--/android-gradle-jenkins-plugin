@@ -55,16 +55,16 @@ public class JenkinsPlugin implements Plugin<Project> {
 	}
 
 	static def addJenkinsTestableDSL() {
-		Map<BuildType, Boolean> bts = new HashMap<>()
-		Map<ProductFlavor, Boolean> fs = new HashMap<>()
+		Map<BuildType, Boolean> buildTypes = new HashMap<>()
+		Map<ProductFlavor, Boolean> productFlavors = new HashMap<>()
 
-		BuildType.metaClass.isJenkinsTestable { -> bts[delegate] }
-		ProductFlavor.metaClass.isJenkinsTestable { -> fs[delegate] }
+		BuildType.metaClass.isJenkinsTestable { -> buildTypes[delegate] }
+		ProductFlavor.metaClass.isJenkinsTestable { -> productFlavors[delegate] }
 		BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			bts[delegate] = isJenkinsTestable
+			buildTypes[delegate] = isJenkinsTestable
 		}
 		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			fs[delegate] = isJenkinsTestable
+			productFlavors[delegate] = isJenkinsTestable
 		}
 	}
 
