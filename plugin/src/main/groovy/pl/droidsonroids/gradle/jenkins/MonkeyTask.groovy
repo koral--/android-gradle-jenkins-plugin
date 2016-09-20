@@ -10,6 +10,7 @@ import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.logging.Logger
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
 import java.util.concurrent.Executors
@@ -21,8 +22,11 @@ class MonkeyTask extends DefaultTask {
 
 	protected static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
 
+	@Internal
 	Set<ApplicationVariant> applicationVariants
+	@Internal
 	Logger logger
+	@Internal
 	DeviceProvider connectedDeviceProvider
 
 	public MonkeyTask() {

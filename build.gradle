@@ -13,7 +13,7 @@ allprojects {
 	apply plugin: 'groovy'
 	dependencies {
 		compile 'org.codehaus.groovy:groovy:2.4.7'
-		compile 'com.android.tools.build:gradle:2.1.3'
+		compile 'com.android.tools.build:gradle:2.2.0'
 		testCompile 'junit:junit:4.12'
 	}
 }
