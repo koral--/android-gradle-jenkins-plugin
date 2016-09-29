@@ -19,7 +19,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
-		if (GradleVersion.current() < GradleVersion.version('2.6')) {
+		if (GradleVersion.current() < GradleVersion.version('2.14.1')) {
 			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.6")
 		}
 
@@ -68,9 +68,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 			false
 		}
 
-		if (applicationVariants.empty) {
-			throw new GradleException('No jenkins testable application variants found')
-		}
 		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
 			it.init(applicationVariants)
 		})

@@ -90,7 +90,7 @@ class PluginFunctionalTest {
 		GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('projects')
+				.withArguments('connectedMonkeyJenkinsTest')
 				.withPluginClasspath()
 				.buildAndFail()
 	}

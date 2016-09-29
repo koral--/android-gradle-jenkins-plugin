@@ -1,3 +1,9 @@
+### 1.0.21
+- testable variants check moved to monkey task action to be compatible with instant run
+
+### 1.0.20
+- jenkinsTestable moved from expando to dedicated extension
+
 ### 1.0.19
 - Gradle daemon support fixed for gradle 2.14.1+ - [#1](https://github.com/koral--/android-gradle-jenkins-plugin/issues/1)
 - Test only Android projects support added

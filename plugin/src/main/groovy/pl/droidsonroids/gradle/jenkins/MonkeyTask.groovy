@@ -8,6 +8,7 @@ import com.android.builder.testing.api.DeviceProvider
 import com.android.ddmlib.ShellCommandUnresponsiveException
 import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.Internal
@@ -37,12 +38,15 @@ class MonkeyTask extends DefaultTask {
 	def init(Set<ApplicationVariant> applicationVariants) {
 		this.logger = project.logger
 		this.applicationVariants = applicationVariants
-		def adbExe = project.extensions.getByType(AppExtension).adbExe
+		def adbExe = project.extensions.getByType(AppExtension).adbExecutable
 		connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(logger))
 	}
 
 	@TaskAction
 	def connectedMonkeyTest() {
+		if (applicationVariants.empty) {
+			throw new GradleException('No jenkins testable application variants found')
+		}
 		connectedDeviceProvider.init()
 		def monkeyFile = project.rootProject.file('monkey.txt')
 		def executor = Executors.newScheduledThreadPool(1)
