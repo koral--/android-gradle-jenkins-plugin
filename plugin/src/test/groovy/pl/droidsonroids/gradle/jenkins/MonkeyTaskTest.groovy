@@ -33,9 +33,12 @@ public class MonkeyTaskTest {
 			compileSdkVersion 24
 			buildTypes {
 				release {
-					jenkinsTestable true
+
 				}
 			}
+		}
+		project.jenkinsTestable {
+			buildTypes 'release'
 		}
 		def variant = mock(ApplicationVariant.class, RETURNS_DEEP_STUBS)
 		when(variant.getApplicationId()).thenReturn('pl.droidsonroids.testapplication')

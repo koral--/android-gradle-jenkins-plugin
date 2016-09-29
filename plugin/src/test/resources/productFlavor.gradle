@@ -7,7 +7,10 @@ android {
 	productFlavors {
 		pro {
 			signingConfig android.signingConfigs.jenkinsRelease
-			jenkinsTestable true
 		}
 	}
+}
+
+jenkinsTestable {
+	productFlavors 'pro'
 }

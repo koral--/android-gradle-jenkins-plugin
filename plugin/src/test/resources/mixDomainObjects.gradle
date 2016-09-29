@@ -21,6 +21,6 @@ android {
 }
 
 jenkinsTestable {
-	buildTypes 'dev'
-	productFlavors 'staging'
+	buildTypes android.buildTypes.dev
+	productFlavors android.productFlavors.staging
 }

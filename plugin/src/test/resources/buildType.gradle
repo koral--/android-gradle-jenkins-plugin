@@ -7,7 +7,10 @@ android {
 	buildTypes {
 		debug {
 			signingConfig android.signingConfigs.jenkinsRelease
-			jenkinsTestable true
 		}
 	}
+}
+
+jenkinsTestable {
+	buildTypes 'debug'
 }

@@ -4,6 +4,7 @@ import com.google.common.io.Resources
 import org.assertj.core.api.SoftAssertions
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -17,6 +18,7 @@ class PluginFunctionalTest {
 	public TemporaryFolder mTemporaryFolder = new TemporaryFolder()
 
 	@Test
+	@Ignore('Add support or abandon feature')
 	void testBuildTypeOverriding() {
 		copyResource('base.gradle', 'base.gradle')
 		copyResource('override.gradle', 'build.gradle')
@@ -27,6 +29,32 @@ class PluginFunctionalTest {
 				.withPluginClasspath()
 				.build()
 		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease')
+	}
+
+	@Test
+	void testBuildTypesAndProductFlavors() {
+		copyResource('base.gradle', 'base.gradle')
+		copyResource('mix.gradle', 'build.gradle')
+		def result = GradleRunner.create()
+				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(mTemporaryFolder.root)
+				.withArguments('projects')
+				.withPluginClasspath()
+				.build()
+		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease', 'stagingStore')
+	}
+
+	@Test
+	void testBuildTypesAndProductFlavorsDomainObjects() {
+		copyResource('base.gradle', 'base.gradle')
+		copyResource('mixDomainObjects.gradle', 'build.gradle')
+		def result = GradleRunner.create()
+				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(mTemporaryFolder.root)
+				.withArguments('projects')
+				.withPluginClasspath()
+				.build()
+		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease', 'stagingStore')
 	}
 
 	@Test

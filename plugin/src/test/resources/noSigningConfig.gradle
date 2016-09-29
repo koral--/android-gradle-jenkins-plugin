@@ -6,7 +6,10 @@ apply from: 'base.gradle'
 android {
 	buildTypes {
 		release {
-			jenkinsTestable true
 		}
 	}
+}
+
+jenkinsTestable {
+	buildTypes 'release'
 }

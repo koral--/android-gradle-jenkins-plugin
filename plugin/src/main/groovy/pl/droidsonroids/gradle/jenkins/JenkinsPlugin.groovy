@@ -1,7 +1,6 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.*
-import com.android.builder.model.BuildType
 import com.android.builder.model.ProductFlavor
 import com.android.ddmlib.DdmPreferences
 import org.gradle.api.GradleException
@@ -26,9 +25,9 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 		DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
 		Utils.addJavacXlint(project)
-		addJenkinsTestableDSL()
 		project.allprojects { Project subproject ->
 			project.pluginManager.apply(BasePlugin)
+			project.extensions.create('jenkinsTestable', TestableExtension)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
@@ -54,38 +53,16 @@ public class JenkinsPlugin implements Plugin<Project> {
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 
-	static def addJenkinsTestableDSL() {
-		Map<BuildType, Boolean> buildTypes = new HashMap<>()
-		Map<ProductFlavor, Boolean> productFlavors = new HashMap<>()
-
-		BuildType.metaClass.isJenkinsTestable { -> buildTypes[delegate] }
-		ProductFlavor.metaClass.isJenkinsTestable { -> productFlavors[delegate] }
-		BuildType.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			buildTypes[delegate] = isJenkinsTestable
-		}
-		ProductFlavor.metaClass.jenkinsTestable { boolean isJenkinsTestable ->
-			productFlavors[delegate] = isJenkinsTestable
-		}
-	}
-
 	static def addMonkeyTask(Project project) {
-		def android = project.extensions.getByType(AppExtension)
-		Map<String, Boolean> testableFlavors = new HashMap<>()
-		Map<String, Boolean> testableBuildTypes = new HashMap<>()
-		android.productFlavors.each {
-			testableFlavors[it.name] = it.isJenkinsTestable()
-		}
-		android.buildTypes.each {
-			testableBuildTypes[it.name] = it.isJenkinsTestable()
-		}
+		def jenkinsTestable = project.extensions.getByType(TestableExtension)
 
-		def applicationVariants = android.applicationVariants.findAll {
-			if (testableBuildTypes[it.buildType.name] != null) {
-				return testableBuildTypes[it.buildType.name]
+		def applicationVariants = project.extensions.getByType(AppExtension).applicationVariants.findAll {
+			if (jenkinsTestable.buildTypeNames.contains(it.buildType.name)) {
+				return true
 			}
 			for (ProductFlavor flavor : it.productFlavors) {
-				if (testableFlavors[flavor.name] != null) {
-					return testableFlavors[flavor.name]
+				if (jenkinsTestable.productFlavorNames.contains(flavor.name)) {
+					return true
 				}
 			}
 			false
