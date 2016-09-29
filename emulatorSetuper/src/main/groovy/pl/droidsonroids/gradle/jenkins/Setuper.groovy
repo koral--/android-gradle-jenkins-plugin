@@ -4,6 +4,8 @@ import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.IDevice
 import com.android.utils.StdLogger
 
+import java.util.concurrent.TimeoutException
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS
 import static java.util.concurrent.TimeUnit.SECONDS
 
@@ -38,9 +40,7 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
 	}
 
 	def unlockAlreadyConnectedDevices() {
-		bridge.getDevices().each { IDevice device ->
-			setup(device)
-		}
+		bridge.getDevices().each { setup(it) }
 	}
 
 	@SuppressWarnings("GroovyInfiniteLoopStatement")
@@ -53,14 +53,20 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
 	}
 
 	def setup(IDevice device) {
-
 		if (!device.online) {
 			return
 		}
 		String bootCompleted = null
-		int tryCount = 3
-		while (tryCount-- > 0 && bootCompleted != '1') {
-			bootCompleted = device.getSystemProperty('sys.boot_completed').get(Cleaner.ADB_COMMAND_TIMEOUT_MILLIS, SECONDS)
+		int tryCount = 0
+		while (bootCompleted != '1') {
+			bootCompleted = device.getSystemProperty('sys.boot_completed').get(20, SECONDS)
+			if (bootCompleted!='1'){
+				if (++tryCount<20) {
+					Thread.sleep(1000)
+				} else {
+					throw new TimeoutException("Emulator ${device.avdName} has a boot loop")
+				}
+			}
 		}
 
 		if (device.version.featureLevel >= 23) {
@@ -77,6 +83,8 @@ public class Setuper implements AndroidDebugBridge.IDeviceChangeListener {
 			def file = pushFile(device, name, '/sdcard/')
 			executeRemoteCommand(device, "$MEDIA_SCAN_COMMAND$file")
 		}
+		executeRemoteCommand(device, "adb shell pm hide com.android.browser")
+
 	}
 
 	private String pushFile(IDevice device, String fileName, String remotePath) {
