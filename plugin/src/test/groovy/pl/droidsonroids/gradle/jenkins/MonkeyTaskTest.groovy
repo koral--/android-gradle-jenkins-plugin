@@ -14,8 +14,6 @@ import static org.mockito.Mockito.*
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
 
 public class MonkeyTaskTest {
-	private static final String BUILD_TOOLS_VERSION = '24.0.2'
-
 	@Test
 	public void testConnectedMonkeyTest() throws Exception {
 
@@ -29,7 +27,7 @@ public class MonkeyTaskTest {
 				signingConfig signingConfigs.jenkinsRelease
 				minSdkVersion 1
 			}
-			buildToolsVersion BUILD_TOOLS_VERSION
+			buildToolsVersion '24.0.3'
 			compileSdkVersion 24
 			buildTypes {
 				release {
