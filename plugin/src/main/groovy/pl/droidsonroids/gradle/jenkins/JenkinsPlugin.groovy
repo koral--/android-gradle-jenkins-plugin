@@ -10,7 +10,6 @@ import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.Delete
 import org.gradle.util.GradleVersion
 
-import static pl.droidsonroids.gradle.jenkins.MonkeyTask.LOG_GILE_PATTERN
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
 
 public class JenkinsPlugin implements Plugin<Project> {
@@ -50,7 +49,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 	static def addCleanMonkeyOutputTask(Project project) {
 		def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', Delete)
-		cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: [LOG_GILE_PATTERN])
+		cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey-logcat-*.txt'])
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 

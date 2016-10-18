@@ -1,3 +1,6 @@
+### 1.0.23
+- monkey task fixed
+
 ### 1.0.22
 - plugin can be applied to both root projects and subprojects
 
