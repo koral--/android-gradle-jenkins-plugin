@@ -1,3 +1,6 @@
+### 1.0.22
+- plugin can be applied to both root projects and subprojects
+
 ### 1.0.21
 - testable variants check moved to monkey task action to be compatible with instant run
 

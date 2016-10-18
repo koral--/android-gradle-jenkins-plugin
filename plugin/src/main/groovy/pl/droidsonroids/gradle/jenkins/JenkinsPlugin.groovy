@@ -10,6 +10,7 @@ import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.Delete
 import org.gradle.util.GradleVersion
 
+import static pl.droidsonroids.gradle.jenkins.MonkeyTask.LOG_GILE_PATTERN
 import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
 
 public class JenkinsPlugin implements Plugin<Project> {
@@ -26,8 +27,8 @@ public class JenkinsPlugin implements Plugin<Project> {
 		DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
 		Utils.addJavacXlint(project)
 		project.allprojects { Project subproject ->
-			project.pluginManager.apply(BasePlugin)
-			project.extensions.create('jenkinsTestable', TestableExtension)
+			subproject.pluginManager.apply(BasePlugin)
+			subproject.extensions.create('jenkinsTestable', TestableExtension)
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
@@ -38,18 +39,18 @@ public class JenkinsPlugin implements Plugin<Project> {
 				}
 			}
 			subproject.plugins.withType(LibraryPlugin) {
-				Utils.setDexOptions(project.extensions.getByType(LibraryExtension), disablePredex)
+				Utils.setDexOptions(subproject.extensions.getByType(LibraryExtension), disablePredex)
 			}
 			subproject.plugins.withType(TestPlugin) {
-				Utils.setDexOptions(project.extensions.getByType(TestExtension), disablePredex)
+				Utils.setDexOptions(subproject.extensions.getByType(TestExtension), disablePredex)
 			}
+			addCleanMonkeyOutputTask(subproject)
 		}
-		addCleanMonkeyOutputTask(project)
 	}
 
 	static def addCleanMonkeyOutputTask(Project project) {
 		def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', Delete)
-		cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey*'])
+		cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: [LOG_GILE_PATTERN])
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 

@@ -21,7 +21,10 @@ import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.ADB_COMMAND_TIMEOUT_
 
 class MonkeyTask extends DefaultTask {
 
-	protected static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
+	static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
+	private static final String LOG_FILENAME_PREFIX = 'monkey-logcat-'
+	private static final String LOG_FILENAME_SUFFIX = '.txt'
+	static final String LOG_GILE_PATTERN = "$LOG_FILENAME_PREFIX*$LOG_FILENAME_SUFFIX"
 
 	@Internal
 	Set<ApplicationVariant> applicationVariants
@@ -56,7 +59,7 @@ class MonkeyTask extends DefaultTask {
 				it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
 			}.each { device ->
 				try {
-					def logcatFileName = "monkey-logcat-${device.name.replace(' ', '_')}.txt"
+					def logcatFileName = "$LOG_FILENAME_PREFIX${device.name.replace(' ', '_')}$LOG_FILENAME_SUFFIX"
 					def logcatFile = project.rootProject.file(logcatFileName)
 					def logcatReceiver = new MonkeyOutputReceiver(logcatFile)
 					Thread.start { device.executeShellCommand('logcat -v time', logcatReceiver, 0, MILLISECONDS) }
