@@ -48,3 +48,8 @@ jacocoTestReport {
 		html.enabled true
 	}
 }
+
+task copyTestResources(type: Copy) {
+	from "${projectDir}/src/test/resources"
+	into "${buildDir}/classes/test"
+}

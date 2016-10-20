@@ -8,7 +8,6 @@ import org.junit.rules.TemporaryFolder
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 
-
 public class MonkeyOutputReceiverTest {
 
 	@Rule

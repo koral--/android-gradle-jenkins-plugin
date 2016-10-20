@@ -31,6 +31,9 @@ public class JenkinsPlugin implements Plugin<Project> {
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
+				subproject.tasks.create('connectedSetup', SetupTask, {
+					it.init(android)
+				})
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {

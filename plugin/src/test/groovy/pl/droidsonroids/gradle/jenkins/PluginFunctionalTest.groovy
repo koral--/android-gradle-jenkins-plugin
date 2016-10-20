@@ -58,6 +58,19 @@ class PluginFunctionalTest {
 	}
 
 	@Test
+	public void testSetup() {
+		copyResource('base.gradle', 'base.gradle')
+		copyResource('buildType.gradle', 'build.gradle')
+		def result = GradleRunner.create()
+				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withArguments('connectedSetup')
+				.withPluginClasspath()
+				.buildAndFail()
+		assertThat(result.output).contains('No connected devices')
+	}
+
+	@Test
 	public void testAddJenkinsTestableBuildType() {
 		copyResource('base.gradle', 'base.gradle')
 		copyResource('buildType.gradle', 'build.gradle')
