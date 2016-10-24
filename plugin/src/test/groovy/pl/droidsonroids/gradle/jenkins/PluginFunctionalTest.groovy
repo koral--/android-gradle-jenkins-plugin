@@ -4,7 +4,7 @@ import com.google.common.io.Resources
 import org.assertj.core.api.SoftAssertions
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.Ignore
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -18,17 +18,16 @@ class PluginFunctionalTest {
 	public TemporaryFolder mTemporaryFolder = new TemporaryFolder()
 
 	@Test
-	@Ignore('Add support or abandon feature')
-	void testBuildTypeOverriding() {
+	void testApplicationVariants() {
 		copyResource('base.gradle', 'base.gradle')
-		copyResource('override.gradle', 'build.gradle')
+		copyResource('variant.gradle', 'build.gradle')
 		def result = GradleRunner.create()
 				.withTestKitDir(mTemporaryFolder.newFolder())
 				.withProjectDir(mTemporaryFolder.root)
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
-		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease')
+		assertTestableVariants(result, 'productionDev', 'stagingDebug')
 	}
 
 	@Test
@@ -64,10 +63,11 @@ class PluginFunctionalTest {
 		def result = GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('connectedSetup')
+				.withArguments('connectedSetupUiTest')
 				.withPluginClasspath()
 				.buildAndFail()
 		assertThat(result.output).contains('No connected devices')
+		assertThat(result.task(':cleanUiTestTempDir').outcome).isEqualTo(TaskOutcome.SUCCESS)
 	}
 
 	@Test

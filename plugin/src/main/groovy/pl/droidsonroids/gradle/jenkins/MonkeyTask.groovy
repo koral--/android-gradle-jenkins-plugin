@@ -10,7 +10,7 @@ import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.logging.LogLevel
-import org.gradle.api.logging.Logger
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
@@ -26,8 +26,6 @@ class MonkeyTask extends DefaultTask {
 	@Internal
 	Set<ApplicationVariant> applicationVariants
 	@Internal
-	Logger logger
-	@Internal
 	DeviceProvider connectedDeviceProvider
 
 	public MonkeyTask() {
@@ -35,11 +33,10 @@ class MonkeyTask extends DefaultTask {
 		description = 'Runs monkey application exerciser on all connected devices and/or emulators'
 	}
 
-	def init(Set<ApplicationVariant> applicationVariants) {
-		this.logger = project.logger
-		this.applicationVariants = applicationVariants
-		def adbExe = project.extensions.getByType(AppExtension).adbExecutable
-		connectedDeviceProvider = new ConnectedDeviceProvider(adbExe, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(logger))
+	@Input
+	public appExtension(AppExtension android) {
+		this.applicationVariants = android.applicationVariants
+		connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExecutable, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(project.logger))
 	}
 
 	@TaskAction
@@ -61,7 +58,7 @@ class MonkeyTask extends DefaultTask {
 					def logcatReceiver = new MonkeyOutputReceiver(logcatFile)
 					Thread.start { device.executeShellCommand('logcat -v time', logcatReceiver, 0, MILLISECONDS) }
 
-					logger.lifecycle('Monkeying on {}', device.name)
+					project.logger.lifecycle('Monkeying on {}', device.name)
 					def monkeyOutputReceiver = new MonkeyOutputReceiver(monkeyFile)
 					def future = executor.schedule({ monkeyOutputReceiver.cancel() }, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
 					device.executeShellCommand(command, monkeyOutputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
@@ -72,7 +69,7 @@ class MonkeyTask extends DefaultTask {
 					future.cancel(false)
 					logcatReceiver.cancel()
 				} catch (ShellCommandUnresponsiveException ex) {
-					logger.log(LogLevel.ERROR, "Monkey timeout on device ${device.name}", ex)
+					project.logger.log(LogLevel.ERROR, "Monkey timeout on device ${device.name}", ex)
 					throw ex
 				}
 			}

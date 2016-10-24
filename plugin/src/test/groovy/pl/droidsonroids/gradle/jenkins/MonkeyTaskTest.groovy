@@ -27,8 +27,8 @@ public class MonkeyTaskTest {
 				signingConfig signingConfigs.jenkinsRelease
 				minSdkVersion 1
 			}
-			buildToolsVersion '24.0.3'
-			compileSdkVersion 24
+			buildToolsVersion '25.0.0'
+			compileSdkVersion 25
 			buildTypes {
 				release {
 
@@ -41,7 +41,8 @@ public class MonkeyTaskTest {
 		def variant = mock(ApplicationVariant.class, RETURNS_DEEP_STUBS)
 		when(variant.getApplicationId()).thenReturn('pl.droidsonroids.testapplication')
 		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
-			it.init(Collections.singleton(variant))
+			appExtension project.android
+			it.applicationVariants = Collections.singletonList(variant)
 		})
 
 		monkeyTask.connectedDeviceProvider = mock(DeviceProvider.class)

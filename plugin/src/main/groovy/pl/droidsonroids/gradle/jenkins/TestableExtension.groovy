@@ -6,6 +6,7 @@ import com.android.builder.model.BuildType
 public class TestableExtension {
 	final Set<String> productFlavorNames = []
 	final Set<String> buildTypeNames = []
+	final Set<String> variantNames = []
 
 	public void productFlavors(ProductFlavor... productFlavors) {
 		productFlavorNames.addAll(productFlavors.collect { it.name })
@@ -21,5 +22,9 @@ public class TestableExtension {
 
 	public void buildTypes(String... buildTypeNames) {
 		this.buildTypeNames.addAll(buildTypeNames)
+	}
+
+	public void applicationVariants(String... variantNames){
+		this.variantNames.addAll(variantNames)
 	}
 }

@@ -16,6 +16,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180_000
 	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
+	public static final String DEFAULT_MOCK_WEB_SERVER_BASE_URL = 'http://localhost:12345'
 
 	@Override
 	void apply(Project project) {
@@ -28,16 +29,27 @@ public class JenkinsPlugin implements Plugin<Project> {
 		project.allprojects { Project subproject ->
 			subproject.pluginManager.apply(BasePlugin)
 			subproject.extensions.create('jenkinsTestable', TestableExtension)
+
 			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
-				subproject.tasks.create('connectedSetup', SetupTask, {
-					it.init(android)
+
+				if (subproject.hasProperty('pl.droidsonroids.jenkins.uiTest')) {
+					android.sourceSets.getByName('androidTest').setRoot(subproject.rootProject.file('uiTest').path)
+				}
+
+				if (!subproject.hasProperty('pl.droidsonroids.jenkins.mockWebServerBaseUrl')) {
+					subproject.ext.'pl.droidsonroids.jenkins.mockWebServerBaseUrl' = DEFAULT_MOCK_WEB_SERVER_BASE_URL
+				}
+
+				subproject.tasks.create('connectedSetupUiTests', SetupTask, {
+					appExtension android
 				})
+
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {
-					addMonkeyTask(subproject)
+					addMonkeyTask(subproject, android)
 				}
 			}
 			subproject.plugins.withType(LibraryPlugin) {
@@ -56,10 +68,13 @@ public class JenkinsPlugin implements Plugin<Project> {
 		project.clean.dependsOn cleanMonkeyOutput
 	}
 
-	static def addMonkeyTask(Project project) {
+	static def addMonkeyTask(Project project, AppExtension android) {
 		def jenkinsTestable = project.extensions.getByType(TestableExtension)
 
-		def applicationVariants = project.extensions.getByType(AppExtension).applicationVariants.findAll {
+		def applicationVariants = android.applicationVariants.findAll {
+			if (jenkinsTestable.variantNames.contains(it.name)) {
+				return true
+			}
 			if (jenkinsTestable.buildTypeNames.contains(it.buildType.name)) {
 				return true
 			}
@@ -72,7 +87,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 		}
 
 		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
-			it.init(applicationVariants)
+			appExtension android
 		})
 		applicationVariants.each {
 			if (it.install == null) {
