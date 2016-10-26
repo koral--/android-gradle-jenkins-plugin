@@ -6,7 +6,6 @@ import com.android.build.gradle.internal.LoggerWrapper
 import com.android.builder.testing.ConnectedDeviceProvider
 import com.android.builder.testing.api.DeviceProvider
 import com.android.ddmlib.ShellCommandUnresponsiveException
-import com.android.ddmlib.TimeoutException
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.logging.LogLevel
@@ -64,7 +63,7 @@ class MonkeyTask extends DefaultTask {
 					device.executeShellCommand(command, monkeyOutputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
 
 					if (monkeyOutputReceiver.isCancelled()) {
-						throw new TimeoutException("Monkey hanged, see monkey.txt and $logcatFileName for details")
+						project.logger.warn("Monkeying timed out, see monkey.txt and $logcatFileName for details")
 					}
 					future.cancel(false)
 					logcatReceiver.cancel()
