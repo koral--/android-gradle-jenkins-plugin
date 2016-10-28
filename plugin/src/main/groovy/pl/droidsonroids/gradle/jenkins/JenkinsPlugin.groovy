@@ -16,7 +16,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180_000
 	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
-	public static final String DEFAULT_MOCK_WEB_SERVER_BASE_URL = 'http://localhost:12345'
+	public static final String DEFAULT_MOCK_WEB_SERVER_BASE_URL = '"http://localhost:12345"'
 
 	@Override
 	void apply(Project project) {
