@@ -1,65 +1,24 @@
 package pl.droidsonroids.gradle.jenkins
 
-import com.google.common.io.Resources
-import org.assertj.core.api.SoftAssertions
-import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
+
+import java.util.regex.Pattern
 
 import static org.assertj.core.api.Assertions.assertThat
+import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.UI_TEST_PROPERTY_NAME
 
 class PluginFunctionalTest {
 
-	public static final String VARIANT_LINE_SUFFIX = 'build variant is testable by monkey'
 	@Rule
-	public TemporaryFolder mTemporaryFolder = new TemporaryFolder()
-
-	@Test
-	void testApplicationVariants() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('variant.gradle', 'build.gradle')
-		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
-				.withArguments('projects')
-				.withPluginClasspath()
-				.build()
-		assertTestableVariants(result, 'productionDev', 'stagingDebug')
-	}
-
-	@Test
-	void testBuildTypesAndProductFlavors() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('mix.gradle', 'build.gradle')
-		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
-				.withArguments('projects')
-				.withPluginClasspath()
-				.build()
-		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease', 'stagingStore')
-	}
-
-	@Test
-	void testBuildTypesAndProductFlavorsDomainObjects() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('mixDomainObjects.gradle', 'build.gradle')
-		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
-				.withArguments('projects')
-				.withPluginClasspath()
-				.build()
-		assertTestableVariants(result, 'productionDev', 'stagingDebug', 'stagingDev', 'stagingRelease', 'stagingStore')
-	}
+	public TemporaryProjectFolder mTemporaryFolder = new TemporaryProjectFolder()
 
 	@Test
 	public void testSetup() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('buildType.gradle', 'build.gradle')
+		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
+		mTemporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
@@ -71,67 +30,36 @@ class PluginFunctionalTest {
 	}
 
 	@Test
-	public void testAddJenkinsTestableBuildType() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('buildType.gradle', 'build.gradle')
+	public void testInstrumentationRunnerNotChangedWithoutUiTest() {
+		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
+		mTemporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		def result = GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
-		assertTestableVariants(result, 'debug')
+		assertThat(result.output).doesNotMatch(Pattern.compile("Instrumentation test runner for.*"))
 	}
 
 	@Test
-	void testAddJenkinsTestableFlavor() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('productFlavor.gradle', 'build.gradle')
+	public void testCustomUiTestInstrumentationRunner() {
+		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
+		mTemporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
+		mTemporaryFolder.projectFile('build.gradle') <<
+				"""
+		jenkinsTestable {
+			testInstrumentationRunner 'test.example.Runner'
+		}
+				"""
+		println mTemporaryFolder.projectFile('build.gradle').text
 		def result = GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('projects')
+				.withArguments('projects', "-P$UI_TEST_PROPERTY_NAME=true")
 				.withPluginClasspath()
 				.build()
-		assertTestableVariants(result, 'proDebug', 'proRelease')
-	}
 
-	@Test
-	public void testNoTestableVariant() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('noTestableVariant.gradle', 'build.gradle')
-		GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('connectedMonkeyJenkinsTest')
-				.withPluginClasspath()
-				.buildAndFail()
-	}
-
-	@Test
-	public void testNoSigningConfig() {
-		copyResource('base.gradle', 'base.gradle')
-		copyResource('noSigningConfig.gradle', 'build.gradle')
-		GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('projects')
-				.withPluginClasspath()
-				.buildAndFail()
-	}
-
-	private static void assertTestableVariants(BuildResult result, String... expectedVariants) {
-		assertThat(result.output.readLines().findAll { it.endsWith(VARIANT_LINE_SUFFIX) }).hasSize(expectedVariants.size())
-		def softAssertions = new SoftAssertions()
-		expectedVariants.each {
-			softAssertions.assertThat(result.output).contains("`$it` build variant is testable by monkey").as(it)
-		}
-		softAssertions.assertAll()
-	}
-
-	protected void copyResource(String resourceName, String fileName) {
-		new File(mTemporaryFolder.root, fileName).withOutputStream {
-			Resources.copy(getClass().classLoader.getResource(resourceName), it)
-		}
+		assertThat(result.output).containsPattern('Instrumentation test runner for \\w+: test\\.example\\.Runner')
 	}
 }

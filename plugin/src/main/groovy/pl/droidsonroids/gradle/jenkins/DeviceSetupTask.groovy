@@ -9,13 +9,13 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 
-public class SetupTask extends DefaultTask {
+public class DeviceSetupTask extends DefaultTask {
 	@Internal
 	private AndroidDebugBridge bridge
 	@Internal
 	private DeviceSetuper setuper
 
-	public SetupTask() {
+	public DeviceSetupTask() {
 		group = 'verification'
 		description = 'Setups device before instrumentation tests'
 		AndroidDebugBridge.initIfNeeded(false)

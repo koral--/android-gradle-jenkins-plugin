@@ -1,19 +1,17 @@
 plugins {
 	id 'com.gradle.plugin-publish' version '0.9.6'
+	id 'maven-publish'
+	id 'jacoco'
+	id 'java-gradle-plugin'
+	id 'groovy'
 }
-apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
-apply plugin: 'java-gradle-plugin'
-apply plugin: 'groovy'
 
 dependencies {
-	compile gradleApi()
 	compile 'org.codehaus.groovy:groovy:2.4.7'
 	compile 'com.android.tools.build:gradle:2.2.2'
-	testCompile gradleTestKit()
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.assertj:assertj-core:3.5.2'
-	testCompile 'org.mockito:mockito-core:2.2.7'
+	testCompile 'org.mockito:mockito-core:2.2.11'
 }
 
 group = GROUP

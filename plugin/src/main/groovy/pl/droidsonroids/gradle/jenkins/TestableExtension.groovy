@@ -1,12 +1,13 @@
 package pl.droidsonroids.gradle.jenkins
 
-import com.android.build.gradle.internal.dsl.ProductFlavor
 import com.android.builder.model.BuildType
+import com.android.builder.model.ProductFlavor
 
 public class TestableExtension {
 	final Set<String> productFlavorNames = []
 	final Set<String> buildTypeNames = []
 	final Set<String> variantNames = []
+	String testInstrumentationRunner
 
 	public void productFlavors(ProductFlavor... productFlavors) {
 		productFlavorNames.addAll(productFlavors.collect { it.name })
@@ -24,7 +25,11 @@ public class TestableExtension {
 		this.buildTypeNames.addAll(buildTypeNames)
 	}
 
-	public void applicationVariants(String... variantNames){
+	public void applicationVariants(String... variantNames) {
 		this.variantNames.addAll(variantNames)
+	}
+
+	public testInstrumentationRunner(String testInstrumentationRunner) {
+		this.testInstrumentationRunner = testInstrumentationRunner
 	}
 }
