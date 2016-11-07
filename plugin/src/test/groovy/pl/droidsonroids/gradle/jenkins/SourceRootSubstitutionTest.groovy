@@ -14,7 +14,7 @@ public class SourceRootSubstitutionTest {
 	@Test
 	public void testAndroidSourceRootSubstitution() throws Exception {
 		def project = ProjectBuilder.builder().build()
-		project.ext.'pl.droidsonroids.jenkins.uiTest' = true
+		project.ext."${JenkinsPlugin.UI_TEST_PROPERTY_NAME}" = true
 
 		project.pluginManager.apply('pl.droidsonroids.jenkins')
 		project.pluginManager.apply('com.android.application')
