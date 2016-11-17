@@ -14,7 +14,7 @@ public class SourceRootSubstitutionTest {
 	@Test
 	public void testAndroidSourceRootSubstitution() throws Exception {
 		def project = ProjectBuilder.builder().build()
-		project.ext."${JenkinsPlugin.UI_TEST_PROPERTY_NAME}" = true
+		project.ext."${JenkinsPlugin.UI_TEST_MODE_PROPERTY_NAME}" = UiTestMode.minify.name()
 
 		project.pluginManager.apply('pl.droidsonroids.jenkins')
 		project.pluginManager.apply('com.android.application')
@@ -34,8 +34,8 @@ public class SourceRootSubstitutionTest {
 
 		androidTest.with {
 			def sets = [java.srcDirs, resources.srcDirs, res.srcDirs, aidl.srcDirs,
-			        renderscript.srcDirs, jni.srcDirs, jniLibs.srcDirs, shaders.srcDirs]
-			for (Set<File> srcDirs: sets) {
+			            renderscript.srcDirs, jni.srcDirs, jniLibs.srcDirs, shaders.srcDirs]
+			for (Set<File> srcDirs : sets) {
 				softly.assertThat(srcDirs).hasSize(1)
 				softly.assertThat(srcDirs.first().path).startsWith(baseDir)
 			}

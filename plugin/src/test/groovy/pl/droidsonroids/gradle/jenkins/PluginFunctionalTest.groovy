@@ -8,7 +8,7 @@ import org.junit.Test
 import java.util.regex.Pattern
 
 import static org.assertj.core.api.Assertions.assertThat
-import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.UI_TEST_PROPERTY_NAME
+import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.UI_TEST_MODE_PROPERTY_NAME
 
 class PluginFunctionalTest {
 
@@ -56,7 +56,7 @@ class PluginFunctionalTest {
 		def result = GradleRunner.create()
 				.withProjectDir(mTemporaryFolder.root)
 				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withArguments('projects', "-P$UI_TEST_PROPERTY_NAME=true")
+				.withArguments('projects', "-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.development.name()}")
 				.withPluginClasspath()
 				.build()
 

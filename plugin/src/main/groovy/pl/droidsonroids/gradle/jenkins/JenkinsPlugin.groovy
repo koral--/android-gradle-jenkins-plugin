@@ -11,8 +11,8 @@ import org.gradle.util.GradleVersion
 public class JenkinsPlugin implements Plugin<Project> {
 
 	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180_000
-	static final String UI_TEST_PROPERTY_NAME = 'pl.droidsonroids.jenkins.ui.test'
 	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
+	static final String UI_TEST_MODE_PROPERTY_NAME = 'pl.droidsonroids.jenkins.ui.test.mode'
 
 	@Override
 	void apply(Project project) {
@@ -30,13 +30,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
 
-				if (subproject.hasProperty(UI_TEST_PROPERTY_NAME)) {
-					android.sourceSets.getByName('androidTest').setRoot(subproject.rootProject.file('uiTest').path)
-					android.applicationVariants.all {
-						it.mergedFlavor.setTestInstrumentationRunner jenkinsTestable.testInstrumentationRunner
-						subproject.logger.quiet("Instrumentation test runner for ${it.mergedFlavor.name}: $jenkinsTestable.testInstrumentationRunner")
-					}
-				}
+				UiTestUtils.addUITestsConfiguration(android, subproject, jenkinsTestable)
 
 				subproject.tasks.create('connectedSetupUiTests', DeviceSetupTask, {
 					appExtension android
@@ -57,4 +51,5 @@ public class JenkinsPlugin implements Plugin<Project> {
 			MonkeyUtils.addCleanMonkeyOutputTask(subproject)
 		}
 	}
+
 }
