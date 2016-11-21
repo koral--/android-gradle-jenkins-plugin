@@ -1,3 +1,7 @@
+### 1.0.24
+- log message instead of throwing an exception if monkey reaches timeout
+- added `pl.droidsonroids.jenkins.ui.test.mode` property
+
 ### 1.0.23
 - monkey task fixed
 
