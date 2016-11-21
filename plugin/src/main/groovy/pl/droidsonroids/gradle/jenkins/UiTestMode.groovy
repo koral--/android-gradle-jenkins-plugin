@@ -1,5 +1,9 @@
 package pl.droidsonroids.gradle.jenkins
 
 enum UiTestMode {
-	none, development, minify
+	noMinify, minify
+
+	boolean getMinifyEnabled(boolean defaultMinifyEnabled) {
+		return this == noMinify ? false : defaultMinifyEnabled
+	}
 }

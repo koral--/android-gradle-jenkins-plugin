@@ -12,15 +12,15 @@ class TestableVariantsFunctionalTest {
 
 	private static final String VARIANT_LINE_SUFFIX = 'build variant is testable by monkey'
 	@Rule
-	public TemporaryProjectFolder mTemporaryFolder = new TemporaryProjectFolder()
+	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
 	void testApplicationVariants() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('variant.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('variant.gradle', 'build.gradle')
 		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
@@ -29,11 +29,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	void testBuildTypesAndProductFlavors() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('mix.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('mix.gradle', 'build.gradle')
 		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
@@ -42,11 +42,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	void testBuildTypesAndProductFlavorsDomainObjects() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('mixDomainObjects.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('mixDomainObjects.gradle', 'build.gradle')
 		def result = GradleRunner.create()
-				.withTestKitDir(mTemporaryFolder.newFolder())
-				.withProjectDir(mTemporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
@@ -55,11 +55,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	public void testAddJenkinsTestableBuildType() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('buildType.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
@@ -68,11 +68,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	void testAddJenkinsTestableFlavor() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('productFlavor.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('productFlavor.gradle', 'build.gradle')
 		def result = GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
 				.withArguments('projects')
 				.withPluginClasspath()
 				.build()
@@ -81,11 +81,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	public void testNoTestableVariant() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
 				.withArguments('connectedMonkeyJenkinsTest')
 				.withPluginClasspath()
 				.buildAndFail()
@@ -93,11 +93,11 @@ class TestableVariantsFunctionalTest {
 
 	@Test
 	public void testNoSigningConfig() {
-		mTemporaryFolder.copyResource('base.gradle', 'base.gradle')
-		mTemporaryFolder.copyResource('noSigningConfig.gradle', 'build.gradle')
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('noSigningConfig.gradle', 'build.gradle')
 		GradleRunner.create()
-				.withProjectDir(mTemporaryFolder.root)
-				.withTestKitDir(mTemporaryFolder.newFolder())
+				.withProjectDir(temporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
 				.withArguments('projects')
 				.withPluginClasspath()
 				.buildAndFail()
