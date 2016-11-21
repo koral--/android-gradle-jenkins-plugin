@@ -1,3 +1,6 @@
+### 1.0.25
+- no changes, version bumped for gradle plugin portal 
+
 ### 1.0.24
 - log message instead of throwing an exception if monkey reaches timeout
 - added `pl.droidsonroids.jenkins.ui.test.mode` property
