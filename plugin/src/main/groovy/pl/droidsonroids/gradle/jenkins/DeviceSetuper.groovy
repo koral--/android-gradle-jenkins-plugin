@@ -7,9 +7,6 @@ import com.android.utils.StdLogger
 import java.util.concurrent.TimeUnit;
 
 public class DeviceSetuper {
-	static final long ADB_COMMAND_TIMEOUT_MILLIS = 30_000
-	static final String MEDIA_SCAN_COMMAND = 'am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://'
-
 	private IShellOutputReceiver outputReceiver = new LoggerBasedOutputReceiver(new StdLogger(StdLogger.Level.VERBOSE))
 
 	private final File tempDir
@@ -28,7 +25,7 @@ public class DeviceSetuper {
 
 		for (name in ['image_portrait.jpg', 'image_square.jpg', 'video.mp4']) {
 			def file = pushFile(device, name, '/sdcard/')
-			executeRemoteCommand(device, "$MEDIA_SCAN_COMMAND$file")
+			executeRemoteCommand(device, "$Constants.MEDIA_SCAN_COMMAND$file")
 		}
 		executeRemoteCommand(device, 'adb shell pm disable com.android.browser')
 		if (device.version.featureLevel >= 24) {
@@ -49,6 +46,6 @@ public class DeviceSetuper {
 	}
 
 	void executeRemoteCommand(IDevice device, String remoteCommand) {
-		device.executeShellCommand(remoteCommand, outputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
+		device.executeShellCommand(remoteCommand, outputReceiver, Constants.ADB_COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
 	}
 }

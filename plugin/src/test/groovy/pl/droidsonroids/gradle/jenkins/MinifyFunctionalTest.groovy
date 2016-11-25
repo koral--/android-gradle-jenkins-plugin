@@ -5,7 +5,7 @@ import org.junit.Rule
 import org.junit.Test
 
 import static org.assertj.core.api.Assertions.assertThat
-import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.UI_TEST_MODE_PROPERTY_NAME
+import static pl.droidsonroids.gradle.jenkins.Constants.UI_TEST_MODE_PROPERTY_NAME
 
 class MinifyFunctionalTest {
 

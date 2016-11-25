@@ -16,11 +16,10 @@ import org.gradle.api.tasks.TaskAction
 import java.util.concurrent.Executors
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS
-import static pl.droidsonroids.gradle.jenkins.JenkinsPlugin.ADB_COMMAND_TIMEOUT_MILLIS
+import static pl.droidsonroids.gradle.jenkins.Constants.ADB_COMMAND_TIMEOUT_MILLIS
+import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_RUN_TIMEOUT_MILLIS
 
 class MonkeyTask extends DefaultTask {
-
-	static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
 
 	@Internal
 	Set<ApplicationVariant> applicationVariants
@@ -59,8 +58,8 @@ class MonkeyTask extends DefaultTask {
 
 					project.logger.lifecycle('Monkeying on {}', device.name)
 					def monkeyOutputReceiver = new MonkeyOutputReceiver(monkeyFile)
-					def future = executor.schedule({ monkeyOutputReceiver.cancel() }, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
-					device.executeShellCommand(command, monkeyOutputReceiver, ADB_COMMAND_TIMEOUT_MILLIS, MILLISECONDS)
+					def future = executor.schedule({ monkeyOutputReceiver.cancel() }, MONKEY_RUN_TIMEOUT_MILLIS, MILLISECONDS)
+					device.executeShellCommand(command, monkeyOutputReceiver, MONKEY_RUN_TIMEOUT_MILLIS, MILLISECONDS)
 
 					if (monkeyOutputReceiver.isCancelled()) {
 						project.logger.warn("Monkeying timed out, see monkey.txt and $logcatFileName for details")

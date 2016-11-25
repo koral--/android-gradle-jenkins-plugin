@@ -10,9 +10,6 @@ import org.gradle.util.GradleVersion
 
 public class JenkinsPlugin implements Plugin<Project> {
 
-	static final int ADB_COMMAND_TIMEOUT_MILLIS = 180_000
-	private static final String DISABLE_PREDEX_PROPERTY_NAME = 'pl.droidsonroids.jenkins.disablepredex'
-	static final String UI_TEST_MODE_PROPERTY_NAME = 'pl.droidsonroids.jenkins.ui.test.mode'
 
 	@Override
 	void apply(Project project) {
@@ -20,21 +17,23 @@ public class JenkinsPlugin implements Plugin<Project> {
 			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.6")
 		}
 
-		DdmPreferences.setTimeOut(ADB_COMMAND_TIMEOUT_MILLIS)
+		DdmPreferences.setTimeOut(Constants.ADB_COMMAND_TIMEOUT_MILLIS)
 		Utils.addJavacXlint(project)
+
 		project.allprojects { Project subproject ->
 			subproject.pluginManager.apply(BasePlugin)
 			TestableExtension jenkinsTestable = subproject.extensions.create('jenkinsTestable', TestableExtension)
 
-			boolean disablePredex = project.hasProperty(DISABLE_PREDEX_PROPERTY_NAME)
+			boolean disablePredex = project.hasProperty(Constants.DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
 
 				UiTestUtils.addUITestsConfiguration(android, subproject, jenkinsTestable)
 
-				subproject.tasks.create('connectedSetupUiTests', DeviceSetupTask, {
+				def deviceSetupTask = subproject.tasks.create(Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME, DeviceSetupTask, {
 					appExtension android
 				})
+				subproject.tasks.create(Constants.CONNECTED_UI_TEST_TASK_NAME).dependsOn(deviceSetupTask, Constants.CONNECTED_CHECK_TASK_NAME)
 
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)

@@ -17,7 +17,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS
 import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
-import static pl.droidsonroids.gradle.jenkins.DeviceSetuper.ADB_COMMAND_TIMEOUT_MILLIS
+import static pl.droidsonroids.gradle.jenkins.Constants.ADB_COMMAND_TIMEOUT_MILLIS
 
 class DeviceSetuperTest {
 
@@ -47,7 +47,7 @@ class DeviceSetuperTest {
 		verify(device).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, atLeastOnce()).pushFile(any(), any())
-		verify(device, atLeastOnce()).executeShellCommand(startsWith(DeviceSetuper.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device, atLeastOnce()).executeShellCommand(startsWith(Constants.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('adb shell pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('adb shell pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}

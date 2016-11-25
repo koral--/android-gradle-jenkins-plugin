@@ -14,7 +14,7 @@ public class SourceRootSubstitutionTest {
 	@Test
 	public void testAndroidSourceRootSubstitution() throws Exception {
 		def project = ProjectBuilder.builder().build()
-		project.ext."${JenkinsPlugin.UI_TEST_MODE_PROPERTY_NAME}" = UiTestMode.minify.name()
+		project.ext."${Constants.UI_TEST_MODE_PROPERTY_NAME}" = UiTestMode.minify.name()
 
 		project.pluginManager.apply('pl.droidsonroids.jenkins')
 		project.pluginManager.apply('com.android.application')

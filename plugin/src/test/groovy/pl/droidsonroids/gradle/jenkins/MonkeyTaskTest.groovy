@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
-import static pl.droidsonroids.gradle.jenkins.MonkeyTask.MONKEY_TASK_NAME
+import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_TASK_NAME
 
 public class MonkeyTaskTest {
 	@Test

@@ -21,7 +21,7 @@ public class DeviceSetupTask extends DefaultTask {
 		AndroidDebugBridge.initIfNeeded(false)
 		def dir = File.createTempDir()
 		setuper = new DeviceSetuper(dir)
-		finalizedBy project.tasks.create('cleanUiTestTempDir', Delete, {
+		finalizedBy project.tasks.create(Constants.CLEAN_UI_TEST_TEMP_DIR_TASK_NAME, Delete, {
 			delete dir
 		})
 	}

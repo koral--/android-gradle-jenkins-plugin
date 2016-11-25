@@ -24,7 +24,7 @@ static def addMonkeyTask(Project project, AppExtension android) {
 		false
 	}
 
-	def monkeyTask = project.tasks.create(MonkeyTask.MONKEY_TASK_NAME, MonkeyTask, {
+	def monkeyTask = project.tasks.create(Constants.MONKEY_TASK_NAME, MonkeyTask, {
 		appExtension android
 	})
 	applicationVariants.each {
@@ -37,7 +37,7 @@ static def addMonkeyTask(Project project, AppExtension android) {
 }
 
 static def addCleanMonkeyOutputTask(Project project) {
-	def cleanMonkeyOutput = project.tasks.create('cleanMonkeyOutput', Delete)
+	def cleanMonkeyOutput = project.tasks.create(Constants.CLEAN_MONKEY_OUTPUT_TASK_NAME, Delete)
 	cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey-logcat-*.txt'])
 	project.clean.dependsOn cleanMonkeyOutput
 }
