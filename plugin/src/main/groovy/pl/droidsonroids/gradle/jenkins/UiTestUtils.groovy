@@ -20,7 +20,7 @@ static void addUITestsConfiguration(AppExtension android, Project subproject, Te
 			def defaultMinifyEnabled = jenkinsTestable.getDefaultMinifyEnabled(variants)
 			def minifyEnabled = uiTestMode.getMinifyEnabled(defaultMinifyEnabled)
 			android.buildTypes."$android.testBuildType".minifyEnabled minifyEnabled
-			subproject.logger.quiet("Overriding minifyEnabled for $it.buildType.name to $minifyEnabled")
+			subproject.logger.quiet("minifyEnabled for $it.buildType.name set to $minifyEnabled")
 		}
 		it.mergedFlavor.setTestInstrumentationRunner jenkinsTestable.testInstrumentationRunner
 		subproject.logger.quiet("Instrumentation test runner for ${it.mergedFlavor.name}: $jenkinsTestable.testInstrumentationRunner")

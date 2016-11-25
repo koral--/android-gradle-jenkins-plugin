@@ -1,22 +1,21 @@
 sudo: false
 
+jdk:
+  - oraclejdk8
+
 language:
   - android
 
 licenses:
-  - 'android-sdk-preview-license-52d11cd2'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
+  - '.*'
 
-jdk:
-  - oraclejdk8
-
-before_install:
-  - echo y|android update sdk --all --no-ui --force --filter tools
-  - echo y|android update sdk --all --no-ui --force --filter platform-tools
-  - echo y|android update sdk --all --no-ui --force --filter tools
-  - echo y|android update sdk --all --no-ui --force --filter build-tools-25.0.0
-  - echo y|android update sdk --all --no-ui --force --filter android-25
+android:
+  components:
+    - tools # to get the new `repository-11.xml`
+    - tools # see https://github.com/travis-ci/travis-ci/issues/6040#issuecomment-219367943)
+    - platform-tools
+    - build-tools-25.0.1
+    - android-25
 
 script:
   - ./gradlew build jacocoTestReport --info --stacktrace
