@@ -69,6 +69,6 @@ class DeviceSetuperTest {
 
 		setuper.executeRemoteCommand(device, command)
 
-		verify(device).executeShellCommand(eq(command), any(), eq(ADB_COMMAND_TIMEOUT_MILLIS), eq(MILLISECONDS))
+		verify(device).executeShellCommand(eq(command), any(), eq((long) ADB_COMMAND_TIMEOUT_MILLIS), eq(MILLISECONDS))
 	}
 }
