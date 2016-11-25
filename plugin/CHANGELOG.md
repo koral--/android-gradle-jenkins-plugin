@@ -1,3 +1,6 @@
+### 1.0.26
+- ui test task names unification 
+
 ### 1.0.25
 - no changes, version bumped for gradle plugin portal 
 
