@@ -22,13 +22,14 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 		project.allprojects { Project subproject ->
 			subproject.pluginManager.apply(BasePlugin)
-			TestableExtension jenkinsTestable = subproject.extensions.create('jenkinsTestable', TestableExtension)
+			MonkeyTestExtension monkeyTest = subproject.extensions.create('monkeyTest', MonkeyTestExtension)
+			UiTestExtension uiTest = subproject.extensions.create('uiTest', UiTestExtension)
 
 			boolean disablePredex = project.hasProperty(Constants.DISABLE_PREDEX_PROPERTY_NAME)
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
 
-				UiTestUtils.addUITestsConfiguration(android, subproject, jenkinsTestable)
+				UiTestUtils.addUITestsConfiguration(android, subproject, uiTest)
 
 				def deviceSetupTask = subproject.tasks.create(Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME, DeviceSetupTask, {
 					appExtension android
@@ -38,7 +39,7 @@ public class JenkinsPlugin implements Plugin<Project> {
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {
-					MonkeyUtils.addMonkeyTask(subproject, android)
+					MonkeyUtils.addMonkeyTask(subproject, android, monkeyTest)
 				}
 			}
 			subproject.plugins.withType(LibraryPlugin) {

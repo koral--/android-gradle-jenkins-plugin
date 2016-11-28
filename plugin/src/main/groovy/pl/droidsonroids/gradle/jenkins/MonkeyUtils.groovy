@@ -6,18 +6,16 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.tasks.Delete
 
-static def addMonkeyTask(Project project, AppExtension android) {
-	def jenkinsTestable = project.extensions.getByType(TestableExtension)
-
+static def addMonkeyTask(Project project, AppExtension android, MonkeyTestExtension monkeyTest) {
 	def applicationVariants = android.applicationVariants.findAll {
-		if (jenkinsTestable.variantNames.contains(it.name)) {
+		if (monkeyTest.variantNames.contains(it.name)) {
 			return true
 		}
-		if (jenkinsTestable.buildTypeNames.contains(it.buildType.name)) {
+		if (monkeyTest.buildTypeNames.contains(it.buildType.name)) {
 			return true
 		}
 		for (ProductFlavor flavor : it.productFlavors) {
-			if (jenkinsTestable.productFlavorNames.contains(flavor.name)) {
+			if (monkeyTest.productFlavorNames.contains(flavor.name)) {
 				return true
 			}
 		}

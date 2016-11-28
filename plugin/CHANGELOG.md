@@ -1,3 +1,6 @@
+### 1.0.27
+- `jenkinsTestable` split into `monkeyTest` and `uiTest` 
+
 ### 1.0.26
 - ui test task names unification 
 

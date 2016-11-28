@@ -33,7 +33,7 @@ public class TestRunnerFunctionalTest {
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
 				"""
-		jenkinsTestable {
+		uiTest {
 			testInstrumentationRunner 'test.example.Runner'
 		}
 				"""

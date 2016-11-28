@@ -35,7 +35,7 @@ public class MonkeyTaskTest {
 				}
 			}
 		}
-		project.jenkinsTestable {
+		project.monkeyTest {
 			buildTypes 'release'
 		}
 		def variant = mock(ApplicationVariant.class, RETURNS_DEEP_STUBS)

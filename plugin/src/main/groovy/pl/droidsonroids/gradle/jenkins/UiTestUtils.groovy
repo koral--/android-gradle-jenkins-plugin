@@ -5,7 +5,7 @@ import com.android.build.gradle.api.ApplicationVariant
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 
-static void addUITestsConfiguration(AppExtension android, Project subproject, TestableExtension jenkinsTestable) {
+static void addUITestsConfiguration(AppExtension android, Project subproject, UiTestExtension uiTest) {
 	def uiTestModeName = subproject.findProperty(Constants.UI_TEST_MODE_PROPERTY_NAME)
 	if (uiTestModeName == null) {
 		return
@@ -17,12 +17,12 @@ static void addUITestsConfiguration(AppExtension android, Project subproject, Te
 
 	variants.all {
 		if (it.buildType.name == android.testBuildType) {
-			def defaultMinifyEnabled = jenkinsTestable.getDefaultMinifyEnabled(variants)
+			def defaultMinifyEnabled = uiTest.getDefaultMinifyEnabled(variants)
 			def minifyEnabled = uiTestMode.getMinifyEnabled(defaultMinifyEnabled)
 			android.buildTypes."$android.testBuildType".minifyEnabled minifyEnabled
 			subproject.logger.quiet("minifyEnabled for $it.buildType.name set to $minifyEnabled")
 		}
-		it.mergedFlavor.setTestInstrumentationRunner jenkinsTestable.testInstrumentationRunner
-		subproject.logger.quiet("Instrumentation test runner for ${it.mergedFlavor.name}: $jenkinsTestable.testInstrumentationRunner")
+		it.mergedFlavor.setTestInstrumentationRunner uiTest.testInstrumentationRunner
+		subproject.logger.quiet("Instrumentation test runner for ${it.mergedFlavor.name}: $uiTest.testInstrumentationRunner")
 	}
 }

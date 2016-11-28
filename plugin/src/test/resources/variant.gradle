@@ -20,6 +20,6 @@ android {
 	}
 }
 
-jenkinsTestable {
+monkeyTest {
 	applicationVariants 'productionDev', 'stagingDebug'
 }

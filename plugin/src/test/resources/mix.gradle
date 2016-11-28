@@ -20,7 +20,7 @@ android {
 	}
 }
 
-jenkinsTestable {
+monkeyTest {
 	buildTypes 'dev'
 	productFlavors 'staging'
 }

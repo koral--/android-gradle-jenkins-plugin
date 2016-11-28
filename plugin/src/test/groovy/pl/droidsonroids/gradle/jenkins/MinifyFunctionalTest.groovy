@@ -18,7 +18,7 @@ class MinifyFunctionalTest {
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
 				"""
-		jenkinsTestable {
+		uiTest {
 			minifyEnabled true
 		}
 				"""
@@ -37,7 +37,7 @@ class MinifyFunctionalTest {
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
 				"""
-		jenkinsTestable {
+		uiTest {
 			minifyEnabled true
 		}
 				"""
@@ -57,7 +57,7 @@ class MinifyFunctionalTest {
 		temporaryFolder.projectFile('build.gradle') <<
 				"""
 		android.buildTypes.debug.minifyEnabled true
-		jenkinsTestable {
+		uiTest {
 			minifyEnabled true
 		}
 				"""

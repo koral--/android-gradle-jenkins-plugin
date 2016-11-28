@@ -54,7 +54,7 @@ class TestableVariantsFunctionalTest {
 	}
 
 	@Test
-	public void testAddJenkinsTestableBuildType() {
+	public void testAddMonkeyTestBuildType() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()
@@ -67,7 +67,7 @@ class TestableVariantsFunctionalTest {
 	}
 
 	@Test
-	void testAddJenkinsTestableFlavor() {
+	void testAddMonkeyTestableFlavor() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('productFlavor.gradle', 'build.gradle')
 		def result = GradleRunner.create()
