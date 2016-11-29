@@ -27,9 +27,9 @@ public class DeviceSetuper {
 			def file = pushFile(device, name, '/sdcard/')
 			executeRemoteCommand(device, "$Constants.MEDIA_SCAN_COMMAND$file")
 		}
-		executeRemoteCommand(device, 'adb shell pm disable com.android.browser')
+		executeRemoteCommand(device, 'pm disable com.android.browser')
 		if (device.version.featureLevel >= 24) {
-			executeRemoteCommand(device, 'adb shell pm hide org.chromium.webview_shell')
+			executeRemoteCommand(device, 'pm hide org.chromium.webview_shell')
 		}
 	}
 

@@ -1,3 +1,6 @@
+### 1.0.29
+- browser disabling fixed
+
 ### 1.0.28
 - `connectedSetupUiTest` fixed
 

@@ -48,8 +48,8 @@ class DeviceSetuperTest {
 		verify(device).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, atLeastOnce()).pushFile(any(), any())
 		verify(device, atLeastOnce()).executeShellCommand(startsWith(Constants.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('adb shell pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('adb shell pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
