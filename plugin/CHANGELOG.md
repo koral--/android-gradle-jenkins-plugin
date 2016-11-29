@@ -1,3 +1,6 @@
+### 1.0.28
+- `connectedSetupUiTest` fixed
+
 ### 1.0.27
 - `jenkinsTestable` split into `monkeyTest` and `uiTest` 
 

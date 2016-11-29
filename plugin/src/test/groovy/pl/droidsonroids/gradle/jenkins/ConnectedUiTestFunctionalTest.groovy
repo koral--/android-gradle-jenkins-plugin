@@ -1,7 +1,6 @@
 package pl.droidsonroids.gradle.jenkins
 
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.Test
 
@@ -11,20 +10,6 @@ class ConnectedUiTestFunctionalTest {
 
 	@Rule
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
-
-	@Test
-	public void testCleanUiTestTempDirFinalize() {
-		temporaryFolder.copyResource('base.gradle', 'base.gradle')
-		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
-
-		def result = GradleRunner.create()
-				.withProjectDir(temporaryFolder.root)
-				.withTestKitDir(temporaryFolder.newFolder())
-				.withArguments(Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME)
-				.withPluginClasspath()
-				.buildAndFail()
-		assertThat(result.task(":$Constants.CLEAN_UI_TEST_TEMP_DIR_TASK_NAME").outcome).isEqualTo(TaskOutcome.SUCCESS)
-	}
 
 	@Test
 	public void testConnectedUiTest() {
