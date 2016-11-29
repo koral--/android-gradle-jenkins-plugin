@@ -1,7 +1,6 @@
 package pl.droidsonroids.gradle.jenkins
 
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.Test
 
@@ -23,7 +22,6 @@ class SetupFunctionalTest {
 				.withPluginClasspath()
 				.buildAndFail()
 		assertThat(result.output).contains('No connected devices')
-		assertThat(result.task(':cleanUiTestTempDir').outcome).isEqualTo(TaskOutcome.SUCCESS)
 	}
 
 }
