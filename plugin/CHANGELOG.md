@@ -1,3 +1,6 @@
+### 1.0.30
+- restarting adb as root replaced with `su 0` in commands
+
 ### 1.0.29
 - browser disabling fixed
 

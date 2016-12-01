@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
@@ -29,12 +30,10 @@ class DeviceSetuperTest {
 	@Mock
 	IDevice device
 	private DeviceSetuper setuper
-	private File folder
 
 	@Before
 	public void setUp() {
-		folder = temporaryFolder.newFolder()
-		setuper = new DeviceSetuper(folder)
+		setuper = new DeviceSetuper()
 	}
 
 	@Test
@@ -48,8 +47,8 @@ class DeviceSetuperTest {
 		verify(device).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, atLeastOnce()).pushFile(any(), any())
 		verify(device, atLeastOnce()).executeShellCommand(startsWith(Constants.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('su 0 pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('su 0 pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
@@ -60,7 +59,9 @@ class DeviceSetuperTest {
 		def remoteFilePath = setuper.pushFile(device, fileName, remotePath)
 
 		assertThat(new File(remoteFilePath)).hasParent(remotePath).hasName(fileName)
-		verify(device).pushFile(new File(folder, fileName).path, remoteFilePath)
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class)
+		verify(device).pushFile(captor.capture(), eq(remoteFilePath))
+		assertThat(captor.value).endsWith(fileName)
 	}
 
 	@Test

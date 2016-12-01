@@ -32,15 +32,10 @@ public class DeviceSetupTask extends DefaultTask {
 			throw new GradleException('No connected devices')
 		}
 
-		def dir = File.createTempDir()
-		try {
-			DeviceSetuper setuper = new DeviceSetuper(dir)
-			bridge.devices.each {
-				project.logger.info("Setupping {}", it.name)
-				setuper.setup(it)
-			}
-		} finally {
-			dir.deleteDir()
+		DeviceSetuper setuper = new DeviceSetuper()
+		bridge.devices.each {
+			project.logger.info("Setupping {}", it.name)
+			setuper.setup(it)
 		}
 	}
 }

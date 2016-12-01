@@ -11,12 +11,14 @@ public class DeviceSetuper {
 
 	private final File tempDir
 
-	public DeviceSetuper(File tempDir) {
-		this.tempDir = tempDir
+	public DeviceSetuper() {
+		this.tempDir = File.createTempDir()
+		Runtime.addShutdownHook {
+			tempDir.deleteDir()
+		}
 	}
 
 	public void setup(IDevice device) {
-		device.root()
 		if (device.version.apiLevel >= 17) {
 			executeRemoteCommand(device, 'settings put global window_animation_scale 0')
 			executeRemoteCommand(device, 'settings put global transition_animation_scale 0')
@@ -27,9 +29,9 @@ public class DeviceSetuper {
 			def file = pushFile(device, name, '/sdcard/')
 			executeRemoteCommand(device, "$Constants.MEDIA_SCAN_COMMAND$file")
 		}
-		executeRemoteCommand(device, 'pm disable com.android.browser')
+		executeRemoteCommand(device, 'su 0 pm disable com.android.browser')
 		if (device.version.featureLevel >= 24) {
-			executeRemoteCommand(device, 'pm hide org.chromium.webview_shell')
+			executeRemoteCommand(device, 'su 0 pm hide org.chromium.webview_shell')
 		}
 	}
 
