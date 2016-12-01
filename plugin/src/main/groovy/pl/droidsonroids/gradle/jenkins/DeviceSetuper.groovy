@@ -30,9 +30,8 @@ public class DeviceSetuper {
 			executeRemoteCommand(device, "$Constants.MEDIA_SCAN_COMMAND$file")
 		}
 		executeRemoteCommand(device, 'su 0 pm disable com.android.browser')
-		if (device.version.featureLevel >= 24) {
-			executeRemoteCommand(device, 'su 0 pm hide org.chromium.webview_shell')
-		}
+		executeRemoteCommand(device, 'su 0 pm hide org.chromium.webview_shell')
+		executeRemoteCommand(device, 'su 0 pm hide com.android.chrome')
 	}
 
 	String pushFile(IDevice device, String fileName, String remotePath) {

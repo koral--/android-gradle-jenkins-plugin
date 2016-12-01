@@ -1,3 +1,6 @@
+### 1.0.31
+- chrome added to hidden browser packages
+
 ### 1.0.30
 - restarting adb as root replaced with `su 0` in commands
 
