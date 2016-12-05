@@ -31,11 +31,6 @@ public class JenkinsPlugin implements Plugin<Project> {
 
 				UiTestUtils.addUITestsConfiguration(android, subproject, uiTest)
 
-				def deviceSetupTask = subproject.tasks.create(Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME, DeviceSetupTask, {
-					appExtension android
-				})
-				subproject.tasks.create(Constants.CONNECTED_UI_TEST_TASK_NAME).dependsOn(deviceSetupTask, Constants.CONNECTED_CHECK_TASK_NAME)
-
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)
 				subproject.afterEvaluate {
