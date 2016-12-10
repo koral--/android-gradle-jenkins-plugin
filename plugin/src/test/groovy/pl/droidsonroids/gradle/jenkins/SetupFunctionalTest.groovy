@@ -18,7 +18,7 @@ class SetupFunctionalTest {
 		def result = GradleRunner.create()
 				.withProjectDir(temporaryFolder.root)
 				.withTestKitDir(temporaryFolder.newFolder())
-				.withArguments(Constants.UI_TEST_MODE_PROPERTY_NAME, "-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name()}")
+				.withArguments(Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME, "-P$Constants.UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name()}")
 				.withPluginClasspath()
 				.buildAndFail()
 		assertThat(result.output).contains('No connected devices')
