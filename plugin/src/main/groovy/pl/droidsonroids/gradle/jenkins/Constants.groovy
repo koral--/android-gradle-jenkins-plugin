@@ -12,6 +12,7 @@ class Constants {
 	static final String CONNECTED_UI_TEST_TASK_NAME = 'connectedUiTest'
 	static final String CONNECTED_CHECK_TASK_NAME = 'connectedCheck'
 	static final String CONNECTED_SETUP_UI_TEST_TASK_NAME = 'connectedSetupUiTest'
+	static final String CONNECTED_SETUP_REVERT_UI_TEST_TASK_NAME = 'connectedSetupRevertUiTest'
 	static final String CLEAN_MONKEY_OUTPUT_TASK_NAME = 'cleanMonkeyOutput'
 
 	static final String MEDIA_SCAN_COMMAND = 'am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://'

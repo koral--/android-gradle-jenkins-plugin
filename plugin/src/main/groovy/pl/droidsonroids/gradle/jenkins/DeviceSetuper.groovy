@@ -1,13 +1,8 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
-import com.android.ddmlib.IShellOutputReceiver
-import com.android.utils.StdLogger
 
-import java.util.concurrent.TimeUnit;
-
-public class DeviceSetuper {
-	private IShellOutputReceiver outputReceiver = new LoggerBasedOutputReceiver(new StdLogger(StdLogger.Level.VERBOSE))
+public class DeviceSetuper extends DeviceActionPerformer {
 
 	private final File tempDir
 
@@ -18,12 +13,11 @@ public class DeviceSetuper {
 		}
 	}
 
-	public void setup(IDevice device) {
-		if (device.version.apiLevel >= 17) {
-			executeRemoteCommand(device, 'settings put global window_animation_scale 0')
-			executeRemoteCommand(device, 'settings put global transition_animation_scale 0')
-			executeRemoteCommand(device, 'settings put global animator_duration_scale 0')
-		}
+	@Override
+	public void performAction(IDevice device) {
+		executeRemoteCommand(device, 'settings put global window_animation_scale 0')
+		executeRemoteCommand(device, 'settings put global transition_animation_scale 0')
+		executeRemoteCommand(device, 'settings put global animator_duration_scale 0')
 
 		for (name in ['image_portrait.jpg', 'image_square.jpg', 'video.mp4']) {
 			def file = pushFile(device, name, '/sdcard/')
@@ -46,7 +40,4 @@ public class DeviceSetuper {
 		return remoteFilePath
 	}
 
-	void executeRemoteCommand(IDevice device, String remoteCommand) {
-		device.executeShellCommand(remoteCommand, outputReceiver, Constants.ADB_COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
-	}
 }

@@ -24,4 +24,20 @@ class SetupFunctionalTest {
 		assertThat(result.output).contains('No connected devices')
 	}
 
+	@Test
+	public void testUiTestDependencies() {
+		temporaryFolder.copyResource('base.gradle', 'base.gradle')
+		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
+		def result = GradleRunner.create()
+				.withProjectDir(temporaryFolder.root)
+				.withTestKitDir(temporaryFolder.newFolder())
+				.withArguments(Constants.CONNECTED_UI_TEST_TASK_NAME, "-P$Constants.UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name()}", '-m')
+				.withPluginClasspath()
+				.build()
+
+		assertThat(result.task(":$Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME")).isNotNull()
+		assertThat(result.task(":$Constants.CONNECTED_CHECK_TASK_NAME")).isNotNull()
+		assertThat(result.task(":$Constants.CONNECTED_SETUP_REVERT_UI_TEST_TASK_NAME")).isNotNull()
+	}
+
 }

@@ -15,6 +15,10 @@ static void addUITestsConfiguration(AppExtension android, Project subproject, Ui
 		it.appExtension android
 	})
 
+	def deviceSetupRevertTask = subproject.tasks.create(Constants.CONNECTED_SETUP_REVERT_UI_TEST_TASK_NAME, DeviceSetupRevertTask, {
+		it.appExtension android
+	})
+
 	def connectedCheckTask = subproject.tasks.getByName(Constants.CONNECTED_CHECK_TASK_NAME)
 	connectedCheckTask.mustRunAfter deviceSetupTask
 
@@ -22,6 +26,7 @@ static void addUITestsConfiguration(AppExtension android, Project subproject, Ui
 		it.group = 'verification'
 		it.description = 'Setups connected devices and performs instrumentation tests'
 		it.dependsOn connectedCheckTask, deviceSetupTask
+		it.finalizedBy deviceSetupRevertTask
 	}
 
 	def uiTestMode = UiTestMode.valueOf(uiTestModeName)

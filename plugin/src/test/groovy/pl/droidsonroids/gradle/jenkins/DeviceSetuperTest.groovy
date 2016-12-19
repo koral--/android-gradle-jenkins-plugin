@@ -2,7 +2,6 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.IShellOutputReceiver
-import com.android.sdklib.AndroidVersion
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -14,11 +13,10 @@ import org.mockito.junit.MockitoRule
 
 import java.util.concurrent.TimeUnit
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS
 import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.ArgumentMatchers.*
-import static org.mockito.Mockito.*
-import static pl.droidsonroids.gradle.jenkins.Constants.ADB_COMMAND_TIMEOUT_MILLIS
+import static org.mockito.Mockito.atLeastOnce
+import static org.mockito.Mockito.verify
 
 class DeviceSetuperTest {
 
@@ -37,10 +35,8 @@ class DeviceSetuperTest {
 	}
 
 	@Test
-	void testSetupApi24() {
-		when(device.getVersion()).thenReturn(new AndroidVersion('24'))
-
-		setuper.setup(device)
+	void testPerformAction() {
+		setuper.performAction(device)
 
 		verify(device).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
@@ -62,14 +58,5 @@ class DeviceSetuperTest {
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class)
 		verify(device).pushFile(captor.capture(), eq(remoteFilePath))
 		assertThat(captor.value).endsWith(fileName)
-	}
-
-	@Test
-	void testExecuteRemoteCommand() {
-		def command = 'test'
-
-		setuper.executeRemoteCommand(device, command)
-
-		verify(device).executeShellCommand(eq(command), any(), eq((long) ADB_COMMAND_TIMEOUT_MILLIS), eq(MILLISECONDS))
 	}
 }
