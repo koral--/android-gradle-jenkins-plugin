@@ -1,5 +1,8 @@
+### 1.0.32
+- Screen unlock added to setup steps along with re-lock after tests 
+
 ### 1.0.31
-- chrome added to hidden browser packages
+- Chrome added to hidden browser packages
 
 ### 1.0.30
 - restarting adb as root replaced with `su 0` in commands

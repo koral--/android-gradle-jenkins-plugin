@@ -2,6 +2,7 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
 import com.android.ddmlib.IShellOutputReceiver
+import com.android.sdklib.AndroidVersion
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,8 +16,7 @@ import java.util.concurrent.TimeUnit
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.ArgumentMatchers.*
-import static org.mockito.Mockito.atLeastOnce
-import static org.mockito.Mockito.verify
+import static org.mockito.Mockito.*
 
 class DeviceSetuperTest {
 
@@ -35,7 +35,8 @@ class DeviceSetuperTest {
 	}
 
 	@Test
-	void testPerformAction() {
+	void testPerformActionApi24() {
+		when(device.version).thenReturn(new AndroidVersion(24, 'Nougat'))
 		setuper.performAction(device)
 
 		verify(device).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
@@ -45,6 +46,27 @@ class DeviceSetuperTest {
 		verify(device, atLeastOnce()).executeShellCommand(startsWith(Constants.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+
+		verify(device).executeShellCommand(eq('input keyevent 26'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('input text 1234'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('input keyevent 66'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+	}
+
+	@Test
+	void testPerformActionApi22() {
+		when(device.version).thenReturn(new AndroidVersion(22, 'Lollipop'))
+		verify(device, never()).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+	}
+
+	@Test
+	void testPerformActionApi16() {
+		when(device.version).thenReturn(new AndroidVersion(16, 'Jelly Bean'))
+		verify(device, never()).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device, never()).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device, never()).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device, never()).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
