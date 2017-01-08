@@ -1,5 +1,8 @@
+### 1.0.33
+- Screen unlock added to setup steps along with re-lock after tests
+
 ### 1.0.32
-- Screen unlock added to setup steps along with re-lock after tests 
+- Setup revert added 
 
 ### 1.0.31
 - Chrome added to hidden browser packages
