@@ -26,7 +26,7 @@ abstract class DeviceActionTask extends DefaultTask {
 		}
 	}
 
-	protected abstract DeviceSetuper getActionPerformer()
+	protected abstract DeviceActionPerformer getActionPerformer()
 
 	@TaskAction
 	public void performAction() {

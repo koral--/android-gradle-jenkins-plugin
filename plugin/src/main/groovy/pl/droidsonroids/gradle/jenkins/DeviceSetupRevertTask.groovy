@@ -6,7 +6,7 @@ public class DeviceSetupRevertTask extends DeviceActionTask {
 		description = 'Reverts device setup after instrumentation tests'
 	}
 
-	protected DeviceSetuper getActionPerformer() {
+	protected DeviceActionPerformer getActionPerformer() {
 		new DeviceSetupReverter()
 	}
 }

@@ -1,3 +1,6 @@
+### 1.0.34
+- Device setup reverter fixed 
+
 ### 1.0.33
 - Screen unlock added to setup steps along with re-lock after tests
 

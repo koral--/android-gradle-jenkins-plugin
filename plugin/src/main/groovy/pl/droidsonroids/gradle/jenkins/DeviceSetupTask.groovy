@@ -6,7 +6,7 @@ public class DeviceSetupTask extends DeviceActionTask {
 		description = 'Setups device before instrumentation tests'
 	}
 
-	protected DeviceSetuper getActionPerformer() {
+	protected DeviceActionPerformer getActionPerformer() {
 		new DeviceSetuper()
 	}
 }
