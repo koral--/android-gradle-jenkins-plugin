@@ -19,13 +19,15 @@ static void addUITestsConfiguration(AppExtension android, Project subproject, Ui
 		it.appExtension android
 	})
 
-	def connectedCheckTask = subproject.tasks.getByName(Constants.CONNECTED_CHECK_TASK_NAME)
-	connectedCheckTask.mustRunAfter deviceSetupTask
+	subproject.apply plugin: 'spoon'
+
+	def spoonTask = subproject.tasks.getByName(Constants.SPOON_TASK_NAME)
+	spoonTask.mustRunAfter deviceSetupTask
 
 	subproject.tasks.create(Constants.CONNECTED_UI_TEST_TASK_NAME) {
 		it.group = 'verification'
 		it.description = 'Setups connected devices and performs instrumentation tests'
-		it.dependsOn connectedCheckTask, deviceSetupTask
+		it.dependsOn spoonTask, deviceSetupTask
 		it.finalizedBy deviceSetupRevertTask
 	}
 

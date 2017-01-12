@@ -10,7 +10,7 @@ class Constants {
 
 	static final String MONKEY_TASK_NAME = 'connectedMonkeyJenkinsTest'
 	static final String CONNECTED_UI_TEST_TASK_NAME = 'connectedUiTest'
-	static final String CONNECTED_CHECK_TASK_NAME = 'connectedCheck'
+	static final String SPOON_TASK_NAME = 'spoon'
 	static final String CONNECTED_SETUP_UI_TEST_TASK_NAME = 'connectedSetupUiTest'
 	static final String CONNECTED_SETUP_REVERT_UI_TEST_TASK_NAME = 'connectedSetupRevertUiTest'
 	static final String CLEAN_MONKEY_OUTPUT_TASK_NAME = 'cleanMonkeyOutput'
