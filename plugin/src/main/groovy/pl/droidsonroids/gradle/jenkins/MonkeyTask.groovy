@@ -22,7 +22,7 @@ import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_RUN_TIMEOUT_MILLI
 class MonkeyTask extends DefaultTask {
 
 	@Internal
-	Set<ApplicationVariant> applicationVariants
+	Set<ApplicationVariant> testableVariants
 	@Internal
 	DeviceProvider connectedDeviceProvider
 
@@ -33,21 +33,25 @@ class MonkeyTask extends DefaultTask {
 
 	@Input
 	public appExtension(AppExtension android) {
-		this.applicationVariants = android.applicationVariants
 		connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExecutable, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(project.logger))
+	}
+
+	@Input
+	public testableVariants(Set<ApplicationVariant> testableVariants) {
+		this.testableVariants = testableVariants
 	}
 
 	@TaskAction
 	def connectedMonkeyTest() {
-		if (applicationVariants.empty) {
+		if (testableVariants.empty) {
 			throw new GradleException('No jenkins testable application variants found')
 		}
 		connectedDeviceProvider.init()
 		def monkeyFile = project.rootProject.file('monkey.txt')
 		def executor = Executors.newScheduledThreadPool(1)
-		applicationVariants.each { variant ->
+		testableVariants.each { variant ->
 			def command = "monkey -v --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes --ignore-native-crashes -p ${variant.applicationId} 1000"
-			connectedDeviceProvider.getDevices().findAll {
+			connectedDeviceProvider.devices.findAll {
 				it.apiLevel >= variant.mergedFlavor.minSdkVersion.apiLevel
 			}.each { device ->
 				try {

@@ -9,7 +9,6 @@ import org.junit.Test
 
 import java.util.concurrent.TimeUnit
 
-import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_TASK_NAME
 
@@ -42,7 +41,7 @@ public class MonkeyTaskTest {
 		when(variant.getApplicationId()).thenReturn('pl.droidsonroids.testapplication')
 		def monkeyTask = project.tasks.create(MONKEY_TASK_NAME, MonkeyTask, {
 			appExtension project.android
-			it.applicationVariants = Collections.singletonList(variant)
+			it.testableVariants = Collections.singletonList(variant)
 		})
 
 		monkeyTask.connectedDeviceProvider = mock(DeviceProvider.class)

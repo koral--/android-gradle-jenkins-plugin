@@ -24,6 +24,7 @@ static def addMonkeyTask(Project project, AppExtension android, MonkeyTestExtens
 
 	def monkeyTask = project.tasks.create(Constants.MONKEY_TASK_NAME, MonkeyTask, {
 		appExtension android
+		testableVariants applicationVariants
 	})
 	applicationVariants.each {
 		if (it.install == null) {
