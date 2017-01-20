@@ -1,3 +1,6 @@
+### 1.0.36
+- MonkeyTask fixed, unneeded monkeyings removed
+
 ### 1.0.35
 - Spoon gradle plugin integration added
 
