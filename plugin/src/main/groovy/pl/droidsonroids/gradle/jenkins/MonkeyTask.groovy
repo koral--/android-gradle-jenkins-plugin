@@ -37,12 +37,12 @@ class MonkeyTask extends DefaultTask {
 	}
 
 	@Input
-	public testableVariants(Set<ApplicationVariant> testableVariants) {
+	testableVariants(Set<ApplicationVariant> testableVariants) {
 		this.testableVariants = testableVariants
 	}
 
 	@TaskAction
-	def connectedMonkeyTest() {
+	connectedMonkeyTest() {
 		if (testableVariants.empty) {
 			throw new GradleException('No jenkins testable application variants found')
 		}
