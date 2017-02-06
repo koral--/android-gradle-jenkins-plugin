@@ -2,11 +2,11 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
 
-public class DeviceSetuper extends DeviceActionPerformer {
+class DeviceSetuper extends DeviceActionPerformer {
 
 	private final File tempDir
 
-	public DeviceSetuper() {
+	DeviceSetuper() {
 		this.tempDir = File.createTempDir()
 		Runtime.addShutdownHook {
 			tempDir.deleteDir()
@@ -14,7 +14,7 @@ public class DeviceSetuper extends DeviceActionPerformer {
 	}
 
 	@Override
-	public void performAction(IDevice device) {
+	void performAction(IDevice device) {
 		if (device.version.isGreaterOrEqualThan(17)) {
 			executeRemoteCommand(device, 'settings put global window_animation_scale 0')
 			executeRemoteCommand(device, 'settings put global transition_animation_scale 0')
@@ -31,7 +31,6 @@ public class DeviceSetuper extends DeviceActionPerformer {
 		executeRemoteCommand(device, 'su 0 pm hide org.chromium.webview_shell')
 		executeRemoteCommand(device, 'su 0 pm hide com.android.chrome')
 
-		executeRemoteCommand(device, 'input keyevent 26')
 		if (device.version.isGreaterOrEqualThan(23)) {
 			executeRemoteCommand(device, 'wm dismiss-keyguard')
 		}

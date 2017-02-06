@@ -19,17 +19,18 @@ abstract class DeviceActionTask extends DefaultTask {
 	}
 
 	@Input
-	public void appExtension(AppExtension android) {
+    void appExtension(AppExtension android) {
 		bridge = AndroidDebugBridge.createBridge(android.adbExecutable.path, false)
 		if (bridge == null) {
 			throw new GradleException('Could not create AndroidDebugBridge')
 		}
 	}
 
+	@Internal
 	protected abstract DeviceActionPerformer getActionPerformer()
 
 	@TaskAction
-	public void performAction() {
+    void performAction() {
 		if (bridge.devices.length == 0) {
 			throw new GradleException('No connected devices')
 		}

@@ -1,6 +1,7 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
+import com.android.ddmlib.IShellOutputReceiver
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +28,7 @@ class DeviceActionPerformerTest {
 	private DeviceActionPerformer performer
 
 	@Before
-	public void setUp() {
+    void setUp() {
 		performer = new DeviceActionPerformer() {
 			@Override
 			void performAction(IDevice device) {
@@ -42,6 +43,6 @@ class DeviceActionPerformerTest {
 
 		performer.executeRemoteCommand(device, command)
 
-		verify(device).executeShellCommand(eq(command), any(), eq((long) ADB_COMMAND_TIMEOUT_MILLIS), eq(MILLISECONDS))
+		verify(device).executeShellCommand(eq(command), any(IShellOutputReceiver.class), eq((long) ADB_COMMAND_TIMEOUT_MILLIS), eq(MILLISECONDS))
 	}
 }

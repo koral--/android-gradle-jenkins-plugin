@@ -9,13 +9,13 @@ import java.util.regex.Pattern
 import static org.assertj.core.api.Assertions.assertThat
 import static pl.droidsonroids.gradle.jenkins.Constants.UI_TEST_MODE_PROPERTY_NAME
 
-public class TestRunnerFunctionalTest {
+class TestRunnerFunctionalTest {
 
 	@Rule
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
-	public void testInstrumentationRunnerNotChangedWithoutUiTest() {
+    void testInstrumentationRunnerNotChangedWithoutUiTest() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		def result = GradleRunner.create()
@@ -28,7 +28,7 @@ public class TestRunnerFunctionalTest {
 	}
 
 	@Test
-	public void testCustomUiTestInstrumentationRunner() {
+    void testCustomUiTestInstrumentationRunner() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<

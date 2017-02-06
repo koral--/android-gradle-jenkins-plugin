@@ -28,7 +28,7 @@ class DeviceSetupReverterTest {
 	private DeviceSetupReverter reverter
 
 	@Before
-	public void setUp() {
+	void setUp() {
 		reverter = new DeviceSetupReverter()
 	}
 
@@ -43,7 +43,6 @@ class DeviceSetupReverterTest {
 		verify(device).executeShellCommand(eq('su 0 pm enable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm unhide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm unhide com.android.chrome'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('input keyevent 26'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test

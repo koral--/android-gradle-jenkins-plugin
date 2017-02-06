@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.Answers.RETURNS_DEEP_STUBS
 import static org.mockito.Mockito.when
 
-public class UiTestExtensionTest {
+class UiTestExtensionTest {
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule()
 	@Mock(answer = RETURNS_DEEP_STUBS)
@@ -23,19 +23,19 @@ public class UiTestExtensionTest {
 	private UiTestExtension uiTest
 
 	@Before
-	public void setUp() {
+    void setUp() {
 		uiTest = new UiTestExtension()
 		applicationVariants = Collections.singleton(variant)
 	}
 
 	@Test
-	public void testTestInstrumentationRunner() {
+    void testTestInstrumentationRunner() {
 		uiTest.testInstrumentationRunner('test.example.Runner')
 		assertThat(uiTest.testInstrumentationRunner).isEqualTo('test.example.Runner')
 	}
 
 	@Test
-	public void testMinifyEnabled() {
+    void testMinifyEnabled() {
 		assertThat(uiTest.minifyEnabled).isNull()
 		uiTest.minifyEnabled(true)
 		assertThat(uiTest.minifyEnabled).isTrue()
@@ -44,7 +44,7 @@ public class UiTestExtensionTest {
 	}
 
 	@Test
-	public void testGetDefaultMinifyEnabledNoMinifiedVariants() {
+    void testGetDefaultMinifyEnabledNoMinifiedVariants() {
 		assertThat(uiTest.getDefaultMinifyEnabled(applicationVariants)).isFalse()
 		uiTest.minifyEnabled true
 		assertThat(uiTest.getDefaultMinifyEnabled(applicationVariants)).isTrue()
@@ -53,7 +53,7 @@ public class UiTestExtensionTest {
 	}
 
 	@Test
-	public void testGetDefaultMinifyEnabledWithMinifiedVariants() {
+    void testGetDefaultMinifyEnabledWithMinifiedVariants() {
 		when(variant.buildType.minifyEnabled).thenReturn(true)
 
 		assertThat(uiTest.getDefaultMinifyEnabled(applicationVariants)).isTrue()

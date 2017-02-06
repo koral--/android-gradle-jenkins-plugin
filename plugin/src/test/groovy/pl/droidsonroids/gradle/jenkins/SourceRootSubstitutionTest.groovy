@@ -6,13 +6,13 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
 import org.junit.Test
 
-public class SourceRootSubstitutionTest {
+class SourceRootSubstitutionTest {
 
 	@Rule
 	public JUnitSoftAssertions softly = new JUnitSoftAssertions()
 
 	@Test
-	public void testAndroidSourceRootSubstitution() throws Exception {
+    void testAndroidSourceRootSubstitution() throws Exception {
 		def project = ProjectBuilder.builder().build()
 		project.ext."${Constants.UI_TEST_MODE_PROPERTY_NAME}" = UiTestMode.minify.name()
 

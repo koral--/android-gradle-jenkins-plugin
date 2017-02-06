@@ -8,7 +8,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.util.GradleVersion
 
-public class JenkinsPlugin implements Plugin<Project> {
+class JenkinsPlugin implements Plugin<Project> {
 
 
 	@Override

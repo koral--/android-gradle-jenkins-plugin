@@ -26,13 +26,13 @@ class MonkeyTask extends DefaultTask {
 	@Internal
 	DeviceProvider connectedDeviceProvider
 
-	public MonkeyTask() {
+    MonkeyTask() {
 		group = 'verification'
 		description = 'Runs monkey application exerciser on all connected devices and/or emulators'
 	}
 
 	@Input
-	public appExtension(AppExtension android) {
+	appExtension(AppExtension android) {
 		connectedDeviceProvider = new ConnectedDeviceProvider(android.adbExecutable, ADB_COMMAND_TIMEOUT_MILLIS, new LoggerWrapper(project.logger))
 	}
 

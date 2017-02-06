@@ -6,7 +6,7 @@ import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 
 static void addUITestsConfiguration(AppExtension android, Project subproject, UiTestExtension uiTest) {
-	def uiTestModeName = subproject.findProperty(Constants.UI_TEST_MODE_PROPERTY_NAME)
+	String uiTestModeName = subproject.findProperty(Constants.UI_TEST_MODE_PROPERTY_NAME)
 	if (uiTestModeName == null) {
 		return
 	}

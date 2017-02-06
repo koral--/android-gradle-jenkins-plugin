@@ -12,7 +12,7 @@ class ConnectedUiTestFunctionalTest {
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
-	public void testConnectedUiTest() {
+    void testConnectedUiTest() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		temporaryFolder.newFolder('src', 'main')

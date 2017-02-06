@@ -6,7 +6,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.tasks.Delete
 
-static def addMonkeyTask(Project project, AppExtension android, MonkeyTestExtension monkeyTest) {
+static addMonkeyTask(Project project, AppExtension android, MonkeyTestExtension monkeyTest) {
 	def applicationVariants = android.applicationVariants.findAll {
 		if (monkeyTest.variantNames.contains(it.name)) {
 			return true
@@ -35,7 +35,7 @@ static def addMonkeyTask(Project project, AppExtension android, MonkeyTestExtens
 	}
 }
 
-static def addCleanMonkeyOutputTask(Project project) {
+static addCleanMonkeyOutputTask(Project project) {
 	def cleanMonkeyOutput = project.tasks.create(Constants.CLEAN_MONKEY_OUTPUT_TASK_NAME, Delete)
 	cleanMonkeyOutput.delete project.rootProject.fileTree(dir: project.rootDir, includes: ['monkey-logcat-*.txt'])
 	project.clean.dependsOn cleanMonkeyOutput

@@ -9,22 +9,22 @@ import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-public class MonkeyTestExtensionTest {
+class MonkeyTestExtensionTest {
 	private MonkeyTestExtension monkeyTest
 
 	@Before
-	public void setUp() {
+    void setUp() {
 		monkeyTest = new MonkeyTestExtension()
 	}
 
 	@Test
-	public void testProductFlavorsString() {
+    void testProductFlavorsString() {
 		monkeyTest.productFlavors('flavor')
 		assertThat(monkeyTest.productFlavorNames).containsOnly('flavor')
 	}
 
 	@Test
-	public void testProductFlavors() {
+    void testProductFlavors() {
 		def flavor = mock(ProductFlavor)
 		when(flavor.getName()).thenReturn('flavor')
 		monkeyTest.productFlavors(flavor)
@@ -32,13 +32,13 @@ public class MonkeyTestExtensionTest {
 	}
 
 	@Test
-	public void testBuildTypesString() {
+    void testBuildTypesString() {
 		monkeyTest.buildTypes('type')
 		assertThat(monkeyTest.buildTypeNames).containsOnly('type')
 	}
 
 	@Test
-	public void testBuildTypes() {
+    void testBuildTypes() {
 		def type = mock(BuildType)
 		when(type.getName()).thenReturn('type')
 		monkeyTest.buildTypes(type)
@@ -46,7 +46,7 @@ public class MonkeyTestExtensionTest {
 	}
 
 	@Test
-	public void testApplicationVariants() {
+    void testApplicationVariants() {
 		monkeyTest.applicationVariants('flavorType')
 		assertThat(monkeyTest.variantNames).containsOnly('flavorType')
 	}

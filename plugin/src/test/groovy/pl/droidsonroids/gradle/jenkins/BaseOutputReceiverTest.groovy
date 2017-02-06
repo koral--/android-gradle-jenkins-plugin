@@ -4,7 +4,7 @@ import org.junit.Test
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 
-public class BaseOutputReceiverTest {
+class BaseOutputReceiverTest {
 	@Test
 	void testIsCancelled() {
 

@@ -12,22 +12,22 @@ class MonkeyOutputReceiver extends MultiLineReceiver {
 	}
 
 	@Override
-	public void processNewLines(String[] lines) {
+    void processNewLines(String[] lines) {
 		lines.each { printWriter.println(it) }
 	}
 
 	@Override
-	public void done() {
+    void done() {
 		printWriter.flush()
 		printWriter.close()
 	}
 
 	@Override
-	public boolean isCancelled() {
+    boolean isCancelled() {
 		isCancelled
 	}
 
-	public void cancel() {
+    void cancel() {
 		isCancelled = true
 	}
 }

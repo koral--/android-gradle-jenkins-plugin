@@ -13,7 +13,7 @@ class MinifyFunctionalTest {
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
-	public void testNoOverrideOnNoProperty() {
+    void testNoOverrideOnNoProperty() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
@@ -32,7 +32,7 @@ class MinifyFunctionalTest {
 	}
 
 	@Test
-	public void testOverrideOnMinifyProperty() {
+    void testOverrideOnMinifyProperty() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
@@ -51,7 +51,7 @@ class MinifyFunctionalTest {
 	}
 
 	@Test
-	public void testOverrideOnNoMinifyProperty() {
+    void testOverrideOnNoMinifyProperty() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
@@ -71,7 +71,7 @@ class MinifyFunctionalTest {
 	}
 
 	@Test
-	public void testNoOverrideOnNoMinifyPropertyAndNoExtension() {
+    void testNoOverrideOnNoMinifyPropertyAndNoExtension() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') << '\n'

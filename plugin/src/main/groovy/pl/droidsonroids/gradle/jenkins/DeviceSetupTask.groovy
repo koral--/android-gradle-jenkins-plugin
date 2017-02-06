@@ -1,11 +1,14 @@
-package pl.droidsonroids.gradle.jenkins;
+package pl.droidsonroids.gradle.jenkins
 
-public class DeviceSetupTask extends DeviceActionTask {
+import org.gradle.api.tasks.Internal
 
-	public DeviceSetupTask() {
+class DeviceSetupTask extends DeviceActionTask {
+
+	DeviceSetupTask() {
 		description = 'Setups device before instrumentation tests'
 	}
 
+	@Internal
 	protected DeviceActionPerformer getActionPerformer() {
 		new DeviceSetuper()
 	}

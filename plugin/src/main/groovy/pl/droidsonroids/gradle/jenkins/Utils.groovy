@@ -5,7 +5,7 @@ import com.android.build.gradle.BaseExtension
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
 
-static def addJavacXlint(Project project) {
+static addJavacXlint(Project project) {
 	project.allprojects { Project subproject ->
 		gradle.projectsEvaluated {
 			subproject.tasks.withType(JavaCompile) {
@@ -15,7 +15,7 @@ static def addJavacXlint(Project project) {
 	}
 }
 
-static def addJenkinsReleaseBuildType(AppExtension android) {
+static addJenkinsReleaseBuildType(AppExtension android) {
 	android.signingConfigs {
 		jenkinsRelease {
 			storeFile new File("$System.env.HOME/.android/debug.keystore")
@@ -26,7 +26,7 @@ static def addJenkinsReleaseBuildType(AppExtension android) {
 	}
 }
 
-static def setDexOptions(BaseExtension android, boolean disablePredex) {
+static setDexOptions(BaseExtension android, boolean disablePredex) {
 	if (disablePredex) {
 		android.dexOptions.setPreDexLibraries(false)
 	}

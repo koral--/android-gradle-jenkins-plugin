@@ -2,11 +2,11 @@ package pl.droidsonroids.gradle.jenkins
 
 import com.android.build.gradle.api.ApplicationVariant
 
-public class UiTestExtension {
+class UiTestExtension {
 	String testInstrumentationRunner
 	Boolean minifyEnabled
 
-	public void minifyEnabled(boolean minifyEnabled) {
+    void minifyEnabled(boolean minifyEnabled) {
 		this.minifyEnabled = minifyEnabled
 	}
 
@@ -18,7 +18,7 @@ public class UiTestExtension {
 		}
 	}
 
-	public void testInstrumentationRunner(String testInstrumentationRunner) {
+    void testInstrumentationRunner(String testInstrumentationRunner) {
 		this.testInstrumentationRunner = testInstrumentationRunner
 	}
 

@@ -54,7 +54,7 @@ class TestableVariantsFunctionalTest {
 	}
 
 	@Test
-	public void testAddMonkeyTestBuildType() {
+    void testAddMonkeyTestBuildType() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()
@@ -80,7 +80,7 @@ class TestableVariantsFunctionalTest {
 	}
 
 	@Test
-	public void testNoTestableVariant() {
+    void testNoTestableVariant() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		GradleRunner.create()
@@ -92,7 +92,7 @@ class TestableVariantsFunctionalTest {
 	}
 
 	@Test
-	public void testNoSigningConfig() {
+    void testNoSigningConfig() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noSigningConfig.gradle', 'build.gradle')
 		GradleRunner.create()

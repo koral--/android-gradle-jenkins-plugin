@@ -14,5 +14,5 @@ abstract class DeviceActionPerformer {
 		device.executeShellCommand(remoteCommand, outputReceiver, Constants.ADB_COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)
 	}
 
-	public abstract void performAction(IDevice device)
+    abstract void performAction(IDevice device)
 }

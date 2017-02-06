@@ -8,7 +8,7 @@ import org.junit.rules.TemporaryFolder
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 
-public class MonkeyOutputReceiverTest {
+class MonkeyOutputReceiverTest {
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder()
@@ -17,18 +17,18 @@ public class MonkeyOutputReceiverTest {
 	File file
 
 	@Before
-	public void setUp() {
+    void setUp() {
 		file = temporaryFolder.newFile()
 		receiver = new MonkeyOutputReceiver(file)
 	}
 
 	@After
-	public void tearDown() {
+    void tearDown() {
 		receiver.flush()
 	}
 
 	@Test
-	public void testProcessNewLines() throws Exception {
+    void testProcessNewLines() throws Exception {
 		String testInput = 'a,b,c,d,e'
 		receiver.processNewLines(testInput.split(','))
 		receiver.flush()
@@ -36,20 +36,20 @@ public class MonkeyOutputReceiverTest {
 	}
 
 	@Test
-	public void testProcessZeroLines() throws Exception {
+    void testProcessZeroLines() throws Exception {
 		receiver.processNewLines(new String[0])
 		receiver.flush()
 		assertThat(file).hasContent('')
 	}
 
 	@Test
-	public void testCancel() throws Exception {
+    void testCancel() throws Exception {
 		receiver.cancel()
 		assertThat(receiver.isCancelled()).isTrue()
 	}
 
 	@Test(expected = IOException.class)
-	public void testNonWritableFile() {
+    void testNonWritableFile() {
 		new MonkeyOutputReceiver(new File(file, "test.txt"))
 	}
 }

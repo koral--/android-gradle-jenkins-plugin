@@ -1,5 +1,9 @@
+### 1.0.37
+- keyevent 26 step removed from setup
+
 ### 1.0.36
 - MonkeyTask fixed, unneeded monkeyings removed
+- `connectedCheck` task dependency replaced with `spoon`
 
 ### 1.0.35
 - Spoon gradle plugin integration added

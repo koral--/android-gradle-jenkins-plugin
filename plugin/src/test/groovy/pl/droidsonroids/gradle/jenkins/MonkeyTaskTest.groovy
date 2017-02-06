@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit
 import static org.mockito.Mockito.*
 import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_TASK_NAME
 
-public class MonkeyTaskTest {
+class MonkeyTaskTest {
 	@Test
-	public void testConnectedMonkeyTest() throws Exception {
+    void testConnectedMonkeyTest() throws Exception {
 
 		def project = ProjectBuilder.builder().build()
 		project.pluginManager.apply('pl.droidsonroids.jenkins')

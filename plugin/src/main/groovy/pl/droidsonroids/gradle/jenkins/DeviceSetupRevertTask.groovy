@@ -1,11 +1,14 @@
-package pl.droidsonroids.gradle.jenkins;
+package pl.droidsonroids.gradle.jenkins
 
-public class DeviceSetupRevertTask extends DeviceActionTask {
+import org.gradle.api.tasks.Internal
 
-	public DeviceSetupRevertTask() {
+class DeviceSetupRevertTask extends DeviceActionTask {
+
+	DeviceSetupRevertTask() {
 		description = 'Reverts device setup after instrumentation tests'
 	}
 
+	@Internal
 	protected DeviceActionPerformer getActionPerformer() {
 		new DeviceSetupReverter()
 	}

@@ -12,7 +12,7 @@ class SetupFunctionalTest {
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
-	public void testSetup() {
+    void testSetup() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()
@@ -25,7 +25,7 @@ class SetupFunctionalTest {
 	}
 
 	@Test
-	public void testUiTestDependencies() {
+    void testUiTestDependencies() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('buildType.gradle', 'build.gradle')
 		def result = GradleRunner.create()

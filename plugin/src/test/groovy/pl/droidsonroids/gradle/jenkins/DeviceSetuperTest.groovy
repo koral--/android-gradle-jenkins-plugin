@@ -30,7 +30,7 @@ class DeviceSetuperTest {
 	private DeviceSetuper setuper
 
 	@Before
-	public void setUp() {
+	void setUp() {
 		setuper = new DeviceSetuper()
 	}
 
@@ -42,12 +42,11 @@ class DeviceSetuperTest {
 		verify(device).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device, atLeastOnce()).pushFile(any(), any())
+		verify(device, atLeastOnce()).pushFile(any(String.class), any(String.class))
 		verify(device, atLeastOnce()).executeShellCommand(startsWith(Constants.MEDIA_SCAN_COMMAND), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm disable com.android.browser'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('su 0 pm hide org.chromium.webview_shell'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 
-		verify(device).executeShellCommand(eq('input keyevent 26'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input text 1234'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
