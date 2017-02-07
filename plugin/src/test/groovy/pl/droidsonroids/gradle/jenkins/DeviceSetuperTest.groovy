@@ -57,6 +57,8 @@ class DeviceSetuperTest {
 	@Test
 	void testPerformActionApi22() {
 		when(device.version).thenReturn(new AndroidVersion(22, 'Lollipop'))
+		setuper.performAction(device)
+
 		verify(device, never()).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input touchscreen swipe 0 200 0 0 100'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
@@ -65,6 +67,8 @@ class DeviceSetuperTest {
 	@Test
 	void testPerformActionApi16() {
 		when(device.version).thenReturn(new AndroidVersion(16, 'Jelly Bean'))
+		setuper.performAction(device)
+
 		verify(device, never()).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
