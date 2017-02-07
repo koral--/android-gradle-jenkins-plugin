@@ -1,4 +1,4 @@
-### 1.0.38-SNAPSHOT
+### 1.0.38
 - `input touchscreen swipe 0 200 0 0 100` shell command added to unlock procedure
 
 ### 1.0.37
