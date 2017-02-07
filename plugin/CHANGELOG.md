@@ -1,3 +1,6 @@
+### 1.0.38-SNAPSHOT
+- `input touchscreen swipe 0 200 0 0 100` shell command added to unlock procedure
+
 ### 1.0.37
 - keyevent 26 step removed from setup
 
