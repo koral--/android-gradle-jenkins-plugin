@@ -4,9 +4,8 @@ Gradle plugin for CI Android projects
 ##Current version
 See [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.jenkins)
 
-##Features
+##Overview
 - `-Xlint` option added to javac parameters, which causes all javac warnings to be included in output.
- Jenkins plugins like [Warnings](https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin) can be used to visualize it.
 - `jenkinsRelease` signing config added (using default debug keystore), obfuscated and optimized application can be
  installed and tested.
 - ADB connection timeout increased to 30s
@@ -46,6 +45,13 @@ monkeyTest {
 ###Project types support
 This plugin supports both application, library and test projects. Signing config and monkey task are applicable only for
 application projects.
+
+##Features
+###`-Xlint` javac option
+If project uses `javac` compiler (contains Java source code and jack is not enabled) then
+[`-Xlint` option](http://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#nonstandard) is added.
+As a result all warnings are printed to console and can be visualised eg. using Jenkins plugins like
+[Warnings](https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin).
 
 ###Signing config
 `jenkinsRelease` signing config is available for use. It assumes that default debug keystore (`$HOME/.android/debug.keystore`)
