@@ -14,7 +14,7 @@ class JenkinsPlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 		if (GradleVersion.current() < GradleVersion.version('2.14.1')) {
-			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.6")
+			throw new GradleException("Gradle version ${GradleVersion.current()} not supported. Use Gradle Wrapper or Gradle version >= 2.14.1")
 		}
 
 		DdmPreferences.setTimeOut(Constants.ADB_COMMAND_TIMEOUT_MILLIS)
