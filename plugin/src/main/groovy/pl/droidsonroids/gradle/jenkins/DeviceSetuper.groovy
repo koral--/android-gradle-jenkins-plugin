@@ -35,10 +35,8 @@ class DeviceSetuper extends DeviceActionPerformer {
 			executeRemoteCommand(device, 'wm dismiss-keyguard')
 		} else {
 			executeRemoteCommand(device, 'input keyevent 82')
-			executeRemoteCommand(device, 'input touchscreen swipe 0 200 0 0 100')
+			executeRemoteCommand(device, 'input swipe 0 200 0 0 100')
 		}
-		executeRemoteCommand(device, 'input text 1234')
-		executeRemoteCommand(device, 'input keyevent 66')
 	}
 
 	String pushFile(IDevice device, String fileName, String remotePath) {

@@ -49,9 +49,7 @@ class DeviceSetuperTest {
 
 		verify(device).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device, never()).executeShellCommand(eq('input touchscreen swipe 0 200 0 0 100'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('input text 1234'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('input keyevent 66'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device, never()).executeShellCommand(eq('input swipe 0 200 0 0 100'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
@@ -61,7 +59,7 @@ class DeviceSetuperTest {
 
 		verify(device, never()).executeShellCommand(eq('wm dismiss-keyguard'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
-		verify(device).executeShellCommand(eq('input touchscreen swipe 0 200 0 0 100'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+		verify(device).executeShellCommand(eq('input swipe 0 200 0 0 100'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
