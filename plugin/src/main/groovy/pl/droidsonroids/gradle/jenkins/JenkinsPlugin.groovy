@@ -29,7 +29,7 @@ class JenkinsPlugin implements Plugin<Project> {
 			subproject.plugins.withType(AppPlugin) {
 				def android = subproject.extensions.getByType(AppExtension)
 
-				UiTestUtils.addUITestsConfiguration(android, subproject, uiTest)
+				UiTestUtils.configureUiTests(android, subproject, uiTest)
 
 				Utils.setDexOptions(android, disablePredex)
 				Utils.addJenkinsReleaseBuildType(android)

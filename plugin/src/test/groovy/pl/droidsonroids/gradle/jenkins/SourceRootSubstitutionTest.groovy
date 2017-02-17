@@ -25,7 +25,7 @@ class SourceRootSubstitutionTest {
 				signingConfig signingConfigs.jenkinsRelease
 				minSdkVersion 1
 			}
-			buildToolsVersion '25.0.0'
+			buildToolsVersion '25.0.2'
 			compileSdkVersion 25
 		}
 		AndroidSourceSet androidTest = project.android.sourceSets.androidTest

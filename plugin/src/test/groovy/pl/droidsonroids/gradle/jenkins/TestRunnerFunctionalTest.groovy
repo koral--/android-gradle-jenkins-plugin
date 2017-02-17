@@ -1,6 +1,7 @@
 package pl.droidsonroids.gradle.jenkins
 
 import org.gradle.testkit.runner.GradleRunner
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -14,10 +15,14 @@ class TestRunnerFunctionalTest {
 	@Rule
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
-	@Test
-    void testInstrumentationRunnerNotChangedWithoutUiTest() {
+	@Before
+	void setUp() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
+	}
+
+	@Test
+	void testInstrumentationRunnerNotChangedWithoutUiTest() {
 		def result = GradleRunner.create()
 				.withProjectDir(temporaryFolder.root)
 				.withTestKitDir(temporaryFolder.newFolder())
@@ -29,8 +34,6 @@ class TestRunnerFunctionalTest {
 
 	@Test
     void testCustomUiTestInstrumentationRunner() {
-		temporaryFolder.copyResource('base.gradle', 'base.gradle')
-		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		temporaryFolder.projectFile('build.gradle') <<
 				"""
 		uiTest {

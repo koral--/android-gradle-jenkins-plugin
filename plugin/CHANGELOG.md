@@ -1,3 +1,6 @@
+### 1.0.40
+- unlock procedure fixed for API levels < 19
+
 ### 1.0.39
 - unlock procedure changed from pin entering to swipe
 

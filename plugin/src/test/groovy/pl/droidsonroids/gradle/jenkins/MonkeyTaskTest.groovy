@@ -9,6 +9,7 @@ import org.junit.Test
 
 import java.util.concurrent.TimeUnit
 
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 import static pl.droidsonroids.gradle.jenkins.Constants.MONKEY_TASK_NAME
 
@@ -26,7 +27,7 @@ class MonkeyTaskTest {
 				signingConfig signingConfigs.jenkinsRelease
 				minSdkVersion 1
 			}
-			buildToolsVersion '25.0.0'
+			buildToolsVersion '25.0.2'
 			compileSdkVersion 25
 			buildTypes {
 				release {
