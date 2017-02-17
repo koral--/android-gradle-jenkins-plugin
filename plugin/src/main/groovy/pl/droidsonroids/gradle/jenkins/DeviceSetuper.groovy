@@ -35,8 +35,8 @@ class DeviceSetuper extends DeviceActionPerformer {
 			executeRemoteCommand(device, 'wm dismiss-keyguard')
 		} else {
 			executeRemoteCommand(device, 'input keyevent 82')
-			executeRemoteCommand(device, 'input swipe 0 200 0 0 100')
-			executeRemoteCommand(device, 'input swipe 0 500 0 0 100')
+			executeRemoteCommand(device, 'input swipe 0 200 0 0')
+			executeRemoteCommand(device, 'input swipe 0 500 0 0')
 		}
 	}
 
