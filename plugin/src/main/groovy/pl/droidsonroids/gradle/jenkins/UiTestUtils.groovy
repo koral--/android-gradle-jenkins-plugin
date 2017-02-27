@@ -25,8 +25,10 @@ static void configureUiTests(AppExtension android, Project subproject, UiTestExt
 
 	subproject.apply plugin: 'spoon'
 
+	deviceSetupTask.mustRunAfter uninstallAllTask
+
 	def spoonTask = subproject.tasks.getByName(SPOON_TASK_NAME)
-	spoonTask.mustRunAfter deviceSetupTask, uninstallAllTask
+	spoonTask.mustRunAfter deviceSetupTask
 
 	subproject.tasks.create(CONNECTED_UI_TEST_TASK_NAME) {
 		it.group = 'verification'
