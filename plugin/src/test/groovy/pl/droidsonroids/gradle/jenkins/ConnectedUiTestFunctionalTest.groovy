@@ -26,6 +26,7 @@ class ConnectedUiTestFunctionalTest {
 				.buildAndFail()
 
 		assertThat(result.task(":$Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME")).isNotNull()
+		assertThat(result.task(":$Constants.UNINSTALL_ALL_TASK_NAME")).isNotNull()
 	}
 
 }

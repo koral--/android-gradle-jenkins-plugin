@@ -13,6 +13,7 @@ class Constants {
 	static final String SPOON_TASK_NAME = 'spoon'
 	static final String CONNECTED_SETUP_UI_TEST_TASK_NAME = 'connectedSetupUiTest'
 	static final String CONNECTED_SETUP_REVERT_UI_TEST_TASK_NAME = 'connectedSetupRevertUiTest'
+	static final String UNINSTALL_ALL_TASK_NAME = 'uninstallAll'
 	static final String CLEAN_MONKEY_OUTPUT_TASK_NAME = 'cleanMonkeyOutput'
 
 	static final String MEDIA_SCAN_COMMAND = 'am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file://'

@@ -1,3 +1,6 @@
+### 1.0.41
+- uninstall all apps task added before spoon task
+
 ### 1.0.40
 - unlock procedure fixed for API levels < 19
 
