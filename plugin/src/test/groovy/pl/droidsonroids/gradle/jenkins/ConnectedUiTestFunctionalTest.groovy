@@ -12,7 +12,7 @@ class ConnectedUiTestFunctionalTest {
 	public TemporaryProjectFolder temporaryFolder = new TemporaryProjectFolder()
 
 	@Test
-    void testConnectedUiTest() {
+	void "build fails when no connected devices"() {
 		temporaryFolder.copyResource('base.gradle', 'base.gradle')
 		temporaryFolder.copyResource('noTestableVariant.gradle', 'build.gradle')
 		temporaryFolder.newFolder('src', 'main')
@@ -25,7 +25,7 @@ class ConnectedUiTestFunctionalTest {
 				.withPluginClasspath()
 				.buildAndFail()
 
-		assertThat(result.task(":$Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME")).isNotNull()
+		assertThat(result.output).contains("No connected devices!")
 	}
 
 }
