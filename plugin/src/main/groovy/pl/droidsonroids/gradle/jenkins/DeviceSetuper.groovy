@@ -1,6 +1,7 @@
 package pl.droidsonroids.gradle.jenkins
 
 import com.android.ddmlib.IDevice
+import com.android.ddmlib.MultiLineReceiver
 
 class DeviceSetuper extends DeviceActionPerformer {
 
@@ -38,12 +39,33 @@ class DeviceSetuper extends DeviceActionPerformer {
 			executeRemoteCommand(device, 'input swipe 0 200 0 0')
 			executeRemoteCommand(device, 'input swipe 0 500 0 0')
 		}
+
+		MultiLineReceiver cleaningPackageListReceiver = new MultiLineReceiver() {
+			@Override
+			void processNewLines(String[] packageNames) {
+				packageNames.findAll { !it.empty }
+						.collect { it.replaceFirst('package:', '') }
+						.each {
+					logger.info("Clearing data of $it")
+					executeRemoteCommand(device, "pm clear $it")
+				}
+			}
+
+			@Override
+			boolean isCancelled() {
+				return false
+			}
+		}
+
+		executeRemoteCommand(device, 'pm list packages -3', cleaningPackageListReceiver)
 	}
 
 	String pushFile(IDevice device, String fileName, String remotePath) {
 		def file = new File(tempDir, fileName)
 		if (!file.isFile()) {
-			file << getClass().getResourceAsStream(fileName)
+			getClass().getResourceAsStream(fileName).withStream {
+				file << it
+			}
 			file.deleteOnExit()
 		}
 

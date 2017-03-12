@@ -51,6 +51,8 @@ class DeviceSetuperTest {
 		verify(device, never()).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('input swipe 0 200 0 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('input swipe 0 500 0 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+
+		verify(device).executeShellCommand(eq('pm list packages -3'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
@@ -62,6 +64,8 @@ class DeviceSetuperTest {
 		verify(device).executeShellCommand(eq('input keyevent 82'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input swipe 0 200 0 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device).executeShellCommand(eq('input swipe 0 500 0 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+
+		verify(device).executeShellCommand(eq('pm list packages -3'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test
@@ -73,6 +77,8 @@ class DeviceSetuperTest {
 		verify(device, never()).executeShellCommand(eq('settings put global window_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('settings put global transition_animation_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 		verify(device, never()).executeShellCommand(eq('settings put global animator_duration_scale 0'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
+
+		verify(device).executeShellCommand(eq('pm list packages -3'), any(IShellOutputReceiver), anyLong(), any(TimeUnit))
 	}
 
 	@Test

@@ -1,3 +1,6 @@
+### 1.0.42-SNAPSHOT
+- clearing app data setup step added
+
 ### 1.0.41
 - uninstall all apps task added before spoon task
 
