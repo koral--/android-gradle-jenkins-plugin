@@ -20,7 +20,7 @@ See [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.je
 ###Sample overview
 ```groovy
 plugins {
-  id 'pl.droidsonroids.jenkins' version '1.0.38'
+  id 'pl.droidsonroids.jenkins' version '1.0.42'
 }
 
 apply plugin: 'com.android.application'

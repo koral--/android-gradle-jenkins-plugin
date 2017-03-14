@@ -44,7 +44,7 @@ class MonkeyTask extends DefaultTask {
 	@TaskAction
 	connectedMonkeyTest() {
 		if (testableVariants.empty) {
-			throw new GradleException('No jenkins testable application variants found')
+			throw new GradleException('No monkey testable application variants found')
 		}
 		connectedDeviceProvider.init()
 		def monkeyFile = project.rootProject.file('monkey.txt')
