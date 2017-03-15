@@ -1,10 +1,10 @@
 # android-gradle-jenkins-plugin
 Gradle plugin for CI Android projects
 
-##Current version
+## Current version
 See [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.jenkins)
 
-##Overview
+## Overview
 - `-Xlint` option added to javac parameters, which causes all javac warnings to be included in output.
 - `jenkinsRelease` signing config added (using default debug keystore), obfuscated and optimized application can be
  installed and tested.
@@ -20,7 +20,7 @@ See [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.je
 ###Sample overview
 ```groovy
 plugins {
-  id 'pl.droidsonroids.jenkins' version '1.0.42'
+  id 'pl.droidsonroids.jenkins' version '1.0.43'
 }
 
 apply plugin: 'com.android.application'
