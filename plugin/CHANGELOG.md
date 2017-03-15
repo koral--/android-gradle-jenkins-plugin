@@ -1,3 +1,8 @@
+### 1.0.43
+- sources ported to kotlin
+- dependencies versions bump
+- clearing 3rd party app data and uninstalling all app variants removed
+
 ### 1.0.42
 - clearing app data setup step added
 
