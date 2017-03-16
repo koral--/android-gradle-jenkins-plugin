@@ -1,3 +1,6 @@
+### 1.0.44
+- compatibility checks fixed
+
 ### 1.0.43
 - sources ported to kotlin
 - dependencies versions bump
