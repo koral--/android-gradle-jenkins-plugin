@@ -1,3 +1,6 @@
+### 1.0.45
+- `kotlin.jvm.internal.FunctionReference` workaround added
+
 ### 1.0.44
 - compatibility checks fixed
 

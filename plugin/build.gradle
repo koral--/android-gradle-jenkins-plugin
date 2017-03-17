@@ -6,13 +6,10 @@ plugins {
     id 'java-gradle-plugin'
 }
 
-ext.kotlin_version = '1.1.1'
-
 dependencies {
     compile 'com.android.tools.build:gradle:2.3.0'
     compile 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    runtime "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.6.2'
     testCompile 'org.mockito:mockito-core:2.7.17'
