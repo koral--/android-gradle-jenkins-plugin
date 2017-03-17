@@ -9,7 +9,7 @@ class DeviceSetuper : DeviceWorker() {
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread {
-           tempDir.deleteRecursively()
+            tempDir.deleteRecursively()
         })
     }
 

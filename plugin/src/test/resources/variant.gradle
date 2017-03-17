@@ -1,25 +1,25 @@
 plugins {
-	id 'pl.droidsonroids.jenkins'
-	id 'com.android.application'
+    id 'pl.droidsonroids.jenkins'
+    id 'com.android.application'
 }
 apply from: 'base.gradle'
 android {
-	buildTypes {
-		dev {
-			signingConfig android.signingConfigs.jenkinsRelease
-		}
-		store {
-		}
-	}
-	productFlavors {
-		staging {
-			signingConfig android.signingConfigs.jenkinsRelease
-		}
-		production {
-		}
-	}
+    buildTypes {
+        dev {
+            signingConfig android.signingConfigs.jenkinsRelease
+        }
+        store {
+        }
+    }
+    productFlavors {
+        staging {
+            signingConfig android.signingConfigs.jenkinsRelease
+        }
+        production {
+        }
+    }
 }
 
 monkeyTest {
-	applicationVariants 'productionDev', 'stagingDebug'
+    applicationVariants 'productionDev', 'stagingDebug'
 }

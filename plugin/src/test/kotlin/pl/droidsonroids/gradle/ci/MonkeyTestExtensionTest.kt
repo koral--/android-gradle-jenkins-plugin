@@ -24,7 +24,7 @@ class MonkeyTestExtensionTest {
 
     @Test
     fun `built from product flavor`() {
-        val flavor = mock<ProductFlavor>{
+        val flavor = mock<ProductFlavor> {
             on { name } doReturn "flavor"
         }
         monkeyTest.productFlavors(flavor)
@@ -39,7 +39,7 @@ class MonkeyTestExtensionTest {
 
     @Test
     fun `built from build type`() {
-        val type =  mock<BuildType>{
+        val type = mock<BuildType> {
             on { name } doReturn "type"
         }
         monkeyTest.buildTypes(type)

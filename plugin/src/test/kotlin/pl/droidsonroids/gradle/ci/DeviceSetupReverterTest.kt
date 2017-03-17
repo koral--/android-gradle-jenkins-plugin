@@ -25,9 +25,8 @@ class DeviceSetupReverterTest {
     }
 
     @Test
-    fun `API 24 actions performed`()
-    {
-        whenever(device.version).thenReturn(AndroidVersion (24, "Nougat"))
+    fun `API 24 actions performed`() {
+        whenever(device.version).thenReturn(AndroidVersion(24, "Nougat"))
         reverter.doWork(device)
 
         verify(device).executeShellCommand(eq("settings put global window_animation_scale 1"), any(), anyLong(), any())
@@ -39,9 +38,8 @@ class DeviceSetupReverterTest {
     }
 
     @Test
-    fun `API 16 actions performed`()
-    {
-        whenever (device.version).thenReturn(AndroidVersion (16, "Jelly Bean"))
+    fun `API 16 actions performed`() {
+        whenever(device.version).thenReturn(AndroidVersion(16, "Jelly Bean"))
         reverter.doWork(device)
 
         verify(device, never()).executeShellCommand(eq("settings put global window_animation_scale 1"), any(), anyLong(), any())
