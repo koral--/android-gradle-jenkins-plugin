@@ -14,6 +14,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import pl.droidsonroids.gradle.ci.Constants.ADB_COMMAND_TIMEOUT_MILLIS
 import pl.droidsonroids.gradle.ci.Constants.MONKEY_RUN_TIMEOUT_MILLIS
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
@@ -49,7 +50,12 @@ open class MonkeyTask : DefaultTask() {
             }.forEach { device ->
                 try {
                     val logcatReceiver = MonkeyOutputReceiver(project.logCatFile(device))
-                    Thread { device.executeShellCommand("logcat -v time", logcatReceiver, 0, MILLISECONDS) }.start()
+                    val latch = CountDownLatch(1)
+                    Thread {
+                        latch.countDown()
+                        device.executeShellCommand("logcat -v time", logcatReceiver, 0, MILLISECONDS)
+                    }.start()
+                    latch.await()
 
                     logger.lifecycle("Monkeying on ${device.name}")
 
