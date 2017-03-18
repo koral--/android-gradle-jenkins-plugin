@@ -11,7 +11,7 @@ open class SetupJacocoTestkitProperties : DefaultTask() {
 
     @TaskAction
     fun createJacocoProperties() {
-        outputFile.mkdirs()
+        outputFile.parentFile.mkdirs()
         val jacocoRuntimePath = project.configurations.getByName("jacocoRuntime").asPath
         val destFile = "${project.buildDir}/jacoco/testKit.exec"
         outputFile.writeText("org.gradle.jvmargs:-javaagent:$jacocoRuntimePath=destfile=$destFile")
