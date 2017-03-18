@@ -4,7 +4,6 @@ import com.android.ddmlib.IDevice
 import com.android.sdklib.AndroidVersion
 import com.nhaarman.mockito_kotlin.*
 import org.assertj.core.api.Assertions.assertThat
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,10 +18,13 @@ import java.io.File
 
 class DeviceSetuperTest {
     @get:Rule
-    val mockitoRule = MockitoJUnit.rule()!!
+    val mockitoRule = MockitoJUnit.rule()
     @Mock
     private lateinit var device: IDevice
     private lateinit var setuper: DeviceSetuper
+
+    private val remotePath = "/test/"
+    private val fileName = "image_portrait.jpg"
 
     @Before
     fun setUp() {
@@ -72,14 +74,24 @@ class DeviceSetuperTest {
 
     @Test
     fun `file pushed`() {
-        val remotePath = "/test/"
-
-        val fileName = "image_portrait.jpg"
         val remoteFilePath = setuper.pushFile(device, fileName, remotePath)
 
-        DefaultGroovyMethods.invokeMethod(assertThat(File(remoteFilePath)).hasParent(remotePath), "hasName", arrayOf(fileName))
+        assertThat(File(remoteFilePath)).hasParent(remotePath).hasName(fileName)
+
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(device).pushFile(captor.capture(), eq(remoteFilePath))
         assertThat(captor.value).endsWith(fileName)
+    }
+
+    @Test
+    fun `temporary directory deleted on shutdown`() {
+        assertThat(setuper.tempDir).isDirectory()
+
+        setuper.pushFile(device, fileName, remotePath)
+        setuper.pushFile(device, fileName, remotePath)
+
+        setuper.shutdownHook.start()
+        setuper.shutdownHook.join()
+        assertThat(setuper.tempDir).doesNotExist()
     }
 }

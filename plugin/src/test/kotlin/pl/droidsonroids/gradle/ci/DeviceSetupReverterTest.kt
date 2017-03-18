@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnit
 class DeviceSetupReverterTest {
 
     @get:Rule
-    val mockitoRule = MockitoJUnit.rule()!!
+    val mockitoRule = MockitoJUnit.rule()
 
     @Mock
     private lateinit var device: IDevice

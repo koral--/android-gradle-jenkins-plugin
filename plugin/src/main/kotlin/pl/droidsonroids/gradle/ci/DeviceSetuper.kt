@@ -5,12 +5,13 @@ import java.io.File
 
 class DeviceSetuper : DeviceWorker() {
 
-    private val tempDir = createTempDir()
+    val tempDir = createTempDir()
+    val shutdownHook = Thread {
+        tempDir.deleteRecursively()
+    }
 
     init {
-        Runtime.getRuntime().addShutdownHook(Thread {
-            tempDir.deleteRecursively()
-        })
+        Runtime.getRuntime().addShutdownHook(shutdownHook)
     }
 
     override fun doWork(device: IDevice) {
@@ -43,7 +44,6 @@ class DeviceSetuper : DeviceWorker() {
         val file = File(tempDir, fileName)
         if (!file.isFile) {
             javaClass.getResourceAsStream(fileName).toFile(file)
-            file.deleteOnExit()
         }
 
         val remoteFilePath = remotePath + fileName

@@ -27,8 +27,8 @@ fun Project.addXlintOptionToJavacTasks() = allprojects { subproject ->
     }
 }
 
-inline fun <reified T : BaseExtension> Project.getAndroidExtension() =
-        extensions.getByType(T::class.java)!!
+inline fun <reified T : BaseExtension> Project.getAndroidExtension(): T =
+        extensions.getByType(T::class.java)
 
 fun AppExtension.addJenkinsReleaseBuildType() {
     signingConfigs.add(SigningConfig("jenkinsRelease").apply {
@@ -78,8 +78,8 @@ val ApplicationVariant.monkeyCommand: String
 val DeviceConnector.logcatFileName: String
     get() = "monkey-logcat-${name.replace(" ", "_")}.txt"
 
-fun Project.logCatFile(device: DeviceConnector) =
-        rootProject.file(device.logcatFileName)!!
+fun Project.logCatFile(device: DeviceConnector): File =
+        rootProject.file(device.logcatFileName)
 
 private fun ApplicationVariant.isMonkeyTestable(monkeyTest: MonkeyTestExtension) =
         monkeyTest.variantNames.contains(name) or

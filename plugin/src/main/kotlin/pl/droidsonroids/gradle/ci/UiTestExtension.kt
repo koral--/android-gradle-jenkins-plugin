@@ -3,21 +3,21 @@ package pl.droidsonroids.gradle.ci
 import com.android.build.gradle.api.ApplicationVariant
 
 open class UiTestExtension {
+    var testInstrumentationRunner: String? = null
+    var minifyEnabled: Boolean? = null
+
     fun minifyEnabled(minifyEnabled: Boolean) {
         this.minifyEnabled = minifyEnabled
     }
 
-    fun getDefaultMinifyEnabled(variants: Collection<ApplicationVariant>): Boolean =
-            if (minifyEnabled == null) {
-                variants.find { it.buildType.isMinifyEnabled } != null
+    fun getDefaultMinifyEnabled(variants: Collection<ApplicationVariant>) =
+            if (minifyEnabled != null) {
+                minifyEnabled
             } else {
-                minifyEnabled!!
+                variants.find { it.buildType.isMinifyEnabled } != null
             }
 
     fun testInstrumentationRunner(testInstrumentationRunner: String) {
         this.testInstrumentationRunner = testInstrumentationRunner
     }
-
-    var testInstrumentationRunner: String? = null
-    var minifyEnabled: Boolean? = null
 }
