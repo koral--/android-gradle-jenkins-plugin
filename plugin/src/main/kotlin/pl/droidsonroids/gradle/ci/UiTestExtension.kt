@@ -11,11 +11,7 @@ open class UiTestExtension {
     }
 
     fun getDefaultMinifyEnabled(variants: Collection<ApplicationVariant>) =
-            if (minifyEnabled != null) {
-                minifyEnabled
-            } else {
-                variants.find { it.buildType.isMinifyEnabled } != null
-            }
+            minifyEnabled.let { it } ?: variants.find { it.buildType.isMinifyEnabled } != null
 
     fun testInstrumentationRunner(testInstrumentationRunner: String) {
         this.testInstrumentationRunner = testInstrumentationRunner
