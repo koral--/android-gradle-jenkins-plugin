@@ -24,7 +24,6 @@ class TestRunnerFunctionalTest {
         val result = GradleRunner.create()
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
-                .withArguments("projects")
                 .withPluginClasspath()
                 .build()
         assertThat(result.output).doesNotMatch(Pattern.compile("Instrumentation test runner for.*"))
@@ -39,7 +38,7 @@ class TestRunnerFunctionalTest {
         val result = GradleRunner.create()
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
-                .withArguments("projects", "-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.minify.name}")
+                .withArguments("-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.minify.name}")
                 .withPluginClasspath()
                 .build()
 

@@ -10,10 +10,7 @@ import org.gradle.util.GradleVersion
 
 class CIPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val minimumSupportedGradleVersion = GradleVersion.version("3.4")
-        if (GradleVersion.current() < minimumSupportedGradleVersion) {
-            throw GradleException("Gradle version ${GradleVersion.current()} is not supported. Use Gradle Wrapper or Gradle version >= $minimumSupportedGradleVersion")
-        }
+        checkGradleVersion()
 
         DdmPreferences.setTimeOut(Constants.ADB_COMMAND_TIMEOUT_MILLIS)
         project.addXlintOptionToJavacTasks()
@@ -42,6 +39,13 @@ class CIPlugin : Plugin<Project> {
                 subproject.getAndroidExtension<TestExtension>().setDexOptions(disablePredex)
             }
             subproject.addCleanMonkeyOutputTask()
+        }
+    }
+
+    private fun checkGradleVersion() {
+        val minimumSupportedGradleVersion = GradleVersion.version("3.4")
+        if (GradleVersion.current() < minimumSupportedGradleVersion) {
+            throw GradleException("Gradle version ${GradleVersion.current().version} is not supported. Use Gradle Wrapper or Gradle version >= ${minimumSupportedGradleVersion.version}")
         }
     }
 
