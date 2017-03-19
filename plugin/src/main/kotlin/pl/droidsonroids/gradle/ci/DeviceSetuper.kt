@@ -6,12 +6,13 @@ import java.io.File
 class DeviceSetuper : DeviceWorker() {
 
     val tempDir = createTempDir()
-    val shutdownHook = Thread {
-        tempDir.deleteRecursively()
-    }
 
     init {
-        Runtime.getRuntime().addShutdownHook(shutdownHook)
+        Runtime.getRuntime().addShutdownHook(Thread { cleanTempDirectory() })
+    }
+
+    fun cleanTempDirectory() {
+        tempDir.deleteRecursively()
     }
 
     override fun doWork(device: IDevice) {

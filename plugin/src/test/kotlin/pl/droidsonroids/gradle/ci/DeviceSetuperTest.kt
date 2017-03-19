@@ -90,8 +90,7 @@ class DeviceSetuperTest {
         setuper.pushFile(device, fileName, remotePath)
         setuper.pushFile(device, fileName, remotePath)
 
-        setuper.shutdownHook.start()
-        setuper.shutdownHook.join()
+        setuper.cleanTempDirectory()
         assertThat(setuper.tempDir).doesNotExist()
     }
 }
