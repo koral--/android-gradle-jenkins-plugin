@@ -21,13 +21,11 @@ class CIPlugin : Plugin<Project> {
         project.allprojects { subproject ->
             subproject.pluginManager.apply(BasePlugin::class.java)
             subproject.extensions.create("monkeyTest", MonkeyTestExtension::class.java)
-            val uiTest = subproject.extensions.create("uiTest", UiTestExtension::class.java)
-
             val disablePredex = subproject.hasProperty(Constants.DISABLE_PREDEX_PROPERTY_NAME)
             subproject.plugins.withType(AppPlugin::class.java) {
                 val android = subproject.getAndroidExtension<AppExtension>()
 
-                subproject.configureUiTests(android, uiTest)
+                subproject.configureUiTests(android)
 
                 android.setDexOptions(disablePredex)
                 android.addJenkinsReleaseBuildType()

@@ -1,3 +1,7 @@
+### 1.0.45
+- uiTest extension removed
+- uiTest source root substitution removed
+
 ### 1.0.44
 - compatibility checks fixed
 
