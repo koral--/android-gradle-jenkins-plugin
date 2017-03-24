@@ -20,6 +20,7 @@ class GradleVersionCheckFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .buildAndFail()
 
         Assertions.assertThat(result.output).contains("Gradle version $gradleVersion is not supported")

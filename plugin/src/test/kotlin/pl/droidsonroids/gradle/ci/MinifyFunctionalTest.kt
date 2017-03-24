@@ -23,6 +23,7 @@ class MinifyFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertThat(result.output).doesNotContain("minifyEnabled for")
     }
@@ -40,6 +41,7 @@ class MinifyFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments("-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.minify.name}")
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertThat(result.output).contains("minifyEnabled for debug set to true")
     }
@@ -58,6 +60,7 @@ class MinifyFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments("-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name}")
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertThat(result.output).contains("minifyEnabled for debug set to false")
     }
@@ -73,6 +76,7 @@ class MinifyFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments("-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.minify.name}")
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertThat(result.output).contains("minifyEnabled for debug set to true")
     }

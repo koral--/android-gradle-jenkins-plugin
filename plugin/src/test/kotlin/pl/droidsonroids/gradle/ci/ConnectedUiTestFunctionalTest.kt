@@ -4,6 +4,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.Test
+import java.io.File
+
+fun GradleRunner.withJacoco(): GradleRunner {
+    javaClass.classLoader.getResourceAsStream("testkit-gradle.properties").toFile(File(projectDir, "gradle.properties"))
+    return this
+}
 
 class ConnectedUiTestFunctionalTest {
 
@@ -22,6 +28,7 @@ class ConnectedUiTestFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments(Constants.CONNECTED_UI_TEST_TASK_NAME, "-P${Constants.UI_TEST_MODE_PROPERTY_NAME}=${UiTestMode.noMinify.name}")
                 .withPluginClasspath()
+                .withJacoco()
                 .buildAndFail()
 
         assertThat(result.output).contains("No connected devices")

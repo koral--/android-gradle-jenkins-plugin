@@ -20,6 +20,7 @@ class TestableVariantsFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withProjectDir(temporaryFolder.root)
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertTestableVariants(result, "productionDev", "stagingDebug")
     }
@@ -32,6 +33,7 @@ class TestableVariantsFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withProjectDir(temporaryFolder.root)
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertTestableVariants(result, "productionDev", "stagingDebug", "stagingDev", "stagingRelease", "stagingStore")
     }
@@ -44,6 +46,7 @@ class TestableVariantsFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withProjectDir(temporaryFolder.root)
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertTestableVariants(result, "productionDev", "stagingDebug", "stagingDev", "stagingRelease", "stagingStore")
     }
@@ -56,6 +59,7 @@ class TestableVariantsFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertTestableVariants(result, "debug")
     }
@@ -68,6 +72,7 @@ class TestableVariantsFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertTestableVariants(result, "proDebug", "proRelease")
     }
@@ -81,6 +86,7 @@ class TestableVariantsFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments("connectedMonkeyJenkinsTest")
                 .withPluginClasspath()
+                .withJacoco()
                 .buildAndFail()
     }
 
@@ -92,6 +98,7 @@ class TestableVariantsFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .buildAndFail()
     }
 

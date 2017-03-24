@@ -1,14 +1,9 @@
-import pl.droidsonroids.ci.SetupJacocoTestkitProperties
-
 plugins {
     id 'com.gradle.plugin-publish' version '0.9.7'
     id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+    id 'pl.droidsonroids.jacoco.testkit' version '0.0.3'
     id 'jacoco'
     id 'java-gradle-plugin'
-}
-
-configurations {
-    jacocoRuntime
 }
 
 dependencies {
@@ -21,8 +16,6 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.6.2'
     testCompile 'org.mockito:mockito-core:2.7.17'
     testCompile 'com.nhaarman:mockito-kotlin:1.3.0'
-    testRuntime files("$buildDir/testkit")
-    jacocoRuntime "org.jacoco:org.jacoco.agent:0.7.9:runtime"
 }
 
 group = GROUP
@@ -43,6 +36,10 @@ pluginBundle {
     }
 }
 
+jacoco {
+    toolVersion '0.7.9'
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -50,6 +47,3 @@ jacocoTestReport {
         html.enabled true
     }
 }
-
-task setupJacocoTestkitProperties(type: SetupJacocoTestkitProperties)
-test.dependsOn setupJacocoTestkitProperties

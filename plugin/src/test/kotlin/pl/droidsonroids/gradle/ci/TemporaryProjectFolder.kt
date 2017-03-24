@@ -9,9 +9,4 @@ class TemporaryProjectFolder : TemporaryFolder() {
             javaClass.classLoader.getResourceAsStream(resourceName).toFile(projectFile(fileName))
 
     fun projectFile(fileName: String) = File(root, fileName)
-
-    override fun before() {
-        super.before()
-        copyResource("gradle.properties", "gradle.properties")
-    }
 }

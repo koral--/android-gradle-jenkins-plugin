@@ -25,6 +25,7 @@ class TestRunnerFunctionalTest {
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
         assertThat(result.output).doesNotMatch(Pattern.compile("Instrumentation test runner for.*"))
     }
@@ -40,6 +41,7 @@ class TestRunnerFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments("-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.minify.name}")
                 .withPluginClasspath()
+                .withJacoco()
                 .build()
 
         assertThat(result.output).containsPattern("Instrumentation test runner for \\w+: test\\.example\\.Runner")
