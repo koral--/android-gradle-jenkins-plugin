@@ -1,3 +1,6 @@
+### 1.0.46
+- code cleaning 
+
 ### 1.0.45
 - uiTest extension removed
 - uiTest source root substitution removed
