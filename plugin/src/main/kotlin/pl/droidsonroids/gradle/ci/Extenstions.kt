@@ -1,11 +1,9 @@
 package pl.droidsonroids.gradle.ci
 
 import com.android.build.gradle.AppExtension
-
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.internal.dsl.SigningConfig
-import com.android.builder.core.DefaultProductFlavor
 import com.android.builder.testing.api.DeviceConnector
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -87,7 +85,7 @@ private fun ApplicationVariant.isMonkeyTestable(monkeyTest: MonkeyTestExtension)
                 (productFlavors.find { monkeyTest.productFlavorNames.contains(it.name) } != null)
 
 
-fun Project.configureUiTests(android: AppExtension, uiTest: UiTestExtension) {
+fun Project.configureUiTests(android: AppExtension) {
     val uiTestModeName = findProperty(UI_TEST_MODE_PROPERTY_NAME) as String? ?: return
 
     val deviceSetupTask = tasks.create(CONNECTED_SETUP_UI_TEST_TASK_NAME, DeviceSetupTask::class.java, {
@@ -112,18 +110,15 @@ fun Project.configureUiTests(android: AppExtension, uiTest: UiTestExtension) {
 
     val uiTestMode = UiTestMode.valueOf(uiTestModeName)
 
-    android.sourceSets.getByName("androidTest").setRoot(rootProject.file("uiTest").path)
     val variants = android.applicationVariants
 
     variants.all {
         if (it.buildType.name == android.testBuildType) {
-            val defaultMinifyEnabled = uiTest.getDefaultMinifyEnabled(variants)
-            val minifyEnabled = uiTestMode.getMinifyEnabled(defaultMinifyEnabled)
-            android.buildTypes.getByName(android.testBuildType).isMinifyEnabled = minifyEnabled
-            logger.quiet("minifyEnabled for ${it.buildType.name} set to $minifyEnabled")
+            if (uiTestMode == UiTestMode.noMinify) {
+                android.buildTypes.getByName(android.testBuildType).isMinifyEnabled = false
+                logger.quiet("minifyEnabled for ${it.buildType.name} set to false")
+            }
         }
-        (it.mergedFlavor as DefaultProductFlavor).testInstrumentationRunner = uiTest.testInstrumentationRunner
-        logger.quiet("Instrumentation test runner for ${it.name}: ${uiTest.testInstrumentationRunner}")
     }
 }
 

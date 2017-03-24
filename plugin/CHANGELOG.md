@@ -1,3 +1,10 @@
+### 1.0.47
+- uiTest source root substitution removed
+- uiTest extension removed
+
+### 1.0.46
+- code cleaning
+
 ### 1.0.45
 - `kotlin.jvm.internal.FunctionReference` workaround added
 

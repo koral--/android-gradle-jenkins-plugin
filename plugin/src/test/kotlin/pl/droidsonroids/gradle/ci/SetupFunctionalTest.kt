@@ -24,7 +24,7 @@ class SetupFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments(CONNECTED_SETUP_UI_TEST_TASK_NAME, "-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name}")
                 .withPluginClasspath()
-                .withJacoco()
+                .withJaCoCo()
                 .buildAndFail()
         assertThat(result.output).contains("No connected devices")
     }
@@ -39,7 +39,7 @@ class SetupFunctionalTest {
                 .withTestKitDir(temporaryFolder.newFolder())
                 .withArguments(CONNECTED_UI_TEST_TASK_NAME, "-P$UI_TEST_MODE_PROPERTY_NAME=${UiTestMode.noMinify.name}", "-m")
                 .withPluginClasspath()
-                .withJacoco()
+                .withJaCoCo()
                 .build()
 
         assertThat(result.task(":$CONNECTED_SETUP_UI_TEST_TASK_NAME")).isNotNull()

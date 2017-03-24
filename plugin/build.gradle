@@ -8,6 +8,7 @@ plugins {
 
 dependencies {
     compile gradleApi()
+    compile gradleTestKit()
     compile 'com.android.tools.build:gradle:2.3.0'
     compile 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.1'
