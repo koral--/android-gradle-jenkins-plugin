@@ -13,7 +13,6 @@ import pl.droidsonroids.gradle.ci.Constants.CONNECTED_SETUP_REVERT_UI_TEST_TASK_
 import pl.droidsonroids.gradle.ci.Constants.CONNECTED_SETUP_UI_TEST_TASK_NAME
 import pl.droidsonroids.gradle.ci.Constants.CONNECTED_UI_TEST_TASK_NAME
 import pl.droidsonroids.gradle.ci.Constants.SPOON_TASK_NAME
-import pl.droidsonroids.gradle.ci.Constants.UI_TEST_MODE_PROPERTY_NAME
 import java.io.File
 import java.io.InputStream
 
