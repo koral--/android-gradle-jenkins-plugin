@@ -21,7 +21,7 @@ class ConnectedUiTestFunctionalTest {
         val result = GradleRunner.create()
                 .withProjectDir(temporaryFolder.root)
                 .withTestKitDir(temporaryFolder.newFolder())
-                .withArguments(Constants.CONNECTED_UI_TEST_TASK_NAME, "-P${Constants.UI_TEST_MODE_PROPERTY_NAME}=${UiTestMode.noMinify.name}")
+                .withArguments(Constants.CONNECTED_UI_TEST_TASK_NAME)
                 .withPluginClasspath()
                 .withJaCoCo()
                 .buildAndFail()

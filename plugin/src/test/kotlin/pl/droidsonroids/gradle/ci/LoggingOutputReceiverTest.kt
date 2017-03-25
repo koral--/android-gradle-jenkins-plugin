@@ -5,15 +5,14 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class.java)
 class LoggingOutputReceiverTest {
-    @get:Rule
-    val mockitoRule = MockitoJUnit.rule()
     @Mock
     lateinit var logger: ILogger
     @InjectMocks

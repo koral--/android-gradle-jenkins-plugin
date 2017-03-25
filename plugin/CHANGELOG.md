@@ -1,3 +1,6 @@
+### 1.0.48
+- uiTest mode property removed
+
 ### 1.0.47
 - uiTest source root substitution removed
 - uiTest extension removed

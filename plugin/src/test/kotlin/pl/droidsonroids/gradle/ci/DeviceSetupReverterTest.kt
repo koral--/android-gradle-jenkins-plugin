@@ -4,16 +4,14 @@ import com.android.ddmlib.IDevice
 import com.android.sdklib.AndroidVersion
 import com.nhaarman.mockito_kotlin.*
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class.java)
 class DeviceSetupReverterTest {
-
-    @get:Rule
-    val mockitoRule = MockitoJUnit.rule()
 
     @Mock
     private lateinit var device: IDevice

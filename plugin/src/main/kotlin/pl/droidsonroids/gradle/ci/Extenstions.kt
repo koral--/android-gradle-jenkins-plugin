@@ -86,8 +86,6 @@ private fun ApplicationVariant.isMonkeyTestable(monkeyTest: MonkeyTestExtension)
 
 
 fun Project.configureUiTests(android: AppExtension) {
-    val uiTestModeName = findProperty(UI_TEST_MODE_PROPERTY_NAME) as String? ?: return
-
     val deviceSetupTask = tasks.create(CONNECTED_SETUP_UI_TEST_TASK_NAME, DeviceSetupTask::class.java, {
         it.appExtension(android)
     })
@@ -106,19 +104,6 @@ fun Project.configureUiTests(android: AppExtension) {
         it.description = "Setups connected devices and performs instrumentation tests"
         it.dependsOn(spoonTask, deviceSetupTask)
         it.finalizedBy(deviceSetupRevertTask)
-    }
-
-    val uiTestMode = UiTestMode.valueOf(uiTestModeName)
-
-    val variants = android.applicationVariants
-
-    variants.all {
-        if (it.buildType.name == android.testBuildType) {
-            if (uiTestMode == UiTestMode.noMinify) {
-                android.buildTypes.getByName(android.testBuildType).isMinifyEnabled = false
-                logger.quiet("minifyEnabled for ${it.buildType.name} set to false")
-            }
-        }
     }
 }
 

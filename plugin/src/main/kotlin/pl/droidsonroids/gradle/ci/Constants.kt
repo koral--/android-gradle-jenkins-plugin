@@ -6,7 +6,6 @@ internal object Constants {
     val ADB_COMMAND_TIMEOUT_MILLIS = 30000
 
     val DISABLE_PREDEX_PROPERTY_NAME = "pl.droidsonroids.jenkins.disablepredex"
-    val UI_TEST_MODE_PROPERTY_NAME = "pl.droidsonroids.jenkins.ui.test.mode"
 
     val MONKEY_TASK_NAME = "connectedMonkeyJenkinsTest"
     val CONNECTED_UI_TEST_TASK_NAME = "connectedUiTest"

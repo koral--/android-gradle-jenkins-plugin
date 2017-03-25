@@ -5,20 +5,19 @@ import com.android.sdklib.AndroidVersion
 import com.nhaarman.mockito_kotlin.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 
+@RunWith(MockitoJUnitRunner::class.java)
 class DeviceSetuperTest {
-    @get:Rule
-    val mockitoRule = MockitoJUnit.rule()
     @Mock
     private lateinit var device: IDevice
     private lateinit var setuper: DeviceSetuper
