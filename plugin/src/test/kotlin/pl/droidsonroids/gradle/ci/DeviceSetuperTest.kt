@@ -16,7 +16,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 
-@RunWith(MockitoJUnitRunner::class.java)
+@RunWith(MockitoJUnitRunner::class)
 class DeviceSetuperTest {
     @Mock
     private lateinit var device: IDevice

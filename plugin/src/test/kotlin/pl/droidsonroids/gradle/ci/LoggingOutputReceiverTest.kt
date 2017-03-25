@@ -11,7 +11,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class.java)
+@RunWith(MockitoJUnitRunner::class)
 class LoggingOutputReceiverTest {
     @Mock
     lateinit var logger: ILogger

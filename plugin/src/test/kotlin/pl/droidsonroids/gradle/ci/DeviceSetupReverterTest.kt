@@ -10,7 +10,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class.java)
+@RunWith(MockitoJUnitRunner::class)
 class DeviceSetupReverterTest {
 
     @Mock
