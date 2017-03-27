@@ -2,21 +2,21 @@ plugins {
     id 'com.gradle.plugin-publish' version '0.9.7'
     id 'org.jetbrains.kotlin.jvm' version '1.1.1'
     id 'jacoco'
-    id 'pl.droidsonroids.jacoco.testkit' version '0.0.4'
+    id 'pl.droidsonroids.jacoco.testkit' version '1.0.0'
     id 'java-gradle-plugin'
 }
 
 dependencies {
-    compile gradleApi()
-    compile gradleTestKit()
+    compileOnly gradleApi()
     compile 'com.android.tools.build:gradle:2.3.0'
     compile 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.1'
-    compile 'org.jetbrains.kotlin:kotlin-reflect:1.1.1'
+    testCompileOnly gradleTestKit()
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.6.2'
     testCompile 'org.mockito:mockito-core:2.7.19'
     testCompile 'com.nhaarman:mockito-kotlin:1.3.0'
+    testCompile 'org.jetbrains.kotlin:kotlin-reflect:1.1.1'
 }
 
 group = GROUP
