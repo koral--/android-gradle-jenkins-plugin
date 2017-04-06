@@ -1,3 +1,6 @@
+### 1.0.49
+- Android Gradle plugin version bump to 2.3.1
+
 ### 1.0.48
 - uiTest mode property removed
 
