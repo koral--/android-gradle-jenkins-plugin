@@ -93,23 +93,25 @@ fun Project.configureUiTests(android: AppExtension) {
         it.appExtension(android)
     })
 
-    val isSplitEnabled = android.splits.let { it.abi.isEnable || it.density.isEnable || it.language.isEnable }
+    afterEvaluate {
+        val isSplitEnabled = android.splits.let { it.abi.isEnable || it.density.isEnable || it.language.isEnable }
 
-    val instrumentationTestTask = when {
-        isSplitEnabled -> tasks.getByName("connectedCheck")
-        else -> {
-            apply(mapOf("plugin" to "spoon"))
-            tasks.getByName(SPOON_TASK_NAME)
+        val instrumentationTestTask = when {
+            isSplitEnabled -> tasks.getByName("connectedCheck")
+            else -> {
+                apply(mapOf("plugin" to "spoon"))
+                tasks.getByName(SPOON_TASK_NAME)
+            }
         }
-    }
 
-    instrumentationTestTask.mustRunAfter(deviceSetupTask)
+        instrumentationTestTask.mustRunAfter(deviceSetupTask)
 
-    tasks.create(CONNECTED_UI_TEST_TASK_NAME) {
-        it.group = "verification"
-        it.description = "Setups connected devices and performs instrumentation tests"
-        it.dependsOn(instrumentationTestTask, deviceSetupTask)
-        it.finalizedBy(deviceSetupRevertTask)
+        tasks.create(CONNECTED_UI_TEST_TASK_NAME) {
+            it.group = "verification"
+            it.description = "Setups connected devices and performs instrumentation tests"
+            it.dependsOn(instrumentationTestTask, deviceSetupTask)
+            it.finalizedBy(deviceSetupRevertTask)
+        }
     }
 }
 

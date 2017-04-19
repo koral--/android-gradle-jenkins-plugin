@@ -1,5 +1,8 @@
+### 1.0.51
+- Workaround for spoon gradle plugin bug extended to any plugin apply order
+
 ### 1.0.50
--  Added workaround for spoon bug https://github.com/stanfy/spoon-gradle-plugin/issues/80
+-  Added workaround for spoon gradle plugin bug https://github.com/stanfy/spoon-gradle-plugin/issues/80
 
 ### 1.0.49
 - Android Gradle plugin version bump to 2.3.1
