@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
 class ConnectedUiTestFunctionalTest {
 
@@ -13,8 +12,7 @@ class ConnectedUiTestFunctionalTest {
 
     @Test
     fun `build fails when no connected devices`() {
-        temporaryFolder.copyResource("base.gradle", "base.gradle")
-        temporaryFolder.copyResource("noTestableVariant.gradle", "build.gradle")
+        temporaryFolder.copyResource("build.gradle", "build.gradle")
         temporaryFolder.newFolder("src", "main")
         temporaryFolder.copyResource("AndroidManifest.xml", "src/main/AndroidManifest.xml")
 

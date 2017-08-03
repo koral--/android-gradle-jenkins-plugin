@@ -11,8 +11,7 @@ class GradleVersionCheckFunctionalTest {
 
     @Test
     fun `build fails if Gradle version not supported`() {
-        temporaryFolder.copyResource("base.gradle", "base.gradle")
-        temporaryFolder.copyResource("noTestableVariant.gradle", "build.gradle")
+        temporaryFolder.copyResource("build.gradle", "build.gradle")
 
         val gradleVersion = "3.3"
         val result = GradleRunner.create()

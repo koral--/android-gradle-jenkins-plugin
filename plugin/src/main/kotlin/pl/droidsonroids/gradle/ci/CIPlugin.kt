@@ -13,11 +13,9 @@ class CIPlugin : Plugin<Project> {
         checkGradleVersion()
 
         DdmPreferences.setTimeOut(Constants.ADB_COMMAND_TIMEOUT_MILLIS)
-        project.addXlintOptionToJavacTasks()
 
         project.allprojects { subproject ->
             subproject.pluginManager.apply(BasePlugin::class.java)
-            subproject.extensions.create("monkeyTest", MonkeyTestExtension::class.java)
 
             val disablePredex = subproject.hasProperty(Constants.DISABLE_PREDEX_PROPERTY_NAME)
             subproject.plugins.withType(AppPlugin::class.java) {
@@ -26,10 +24,6 @@ class CIPlugin : Plugin<Project> {
                 subproject.configureUiTests(android)
 
                 android.setDexOptions(disablePredex)
-                android.addJenkinsReleaseBuildType()
-                subproject.afterEvaluate {
-                    subproject.addMonkeyTask()
-                }
             }
             subproject.plugins.withType(LibraryPlugin::class.java) {
                 subproject.getAndroidExtension<LibraryExtension>().setDexOptions(disablePredex)
@@ -37,7 +31,6 @@ class CIPlugin : Plugin<Project> {
             subproject.plugins.withType(TestPlugin::class.java) {
                 subproject.getAndroidExtension<TestExtension>().setDexOptions(disablePredex)
             }
-            subproject.addCleanMonkeyOutputTask()
         }
     }
 

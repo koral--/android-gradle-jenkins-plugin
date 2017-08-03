@@ -1,3 +1,7 @@
+plugins {
+    id 'pl.droidsonroids.jenkins'
+    id 'com.android.application'
+}
 android {
     defaultConfig {
         applicationId 'pl.droidsonroids.testapplication'
